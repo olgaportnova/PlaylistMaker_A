@@ -3,9 +3,7 @@ package com.example.playlistmaker
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import android.R.layout;
 import android.content.Intent
 
 
@@ -23,12 +21,12 @@ class MainActivity : AppCompatActivity() {
         }
         val buttonLibrary=findViewById<View>(R.id.library)
         buttonLibrary.setOnClickListener {
-            val displayIntent = Intent(this, library::class.java)
+            val displayIntent = Intent(this, LibraryActivity::class.java)
             startActivity(displayIntent)
         }
         val buttonSearch=findViewById<View>(R.id.search)
         buttonSearch.setOnClickListener {
-            val displayIntent = Intent(this, Search::class.java)
+            val displayIntent = Intent(this, SearchActivity::class.java)
             startActivity(displayIntent)
         }
 //123

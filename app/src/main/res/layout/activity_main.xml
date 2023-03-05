@@ -13,7 +13,7 @@
         android:layout_marginLeft="17dp"
         android:text="@string/app_name"
         android:textColor="@color/white"
-        android:textSize="22sp"
+        android:textSize="@dimen/menu_text_size"
         android:textStyle="bold"
         />
 

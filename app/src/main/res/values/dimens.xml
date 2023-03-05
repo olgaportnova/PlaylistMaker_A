@@ -11,5 +11,8 @@
     <dimen name="padding_top_settings_text">21dp</dimen>
     <dimen name="padding_bottom_settings_text">21dp</dimen>
     <dimen name="margin_top">16dp</dimen>
-
+    <dimen name="setting_imagine_margin">20dp</dimen>
+    <dimen name="setting_first_frame_top">141dp</dimen>
+    <dimen name="setting_second_frame_top">202dp</dimen>
+    <dimen name="setting_third_frame_top">263dp</dimen>
 </resources>
