@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="icon_padding">10dp</dimen>
+    <dimen name="menu_text_size">22sp</dimen>
+    <dimen name="buttom_left">17dp</dimen>
+    <dimen name="buttom_right">15dp</dimen>
+    <dimen name="buttom_top">16dp</dimen>
+    <dimen name="corner_radius">16dp</dimen>
+    <dimen name="text_size_settings">16sp</dimen>
+    <dimen name="padding_left_settings_text">21dp</dimen>
+    <dimen name="padding_top_settings_text">21dp</dimen>
+    <dimen name="padding_bottom_settings_text">21dp</dimen>
+    <dimen name="margin_top">16dp</dimen>
+    <dimen name="setting_imagine_margin">20dp</dimen>
+    <dimen name="setting_first_frame_top">141dp</dimen>
+    <dimen name="setting_second_frame_top">202dp</dimen>
+    <dimen name="setting_third_frame_top">263dp</dimen>
+</resources>
