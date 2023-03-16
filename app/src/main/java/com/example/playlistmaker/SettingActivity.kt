@@ -48,7 +48,7 @@ class SettingActivity : AppCompatActivity() {
 
             val supportIntent = Intent(Intent.ACTION_SENDTO)
             supportIntent.data = Uri.parse("mailto:")
-            supportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("yep4yep@gmail.com"))
+            supportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.support_email)))
             supportIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.message_support))
             supportIntent.putExtra(Intent.EXTRA_TEXT,getString(R.string.subject_message_support))
             startActivity(supportIntent)
@@ -58,7 +58,7 @@ class SettingActivity : AppCompatActivity() {
         buttonShare.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.android_yandex))
-            shareIntent.setType("text/plain");
+            shareIntent.type = getString(R.string.share_type);
             startActivity(shareIntent)
         }
         val buttonAgreement = findViewById<View>(R.id.agreement)
