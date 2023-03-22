@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
-
+import android.widget.Switch
+import androidx.appcompat.app.AppCompatDelegate
 
 
 class MainActivity : AppCompatActivity() {
+
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +32,10 @@ class MainActivity : AppCompatActivity() {
             val displayIntent = Intent(this, SearchActivity::class.java)
             startActivity(displayIntent)
         }
+
+
+
+
 //123
 //        val buttonSearch=findViewById<View>(R.id.search)
 //        val buttonLibrary=findViewById<View>(R.id.library)

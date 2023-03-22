@@ -8,4 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#3772E7</color>
+    <color name="ic_day">#AEAFB4</color>
+    <color name="setting_head">#1A1B22</color>
+
 </resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name='SettingsSwitchIcons'>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:thumbTint">#AEAFB4</item>
+        <item name="android:trackTint">#AEAFB4</item>
+    </style>
+
+    <style name="EditTextBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:textColorHint">#AEAFB4</item>
+        <item name="android:drawablePadding">9dp</item>
+        <item name="android:paddingStart">13dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:drawableTint">#AEAFB4</item>
+
+    </style>
+
+
+</resources>
