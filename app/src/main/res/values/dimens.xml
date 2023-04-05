@@ -15,4 +15,15 @@
     <dimen name="setting_first_frame_top">141dp</dimen>
     <dimen name="setting_second_frame_top">202dp</dimen>
     <dimen name="setting_third_frame_top">263dp</dimen>
+    <dimen name="art_work_height">45dp</dimen>
+    <dimen name="art_work_width">45dp</dimen>
+    <dimen name="art_work_corners">2dp</dimen>
+    <dimen name="art_work_marginStart">13dp</dimen>
+    <dimen name="art_work_marginTop">8dp</dimen>
+    <dimen name="track_name_frame_width">250dp</dimen>
+    <dimen name="track_name_frame_height">19dp</dimen>
+    <dimen name="track_name_frame_marginStart">8dp</dimen>
+    <dimen name="track_name_frame_marginTop">14dp</dimen>
+
+
 </resources>

@@ -10,12 +10,17 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {
-
+    lateinit var binding: ActivitySearchBinding
+    private val adapter = TrackAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+        binding= ActivitySearchBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        init()
         val frameLayout = findViewById<FrameLayout>(R.id.container)
         val inputEditText = findViewById<EditText>(R.id.inputEditText)
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
@@ -45,6 +50,13 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         inputEditText.addTextChangedListener(simpleTextWatcher)
+    }
+
+    private fun init() {
+        binding.apply {
+        rcTrackList.layoutManager=LinearLayoutManager(this@SearchActivity)
+        rcTrackList.adapter= adapter
+        }
     }
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
