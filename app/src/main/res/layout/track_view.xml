@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rcTrackList"
     android:layout_width="match_parent"
     android:layout_height="61dp"
@@ -22,7 +23,7 @@
         <TextView
             android:id="@+id/trackName"
             style="@style/track_name"
-            android:text="Song #1"
+            tools:text="Song #1"
             android:maxLines="1"
             android:ellipsize="end"
             />
@@ -39,7 +40,7 @@
                 style="@style/artist_time_track"
                 android:layout_weight="1"
                 android:layout_gravity="bottom|start"
-                android:text="The Beatles" />
+                tools:text="The Beatles" />
             <ImageView
                 style="@style/ellipse_devider"
                 android:src="@drawable/ic_ellipse" />
@@ -48,7 +49,7 @@
                 style="@style/artist_time_track"
                 android:layout_weight="0"
                 android:layout_marginStart="5dp"
-                android:text="2:34" />
+                tools:text="2:34" />
         </LinearLayout>
     </LinearLayout>
 

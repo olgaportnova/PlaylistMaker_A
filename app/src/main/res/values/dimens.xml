@@ -24,6 +24,7 @@
     <dimen name="track_name_frame_height">19dp</dimen>
     <dimen name="track_name_frame_marginStart">8dp</dimen>
     <dimen name="track_name_frame_marginTop">14dp</dimen>
+    <dimen name="radius_art_work">2dp</dimen>
 
 
 </resources>
