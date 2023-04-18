@@ -15,4 +15,7 @@
     <string name="android_yandex" translatable="false"> https://yandex.ru/legal/practicum_offer/ </string>
     <string name="support_email" translatable="false"> yep4yep@gmail.com </string>
     <string name="share_type" translatable="false"> text/plain </string>
+    <string name="nothing_found">Ничего не нашлось</string>
+    <string name="something_went_wrong">Проблемы со связью \n \n Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="btUpdate">Обновить</string>
 </resources>
