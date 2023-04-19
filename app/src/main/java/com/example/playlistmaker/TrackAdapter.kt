@@ -10,7 +10,7 @@ import com.example.playlistmaker.databinding.TrackViewBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TrackAdapter: RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
+class TrackAdapter(songs: ArrayList<Song>): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
 
 
     class TrackHolder (item: View):RecyclerView.ViewHolder(item) {
