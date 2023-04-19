@@ -57,25 +57,28 @@
 
     <LinearLayout
         android:id="@+id/placeholderMessage"
-        style="@style/placeholder_layout">
+        style="@style/placeholder_layout"
+        android:layout_height="288dp">
 
         <ImageView
             android:id="@+id/imageNothingFound"
-            style="@style/plaseholder_image"
-            />
-
+            style="@style/plaseholder_image" />
 
 
         <TextView
             android:id="@+id/text_nothing_found"
+            style="@style/placeholder_text"
+            android:layout_height="102dp"
             tools:text="Проблемы со связью \n \n
-Загрузка не удалась. Проверьте подключение к интернету"
-            style="@style/placeholder_text" />
+Загрузка не удалась. Проверьте подключение к интернету" />
+
         <Button
             android:id="@+id/buttonUpdate"
+            style="@style/placeholder_button"
+            android:layout_marginTop="24dp"
             android:text="@string/btUpdate"
-            app:cornerRadius="54dp"
-            style="@style/placeholder_button" />
+            android:visibility="invisible"
+            app:cornerRadius="54dp" />
 
 
     </LinearLayout>
