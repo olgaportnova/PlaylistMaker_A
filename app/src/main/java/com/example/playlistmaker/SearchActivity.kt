@@ -19,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
     lateinit var binding: ActivitySearchBinding
-    private val adapter = TrackAdapter(songs)
+    private val adapter  = TrackAdapter(songs)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +38,7 @@ class SearchActivity : AppCompatActivity() {
             songs.clear()
             adapter.notifyDataSetChanged()
             binding.placeholderMessage.visibility = View.INVISIBLE
+
         }
 
 
@@ -68,19 +69,7 @@ class SearchActivity : AppCompatActivity() {
         binding.inputEditText.addTextChangedListener(simpleTextWatcher)
     }
 
-    // сообщение плейсхолдера
-    private fun showMessage(text: String, image: Int) {
-        if (text.isNotEmpty()) {
-            binding.placeholderMessage.visibility = View.VISIBLE
-            binding.imageNothingFound.setImageResource(image)
-            binding.textNothingFound.text = text
-            songs.clear()
-            adapter.notifyDataSetChanged()
 
-        } else {
-            binding.placeholderMessage.visibility = View.GONE
-        }
-    }
     // функция поиска трека из iTunes
     private fun searchAction () {
         itunesService.search(binding.inputEditText.text.toString())
@@ -96,7 +85,7 @@ class SearchActivity : AppCompatActivity() {
                             adapter.notifyDataSetChanged()
                             binding.placeholderMessage.visibility=View.GONE
                         }
-                        if (songs.isEmpty()) {
+                        if ((songs.isEmpty()) or (response.code() == 404)) {
                             showMessage(
                                 getString(R.string.nothing_found),
                                 R.drawable.nothing_found
@@ -108,9 +97,7 @@ class SearchActivity : AppCompatActivity() {
                             R.drawable.something_wrong
                         )
                         binding.buttonUpdate.visibility = View.VISIBLE
-                        binding.buttonUpdate.setOnClickListener {
-                            searchAction()
-                        }
+                        repeatSearch()
 
                     }
                 }
@@ -124,14 +111,32 @@ class SearchActivity : AppCompatActivity() {
                         R.drawable.something_wrong
                     )
                     binding.buttonUpdate.visibility = View.VISIBLE
-                    binding.buttonUpdate.setOnClickListener {
-                        searchAction()
-                    }
+                    repeatSearch()
 
                 }
             })
     }
 
+    // сообщение плейсхолдера
+    private fun showMessage(text: String, image: Int) {
+        if (text.isNotEmpty()) {
+            binding.placeholderMessage.visibility = View.VISIBLE
+            binding.imageNothingFound.setImageResource(image)
+            binding.textNothingFound.text = text
+            songs.clear()
+            adapter.notifyDataSetChanged()
+
+        } else {
+            binding.placeholderMessage.visibility = View.GONE
+        }
+    }
+
+    // повторный поиск после нажатия на кнопку "Обновить"
+    private fun repeatSearch() {
+        binding.buttonUpdate.setOnClickListener {
+            searchAction()
+        }
+    }
     private fun init() {
         binding.apply {
             rcTrackList.layoutManager = LinearLayoutManager(this@SearchActivity)
