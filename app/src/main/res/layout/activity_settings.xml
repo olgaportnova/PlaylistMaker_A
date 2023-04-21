@@ -30,7 +30,7 @@
 
         style="@style/SettingsScreenText" />
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/theme"
         style="@style/SettingsSwitchIcons"
         android:layout_width="wrap_content"
