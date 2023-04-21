@@ -28,7 +28,8 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         >
-    <EditText
+
+        <EditText
         android:id="@+id/inputEditText"
         style="@style/EditTextBar"
         android:background="@drawable/backgroud_edit_text"
@@ -46,9 +47,39 @@
 
     </FrameLayout>
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcTrackList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="124dp" />
+
+
+    <LinearLayout
+        android:id="@+id/placeholderMessage"
+        style="@style/placeholder_layout"
+        android:layout_height="288dp">
+
+        <ImageView
+            android:id="@+id/imageNothingFound"
+            style="@style/plaseholder_image" />
+
+
+        <TextView
+            android:id="@+id/text_nothing_found"
+            style="@style/placeholder_text"
+            android:layout_height="102dp"
+            tools:text="Проблемы со связью \n \n
+Загрузка не удалась. Проверьте подключение к интернету" />
+
+        <Button
+            android:id="@+id/buttonUpdate"
+            style="@style/placeholder_button"
+            android:layout_marginTop="24dp"
+            android:text="@string/btUpdate"
+            android:visibility="invisible"
+            app:cornerRadius="54dp" />
+
+
+    </LinearLayout>
 </FrameLayout>
