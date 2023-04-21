@@ -17,6 +17,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
+
 class SearchActivity : AppCompatActivity() {
     lateinit var binding: ActivitySearchBinding
     private val adapter = TrackAdapter(songs)
@@ -44,6 +45,7 @@ class SearchActivity : AppCompatActivity() {
         binding.inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (binding.inputEditText.text.isNotEmpty()) {
+
                     searchAction() }
                 return@setOnEditorActionListener  true
             }
@@ -81,8 +83,10 @@ class SearchActivity : AppCompatActivity() {
             binding.placeholderMessage.visibility = View.GONE
         }
     }
+
     // функция поиска трека из iTunes
     private fun searchAction () {
+       
         itunesService.search(binding.inputEditText.text.toString())
             .enqueue(object : Callback<SongsResponse> {
                 override fun onResponse(
@@ -96,7 +100,7 @@ class SearchActivity : AppCompatActivity() {
                             adapter.notifyDataSetChanged()
                             binding.placeholderMessage.visibility=View.GONE
                         }
-                        if (songs.isEmpty()) {
+                        if ((songs.isEmpty()) or (response.code() == 404) ) {
                             showMessage(
                                 getString(R.string.nothing_found),
                                 R.drawable.nothing_found
@@ -108,9 +112,7 @@ class SearchActivity : AppCompatActivity() {
                             R.drawable.something_wrong
                         )
                         binding.buttonUpdate.visibility = View.VISIBLE
-                        binding.buttonUpdate.setOnClickListener {
-                            searchAction()
-                        }
+                        repeatSearch()
 
                     }
                 }
@@ -124,12 +126,16 @@ class SearchActivity : AppCompatActivity() {
                         R.drawable.something_wrong
                     )
                     binding.buttonUpdate.visibility = View.VISIBLE
-                    binding.buttonUpdate.setOnClickListener {
-                        searchAction()
-                    }
-
+                    repeatSearch()
                 }
             })
+    }
+
+    // повторный поиск после нажатия на кнопку "Обновить"
+    private fun repeatSearch() {
+        binding.buttonUpdate.setOnClickListener {
+            searchAction()
+        }
     }
 
     private fun init() {

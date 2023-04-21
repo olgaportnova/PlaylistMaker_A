@@ -24,8 +24,6 @@ data class Song (
         )
 
 class SongsResponse (
-    val searchType:String,
-    val expression :String,
     val results: List<Song>)
 
 interface Itunes {
