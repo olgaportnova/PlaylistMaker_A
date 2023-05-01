@@ -26,19 +26,12 @@ class SettingActivity : AppCompatActivity() {
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             switch.isChecked = true
         }
-        switch.setOnCheckedChangeListener() { _, isChecked ->
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
-
-            } else {
-                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
-
-            }
-
+        switch.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
         }
 
 
-        val buttonBack = findViewById<View>(R.id.back)
+            val buttonBack = findViewById<View>(R.id.back)
         buttonBack.setOnClickListener {
             finish()
         }

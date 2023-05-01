@@ -17,6 +17,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+//        if (darkTheme) {
+//            AppCompatDelegate.MODE_NIGHT_YES
+//        }
+
+
         val buttonSettings=findViewById<View>(R.id.settings)
         buttonSettings.setOnClickListener {
             val displayIntent = Intent(this, SettingActivity::class.java)

@@ -27,16 +27,25 @@
         android:layout_marginTop="64dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
+        android:background="@drawable/backgroud_edit_text"
+
         >
 
         <EditText
-        android:id="@+id/inputEditText"
-        style="@style/EditTextBar"
-        android:background="@drawable/backgroud_edit_text"
-        android:hint="@string/input_hint"
-        android:inputType="text"
-        android:drawableStart="@drawable/ic_search_small"
-        android:maxLines="1" />
+            tools:text="апыпарыапрпрыпрыпреерооофаваррреяя"
+            android:id="@+id/inputEditText"
+            style="@style/EditTextBar"
+            android:paddingEnd="27dp"
+            android:layout_width="match_parent"
+            android:autofillHints=""
+            android:background="@drawable/backgroud_edit_text"
+            android:drawableStart="@drawable/ic_search_small"
+            android:ellipsize="end"
+            android:hint="@string/input_hint"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"
+            android:singleLine="true" />
 
         <ImageView
             style="@style/ic_clear"
@@ -52,13 +61,15 @@
         android:id="@+id/rcTrackList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="124dp" />
+        android:layout_marginTop="124dp"
+        android:visibility="visible" />
 
 
     <LinearLayout
         android:id="@+id/placeholderMessage"
         style="@style/placeholder_layout"
-        android:layout_height="288dp">
+        android:layout_height="288dp"
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/imageNothingFound"
@@ -81,5 +92,47 @@
             app:cornerRadius="54dp" />
 
 
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/searchHistoryLayout"
+        android:visibility="gone"
+        android:layout_marginTop="150dp"
+        >
+    <TextView
+        android:id="@+id/textView"
+        android:text="Вы искали"
+        style="@style/history_headline" />
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+      >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <androidx.recyclerview.widget.RecyclerView
+
+                android:id="@+id/trackHistoryRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <Button
+                android:id="@+id/buttonClearHistory"
+                android:text="Очистить историю"
+                app:cornerRadius="54dp"
+                style="@style/button_clear_history" />
+        </LinearLayout>
+    </ScrollView>
     </LinearLayout>
 </FrameLayout>
