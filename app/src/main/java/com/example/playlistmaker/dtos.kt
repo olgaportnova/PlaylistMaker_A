@@ -14,8 +14,6 @@ val retrofit = Retrofit.Builder()
     .build()
 
 val itunesService = retrofit.create(Itunes::class.java)
-var tracks = ArrayList<Track>()
-var trackHistory = ArrayList<Track>()
 
 data class Track(
     val trackName: String,
@@ -25,7 +23,7 @@ data class Track(
     val trackId:Int
 )
 
-class SongsResponse (
+data class SongsResponse (
     val results: List<Track>)
 
 interface Itunes {

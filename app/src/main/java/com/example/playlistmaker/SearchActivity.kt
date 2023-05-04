@@ -13,18 +13,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.ArrayList
 
 
-class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
-    lateinit var binding: ActivitySearchBinding
+ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
+    var tracks = ArrayList<Track>()
+    private lateinit var binding: ActivitySearchBinding
+    lateinit var sharedPref:SharedPreferences
+    lateinit var trackHistory:String
     private val adapter = TrackAdapter(tracks, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        var sharedPref = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
+        sharedPref = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
+        trackHistory = sharedPref.getString(TRACK_LIST_KEY, null).toString()
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -47,8 +52,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
         // очистка истории поиска
         binding.buttonClearHistory.setOnClickListener {
             sharedPref.edit().remove(TRACK_LIST_KEY).apply()
-            var sharedPref = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
-            var trackHistory = sharedPref.getString(TRACK_LIST_KEY, null)
             showHistory()
         }
 
@@ -161,14 +164,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
         binding.apply {
             rcTrackList.layoutManager = LinearLayoutManager(this@SearchActivity)
             rcTrackList.adapter = adapter
-
         }
-        var sharedPref = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
-        var trackHistory = sharedPref.getString(TRACK_LIST_KEY, null)
-        if (trackHistory != null) {
-            showHistory()
-            binding.searchHistoryLayout.visibility = View.VISIBLE
-        }
+        showHistory()
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -199,8 +196,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
     // добавление трека в историю по клику
     override fun onClick(track: Track) {
 
-        val sharedPref = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
-        var trackHistory = SearchHistory(sharedPref)
+        var trackHistory = SearchHistory()
         trackHistory.addTrackToHistory(sharedPref, track)
         showHistory()
 
@@ -208,9 +204,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
 
     // оторбражение истории поиска
-    fun showHistory() {
+    private fun showHistory() {
         // достаем историю из sharedpref
-        var sharedPref = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
         var trackHistory = sharedPref.getString(TRACK_LIST_KEY, null)
         // если пустая ничего не показываем
         if (trackHistory == null) {
@@ -219,11 +214,16 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
         }
 
         if (trackHistory != null) {
-
             val layoutManager = LinearLayoutManager(this)
             binding.trackHistoryRecyclerView.setLayoutManager(layoutManager)
             var adapterHistory = HistoryAdapter(createTrackList1FromJson(trackHistory))
             binding.trackHistoryRecyclerView.adapter = adapterHistory
+
+
+
+            binding.inputEditText.setOnFocusChangeListener { view, hasFocus ->
+                binding.searchHistoryLayout.visibility = if (hasFocus && binding.inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
+            }
 
             binding.inputEditText.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {

@@ -5,23 +5,18 @@ import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
 import com.google.gson.Gson
 
-const val SEARCH_HISTORY= "search_history"
+const val SEARCH_HISTORY = "search_history"
 const val TRACK_LIST_KEY = "track_list_key"
 
 
-class SearchHistory(sharedPref: SharedPreferences) {
+class SearchHistory() {
     var trackList = arrayListOf<Track>()
-
-    fun read(sharedPref: SharedPreferences): Array<Track> {
-        val json = sharedPref.getString(TRACK_LIST_KEY, null) ?: return emptyArray()
-        return Gson().fromJson(json, Array<Track>::class.java)
-    }
 
 
     // добавление нового трека в sharedPref
     fun addTrackToHistory(sharedPreferences: SharedPreferences, track: Track) {
 
-        var tracks = sharedPreferences.getString(TRACK_LIST_KEY, null)
+        val tracks = sharedPreferences.getString(TRACK_LIST_KEY, null)
         if (tracks != null) {
 
             // проверка на дубликат
@@ -42,40 +37,39 @@ class SearchHistory(sharedPref: SharedPreferences) {
 
             }
 
-                if (trackList.size < 10) {
-                    trackList.add(0, track)
-                }
-
-            }
-            if (tracks == null) {
-                trackList = arrayListOf<Track>(track)
-
+            if (trackList.size < 10) {
+                trackList.add(0, track)
             }
 
-            sharedPreferences.edit()
-                .putString(TRACK_LIST_KEY, createJsonFromTrackList(trackList))
-                .apply()
+        }
+        if (tracks == null) {
+            trackList = arrayListOf<Track>(track)
 
         }
 
+        sharedPreferences.edit().putString(TRACK_LIST_KEY, createJsonFromTrackList(trackList))
+            .apply()
 
     }
-
-
 
     fun createTrackListFromJson(json: String): ArrayList<Track> {
         return Gson().fromJson(json, ArrayList<Track>()::class.java)
 
     }
 
-    fun createTrackList1FromJson(json: String): Array<Track> {
-        return Gson().fromJson(json, Array<Track>::class.java)
-
-    }
 
     private fun createJsonFromTrackList(trackList: ArrayList<Track>): String {
         return Gson().toJson(trackList)
     }
+
+}
+fun createTrackList1FromJson(json: String): Array<Track> {
+    return Gson().fromJson(json, Array<Track>::class.java)
+
+}
+
+
+
 
 
 
