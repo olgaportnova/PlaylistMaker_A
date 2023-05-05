@@ -1,59 +1,80 @@
 package com.example.playlistmaker
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import java.util.ArrayList
 
 
-
-class SearchActivity : AppCompatActivity() {
-    lateinit var binding: ActivitySearchBinding
-    private val adapter = TrackAdapter(songs)
-
+ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
+    var tracks = ArrayList<Track>()
+    private lateinit var binding: ActivitySearchBinding
+    lateinit var sharedPref:SharedPreferences
+    lateinit var trackHistory:String
+    private val adapter = TrackAdapter(tracks, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        sharedPref = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
+        trackHistory = sharedPref.getString(TRACK_LIST_KEY, null).toString()
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
         init()
 
 
+        // стрелка назад в меню
         binding.back.setOnClickListener {
             finish()
         }
 
+        // очистка строки поиска
         binding.clearIcon.setOnClickListener {
             binding.inputEditText.setText("")
-            songs.clear()
+            tracks.clear()
             adapter.notifyDataSetChanged()
             binding.placeholderMessage.visibility = View.INVISIBLE
         }
 
+        // очистка истории поиска
+        binding.buttonClearHistory.setOnClickListener {
+            sharedPref.edit().remove(TRACK_LIST_KEY).apply()
+            showHistory()
+        }
 
+
+        // поиск треков по вводу
         binding.inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (binding.inputEditText.text.isNotEmpty()) {
 
-                    searchAction() }
-                return@setOnEditorActionListener  true
+                    searchAction()
+                }
+                return@setOnEditorActionListener true
             }
             false
         }
 
         val simpleTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
 
             }
 
@@ -76,7 +97,7 @@ class SearchActivity : AppCompatActivity() {
             binding.placeholderMessage.visibility = View.VISIBLE
             binding.imageNothingFound.setImageResource(image)
             binding.textNothingFound.text = text
-            songs.clear()
+            tracks.clear()
             adapter.notifyDataSetChanged()
 
         } else {
@@ -84,9 +105,9 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    // функция поиска трека из iTunes
-    private fun searchAction () {
-       
+    // функция получение информации из iTunes
+    private fun searchAction() {
+
         itunesService.search(binding.inputEditText.text.toString())
             .enqueue(object : Callback<SongsResponse> {
                 override fun onResponse(
@@ -94,13 +115,13 @@ class SearchActivity : AppCompatActivity() {
                     response: Response<SongsResponse>
                 ) {
                     if (response.code() == 200) {
-                        songs.clear()
+                        tracks.clear()
                         if (response.body()?.results?.isNotEmpty() == true) {
-                            songs.addAll(response.body()?.results!!)
+                            tracks.addAll(response.body()?.results!!)
                             adapter.notifyDataSetChanged()
-                            binding.placeholderMessage.visibility=View.GONE
+                            binding.placeholderMessage.visibility = View.GONE
                         }
-                        if ((songs.isEmpty()) or (response.code() == 404) ) {
+                        if ((tracks.isEmpty()) or (response.code() == 404)) {
                             showMessage(
                                 getString(R.string.nothing_found),
                                 R.drawable.nothing_found
@@ -138,11 +159,13 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+
     private fun init() {
         binding.apply {
             rcTrackList.layoutManager = LinearLayoutManager(this@SearchActivity)
             rcTrackList.adapter = adapter
         }
+        showHistory()
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -159,14 +182,70 @@ class SearchActivity : AppCompatActivity() {
         val inputEditText = findViewById<EditText>(R.id.inputEditText)
         outState.putString(SEARCH_TYPE, inputEditText.text.toString())
     }
+
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val inputEditText = findViewById<EditText>(R.id.inputEditText)
         inputEditText.text = savedInstanceState.getString(SEARCH_TYPE) as Editable
     }
+
     companion object {
         const val SEARCH_TYPE = "SEARCH_TYPE"
     }
 
+    // добавление трека в историю по клику
+    override fun onClick(track: Track) {
+
+        var trackHistory = SearchHistory()
+        trackHistory.addTrackToHistory(sharedPref, track)
+        showHistory()
+
+    }
+
+
+    // оторбражение истории поиска
+    private fun showHistory() {
+        // достаем историю из sharedpref
+        var trackHistory = sharedPref.getString(TRACK_LIST_KEY, null)
+        // если пустая ничего не показываем
+        if (trackHistory == null) {
+            binding.searchHistoryLayout.visibility = View.GONE
+            return
+        }
+
+        if (trackHistory != null) {
+            val layoutManager = LinearLayoutManager(this)
+            binding.trackHistoryRecyclerView.setLayoutManager(layoutManager)
+            var adapterHistory = HistoryAdapter(createTrackList1FromJson(trackHistory))
+            binding.trackHistoryRecyclerView.adapter = adapterHistory
+
+
+
+            binding.inputEditText.setOnFocusChangeListener { view, hasFocus ->
+                binding.searchHistoryLayout.visibility = if (hasFocus && binding.inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
+            }
+
+            binding.inputEditText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    binding.searchHistoryLayout.visibility =
+                        if (binding.inputEditText.hasFocus() && p0?.isEmpty() == true) View.VISIBLE else View.GONE
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                }
+            })
+
+
+        }
+
+
+    }
+
 
 }
+
+
+

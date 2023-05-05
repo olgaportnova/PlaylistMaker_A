@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,19 +11,22 @@ import com.example.playlistmaker.databinding.TrackViewBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TrackAdapter(songs: ArrayList<Song>): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
+class TrackAdapter(var tracks: ArrayList<Track>,  var listener:Listener): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
+
 
 
     class TrackHolder (item: View):RecyclerView.ViewHolder(item) {
 
         val binding = TrackViewBinding.bind(item)
         val cornerRadius = binding.root.context.resources.getDimensionPixelSize(R.dimen.radius_art_work)
-        fun bind (track: Song) = with(binding){
-        trackName.text= track.trackName
+        fun bind (track: Track,listener:Listener) = with(binding){
+            trackName.text= track.trackName
             artistName.text = track.artistName
-            trackTime.text=SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
+            trackTime.text=SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis.toInt())
             Glide.with(itemView).load(track.artworkUrl100).transform(RoundedCorners(cornerRadius)).placeholder(R.drawable.placeholder).into(artWork)
-
+            itemView.setOnClickListener{
+                listener.onClick(track)
+            }
         }
     }
 
@@ -32,11 +36,16 @@ class TrackAdapter(songs: ArrayList<Song>): RecyclerView.Adapter<TrackAdapter.Tr
     }
 
     override fun getItemCount(): Int {
-        return songs.size
+        return tracks.size
     }
 
     override fun onBindViewHolder(holder: TrackHolder, position: Int) {
-        holder.bind(songs[position])
+        holder.bind(tracks[position],listener)
 
+
+    }
+
+    interface Listener {
+        fun onClick(track:Track)
     }
 }

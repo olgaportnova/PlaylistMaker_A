@@ -41,6 +41,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="bottom|start"
                 tools:text="The Beatles" />
+
             <ImageView
                 style="@style/ellipse_devider"
                 android:src="@drawable/ic_ellipse" />

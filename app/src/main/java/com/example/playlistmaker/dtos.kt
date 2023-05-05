@@ -14,17 +14,17 @@ val retrofit = Retrofit.Builder()
     .build()
 
 val itunesService = retrofit.create(Itunes::class.java)
-var songs = ArrayList<Song>()
 
-data class Song (
-    val trackName:String,
-    val artistName:String,
+data class Track(
+    val trackName: String,
+    val artistName: String,
     val trackTimeMillis: Int,
-    val artworkUrl100:String,
-        )
+    val artworkUrl100: String,
+    val trackId:Int
+)
 
-class SongsResponse (
-    val results: List<Song>)
+data class SongsResponse (
+    val results: List<Track>)
 
 interface Itunes {
     @GET ("/search?entity=song")
