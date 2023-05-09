@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -17,15 +18,17 @@ import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.Serializable
 import java.util.ArrayList
 
 
- class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
+class SearchActivity : AppCompatActivity(), TrackAdapter.Listener,HistoryAdapter.Listener {
     var tracks = ArrayList<Track>()
     private lateinit var binding: ActivitySearchBinding
     lateinit var sharedPref:SharedPreferences
     lateinit var trackHistory:String
     private val adapter = TrackAdapter(tracks, this)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         sharedPref = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
@@ -196,11 +199,39 @@ import java.util.ArrayList
     // добавление трека в историю по клику
     override fun onClick(track: Track) {
 
+        val item = createJsonFromTrack(track)
+        val displayIntent = Intent(this, AudioPlayerActivity::class.java)
+        displayIntent.putExtra("item",item)
+        startActivity(displayIntent)
+
+
         var trackHistory = SearchHistory()
         trackHistory.addTrackToHistory(sharedPref, track)
         showHistory()
 
+
+
     }
+
+    override fun onClickFromHistory(track: Track) {
+
+
+
+        val item = createJsonFromTrack(track)
+        val displayIntent = Intent(this, AudioPlayerActivity::class.java)
+        displayIntent.putExtra("item",item)
+        startActivity(displayIntent)
+
+        var trackHistory = SearchHistory()
+        trackHistory.addTrackToHistory(sharedPref, track)
+        showHistory()
+
+
+
+
+    }
+
+
 
 
     // оторбражение истории поиска
@@ -216,7 +247,7 @@ import java.util.ArrayList
         if (trackHistory != null) {
             val layoutManager = LinearLayoutManager(this)
             binding.trackHistoryRecyclerView.setLayoutManager(layoutManager)
-            var adapterHistory = HistoryAdapter(createTrackList1FromJson(trackHistory))
+            var adapterHistory = HistoryAdapter(createTrackList1FromJson(trackHistory), this)
             binding.trackHistoryRecyclerView.adapter = adapterHistory
 
 
