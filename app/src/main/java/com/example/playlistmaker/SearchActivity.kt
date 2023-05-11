@@ -9,24 +9,21 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.AudioPlayerActivity.Companion.TRACK_TO_OPEN
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.Serializable
 import java.util.ArrayList
 
 
-class SearchActivity : AppCompatActivity(), TrackAdapter.Listener,HistoryAdapter.Listener {
+class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapter.Listener {
     var tracks = ArrayList<Track>()
     private lateinit var binding: ActivitySearchBinding
-    lateinit var sharedPref:SharedPreferences
-    lateinit var trackHistory:String
+    lateinit var sharedPref: SharedPreferences
+    lateinit var trackHistory: String
     private val adapter = TrackAdapter(tracks, this)
 
 
@@ -73,10 +70,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener,HistoryAdapter
 
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
+                s: CharSequence?, start: Int, count: Int, after: Int
             ) {
 
             }
@@ -114,8 +108,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener,HistoryAdapter
         itunesService.search(binding.inputEditText.text.toString())
             .enqueue(object : Callback<SongsResponse> {
                 override fun onResponse(
-                    call: Call<SongsResponse>,
-                    response: Response<SongsResponse>
+                    call: Call<SongsResponse>, response: Response<SongsResponse>
                 ) {
                     if (response.code() == 200) {
                         tracks.clear()
@@ -126,14 +119,12 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener,HistoryAdapter
                         }
                         if ((tracks.isEmpty()) or (response.code() == 404)) {
                             showMessage(
-                                getString(R.string.nothing_found),
-                                R.drawable.nothing_found
+                                getString(R.string.nothing_found), R.drawable.nothing_found
                             )
                         }
                     } else {
                         showMessage(
-                            getString(R.string.something_went_wrong),
-                            R.drawable.something_wrong
+                            getString(R.string.something_went_wrong), R.drawable.something_wrong
                         )
                         binding.buttonUpdate.visibility = View.VISIBLE
                         repeatSearch()
@@ -142,12 +133,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener,HistoryAdapter
                 }
 
                 override fun onFailure(
-                    call: Call<SongsResponse>,
-                    t: Throwable
+                    call: Call<SongsResponse>, t: Throwable
                 ) {
                     showMessage(
-                        getString(R.string.something_went_wrong),
-                        R.drawable.something_wrong
+                        getString(R.string.something_went_wrong), R.drawable.something_wrong
                     )
                     binding.buttonUpdate.visibility = View.VISIBLE
                     repeatSearch()
@@ -198,10 +187,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener,HistoryAdapter
 
     // добавление трека в историю по клику
     override fun onClick(track: Track) {
-
-        val item = createJsonFromTrack(track)
         val displayIntent = Intent(this, AudioPlayerActivity::class.java)
-        displayIntent.putExtra("item",item)
+        displayIntent.putExtra(TRACK_TO_OPEN, track)
         startActivity(displayIntent)
 
 
@@ -210,29 +197,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener,HistoryAdapter
         showHistory()
 
 
-
     }
-
-    override fun onClickFromHistory(track: Track) {
-
-
-
-        val item = createJsonFromTrack(track)
-        val displayIntent = Intent(this, AudioPlayerActivity::class.java)
-        displayIntent.putExtra("item",item)
-        startActivity(displayIntent)
-
-        var trackHistory = SearchHistory()
-        trackHistory.addTrackToHistory(sharedPref, track)
-        showHistory()
-
-
-
-
-    }
-
-
-
 
     // оторбражение истории поиска
     private fun showHistory() {
@@ -253,7 +218,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener,HistoryAdapter
 
 
             binding.inputEditText.setOnFocusChangeListener { view, hasFocus ->
-                binding.searchHistoryLayout.visibility = if (hasFocus && binding.inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
+                binding.searchHistoryLayout.visibility =
+                    if (hasFocus && binding.inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
             }
 
             binding.inputEditText.addTextChangedListener(object : TextWatcher {

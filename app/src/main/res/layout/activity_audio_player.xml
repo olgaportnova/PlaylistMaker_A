@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+     android:layout_height="wrap_content"
+     android:layout_width="wrap_content">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -34,7 +42,7 @@
         android:id="@+id/cover_AP"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="46dp"
         android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
@@ -103,8 +111,8 @@
 
     <TextView
         android:id="@+id/duration"
-        android:layout_marginTop="17dp"
-        android:text="Длительность"
+        android:layout_marginTop="39dp"
+        android:text="@string/duration"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/current_time"
         style="@style/params_AP_screen" />
@@ -119,7 +127,7 @@
     <TextView
         android:id="@+id/album"
         android:layout_marginTop="17dp"
-        android:text="Альбом"
+        android:text="@string/album"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/duration"
         style="@style/params_AP_screen"
@@ -142,7 +150,7 @@
     <TextView
         android:id="@+id/year"
         android:layout_marginTop="17dp"
-        android:text="Год"
+        android:text="@string/year"
         app:layout_goneMarginTop="17dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/album"
@@ -158,7 +166,7 @@
     <TextView
         android:id="@+id/genre"
         android:layout_marginTop="17dp"
-        android:text="Жанр"
+        android:text="@string/Genre"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/year"
         style="@style/params_AP_screen" />
@@ -173,9 +181,11 @@
     <TextView
         android:id="@+id/country"
         android:layout_marginTop="17dp"
-        android:text="Страна"
+        android:text="@string/country"
+        android:layout_marginBottom="28dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/genre"
+        app:layout_constraintBottom_toBottomOf="parent"
         style="@style/params_AP_screen" />
 
     <TextView
@@ -187,3 +197,4 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

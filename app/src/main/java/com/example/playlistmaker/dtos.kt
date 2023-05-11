@@ -26,7 +26,7 @@ data class Track(
     val primaryGenreName:String,
     val country:String
 
-)
+):java.io.Serializable
 
 
 

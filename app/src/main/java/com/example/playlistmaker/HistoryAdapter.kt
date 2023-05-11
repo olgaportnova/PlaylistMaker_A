@@ -28,16 +28,11 @@ class HistoryHolder (itemView: View):RecyclerView.ViewHolder(itemView) {
         Glide.with(itemView).load(track.artworkUrl100).transform(RoundedCorners(cornerRadius)).placeholder(R.drawable.placeholder).into(artWork)
         itemView.setOnClickListener {
             Log.d ("HISTORY_CLICK", "clicked")
-            listener.onClickFromHistory(track)
+            listener.onClick(track)
         }
 
         }
     }
-
-
-
-
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryHolder {
@@ -54,7 +49,7 @@ class HistoryHolder (itemView: View):RecyclerView.ViewHolder(itemView) {
     }
 
     interface Listener {
-        fun onClickFromHistory(track: Track)
+        fun onClick(track: Track)
     }
 
 
