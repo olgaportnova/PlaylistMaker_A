@@ -52,20 +52,25 @@ class SearchHistory() {
 
     }
 
-    fun createTrackListFromJson(json: String): ArrayList<Track> {
-        return Gson().fromJson(json, ArrayList<Track>()::class.java)
-
-    }
 
 
-    private fun createJsonFromTrackList(trackList: ArrayList<Track>): String {
-        return Gson().toJson(trackList)
-    }
+
 
 }
 fun createTrackList1FromJson(json: String): Array<Track> {
     return Gson().fromJson(json, Array<Track>::class.java)
 
+}
+fun createJsonFromTrackList(trackList: ArrayList<Track>): String {
+    return Gson().toJson(trackList)
+}
+fun createTrackListFromJson(json: String): ArrayList<Track> {
+    return Gson().fromJson(json, ArrayList<Track>()::class.java)
+
+}
+
+fun createJsonFromTrack(track: Track): String {
+    return Gson().toJson(track)
 }
 
 
