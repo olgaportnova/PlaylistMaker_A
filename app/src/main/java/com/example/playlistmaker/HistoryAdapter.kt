@@ -2,6 +2,8 @@ package com.example.playlistmaker
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -35,6 +37,7 @@ class HistoryHolder (itemView: View):RecyclerView.ViewHolder(itemView) {
     }
 
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_view,parent,false)
         return HistoryHolder(view)
@@ -51,6 +54,7 @@ class HistoryHolder (itemView: View):RecyclerView.ViewHolder(itemView) {
     interface Listener {
         fun onClick(track: Track)
     }
+
 
 
 }
