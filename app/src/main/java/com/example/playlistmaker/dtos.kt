@@ -5,9 +5,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.io.Serializable
 import java.util.ArrayList
 
-val itunesBaseUrl = "https://itunes.apple.com"
+
+val itunesBaseUrl = "http://itunes.apple.com"
 val retrofit = Retrofit.Builder()
     .baseUrl(itunesBaseUrl)
     .addConverterFactory(GsonConverterFactory.create())
@@ -24,9 +26,10 @@ data class Track(
     val collectionName:String,
     val releaseDate: String,
     val primaryGenreName:String,
-    val country:String
+    val country:String,
+    val previewUrl: String
 
-):java.io.Serializable
+): Serializable
 
 
 

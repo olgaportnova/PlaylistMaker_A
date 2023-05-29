@@ -64,6 +64,14 @@
         android:layout_marginTop="124dp"
         android:visibility="visible" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center"
+        android:indeterminateTint="#6200EE"
+        android:visibility="gone"/>
+
 
     <LinearLayout
         android:id="@+id/placeholderMessage"
@@ -133,6 +141,7 @@
                 app:cornerRadius="54dp"
                 style="@style/button_clear_history" />
         </LinearLayout>
+
     </ScrollView>
     </LinearLayout>
 </FrameLayout>
