@@ -9,13 +9,12 @@ import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.AudioPlayerActivity.Companion.TRACK_TO_OPEN
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.presentation.AudioPlayerActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -64,25 +63,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
 
         // поиск треков по вводу
         binding.inputEditText.addTextChangedListener {
-
-                val simpleTextWatcher = object : TextWatcher {
-                    override fun beforeTextChanged(
-                        s: CharSequence?, start: Int, count: Int, after: Int
-                    ) {
-
-                    }
-
-                    override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        binding.clearIcon.visibility = clearButtonVisibility(s)
-                            searchDebounce()
-                    }
-
-                    override fun afterTextChanged(s: Editable?) {
-                        // empty
-                    }
-                }
-                binding.inputEditText.addTextChangedListener(simpleTextWatcher)
-
+            binding.clearIcon.visibility = clearButtonVisibility(trackHistory)
+            searchDebounce()
         }
     }
 
@@ -104,7 +86,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
     private fun searchAction() {
         if (binding.inputEditText.text.isEmpty()) {
             tracks.clear()
-            binding.rcTrackList.visibility=View.GONE
+            binding.rcTrackList.visibility = View.GONE
         }
         if (binding.inputEditText.text.isNotEmpty()) {
 
@@ -202,18 +184,16 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
         if (clickDebounce()) {
 
             val displayIntent = Intent(this, AudioPlayerActivity::class.java)
-            displayIntent.putExtra(TRACK_TO_OPEN, track)
+            displayIntent.putExtra("item", track)
             startActivity(displayIntent)
 
-
-            var trackHistory = SearchHistory()
+            val trackHistory = SearchHistory()
             trackHistory.addTrackToHistory(sharedPref, track)
             showHistory()
         }
 
 
     }
-
 
 
     // оторбражение истории поиска
@@ -231,7 +211,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
             binding.trackHistoryRecyclerView.setLayoutManager(layoutManager)
             var adapterHistory = HistoryAdapter(createTrackList1FromJson(trackHistory), this)
             binding.trackHistoryRecyclerView.adapter = adapterHistory
-            binding.placeholderMessage.visibility=View.GONE
+            binding.placeholderMessage.visibility = View.GONE
 
 
 
@@ -263,7 +243,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
     }
 
     // контроль нажатий на трек (не быстрее чем 1 сек)
-    private fun clickDebounce() : Boolean {
+    private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
