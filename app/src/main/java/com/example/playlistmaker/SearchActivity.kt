@@ -65,23 +65,11 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
         // поиск треков по вводу
         binding.inputEditText.addTextChangedListener {
 
-                val simpleTextWatcher = object : TextWatcher {
-                    override fun beforeTextChanged(
-                        s: CharSequence?, start: Int, count: Int, after: Int
-                    ) {
-
-                    }
-
-                    override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        binding.clearIcon.visibility = clearButtonVisibility(s)
+                        binding.clearIcon.visibility = clearButtonVisibility(trackHistory)
                             searchDebounce()
-                    }
 
-                    override fun afterTextChanged(s: Editable?) {
-                        // empty
-                    }
-                }
-                binding.inputEditText.addTextChangedListener(simpleTextWatcher)
+
+
 
         }
     }
