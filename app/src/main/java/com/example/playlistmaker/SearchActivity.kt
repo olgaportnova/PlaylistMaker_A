@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,6 +12,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.AudioPlayerActivity.Companion.TRACK_TO_OPEN
 import com.example.playlistmaker.databinding.ActivitySearchBinding
@@ -25,6 +28,9 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
     lateinit var sharedPref: SharedPreferences
     lateinit var trackHistory: String
     private val adapter = TrackAdapter(tracks, this)
+    private val searchRunnable = Runnable { searchAction() }
+    private val handler = Handler(Looper.getMainLooper())
+    private var isClickAllowed = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,35 +63,15 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
 
 
         // поиск треков по вводу
-        binding.inputEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (binding.inputEditText.text.isNotEmpty()) {
+        binding.inputEditText.addTextChangedListener {
 
-                    searchAction()
-                }
-                return@setOnEditorActionListener true
-            }
-            false
+                        binding.clearIcon.visibility = clearButtonVisibility(trackHistory)
+                            searchDebounce()
+
+
+
+
         }
-
-        val simpleTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(
-                s: CharSequence?, start: Int, count: Int, after: Int
-            ) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-
-                binding.clearIcon.visibility = clearButtonVisibility(s)
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // empty
-            }
-        }
-        binding.inputEditText.addTextChangedListener(simpleTextWatcher)
     }
 
     // сообщение плейсхолдера
@@ -104,45 +90,62 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
 
     // функция получение информации из iTunes
     private fun searchAction() {
+        if (binding.inputEditText.text.isEmpty()) {
+            tracks.clear()
+            binding.rcTrackList.visibility=View.GONE
+        }
+        if (binding.inputEditText.text.isNotEmpty()) {
 
-        itunesService.search(binding.inputEditText.text.toString())
-            .enqueue(object : Callback<SongsResponse> {
-                override fun onResponse(
-                    call: Call<SongsResponse>, response: Response<SongsResponse>
-                ) {
-                    if (response.code() == 200) {
-                        tracks.clear()
-                        if (response.body()?.results?.isNotEmpty() == true) {
-                            tracks.addAll(response.body()?.results!!)
-                            adapter.notifyDataSetChanged()
-                            binding.placeholderMessage.visibility = View.GONE
-                        }
-                        if ((tracks.isEmpty()) or (response.code() == 404)) {
+
+            binding.placeholderMessage.visibility = View.GONE
+            binding.rcTrackList.visibility = View.GONE
+            binding.progressBar.visibility = View.VISIBLE
+
+
+            itunesService.search(binding.inputEditText.text.toString())
+                .enqueue(object : Callback<SongsResponse> {
+                    override fun onResponse(
+                        call: Call<SongsResponse>, response: Response<SongsResponse>
+                    ) {
+                        binding.progressBar.visibility = View.GONE
+                        if (response.code() == 200) {
+                            tracks.clear()
+                            if (response.body()?.results?.isNotEmpty() == true) {
+                                tracks.addAll(response.body()?.results!!)
+                                adapter.notifyDataSetChanged()
+                                binding.placeholderMessage.visibility = View.GONE
+                                binding.rcTrackList.visibility = View.VISIBLE
+                            }
+                            if ((tracks.isEmpty()) or (response.code() == 404)) {
+                                showMessage(
+                                    getString(R.string.nothing_found), R.drawable.nothing_found
+                                )
+                            }
+                        } else {
                             showMessage(
-                                getString(R.string.nothing_found), R.drawable.nothing_found
+                                getString(R.string.something_went_wrong), R.drawable.something_wrong
                             )
+                            binding.buttonUpdate.visibility = View.VISIBLE
+                            repeatSearch()
+
                         }
-                    } else {
+                    }
+
+                    override fun onFailure(
+                        call: Call<SongsResponse>, t: Throwable
+                    ) {
+                        binding.progressBar.visibility = View.GONE
                         showMessage(
                             getString(R.string.something_went_wrong), R.drawable.something_wrong
                         )
                         binding.buttonUpdate.visibility = View.VISIBLE
                         repeatSearch()
-
                     }
-                }
+                })
 
-                override fun onFailure(
-                    call: Call<SongsResponse>, t: Throwable
-                ) {
-                    showMessage(
-                        getString(R.string.something_went_wrong), R.drawable.something_wrong
-                    )
-                    binding.buttonUpdate.visibility = View.VISIBLE
-                    repeatSearch()
-                }
-            })
+        }
     }
+
 
     // повторный поиск после нажатия на кнопку "Обновить"
     private fun repeatSearch() {
@@ -181,23 +184,25 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
         inputEditText.text = savedInstanceState.getString(SEARCH_TYPE) as Editable
     }
 
-    companion object {
-        const val SEARCH_TYPE = "SEARCH_TYPE"
-    }
 
-    // добавление трека в историю по клику
+    // добавление трека в историю по клику и открыте в аудиоплеере
     override fun onClick(track: Track) {
-        val displayIntent = Intent(this, AudioPlayerActivity::class.java)
-        displayIntent.putExtra(TRACK_TO_OPEN, track)
-        startActivity(displayIntent)
+        if (clickDebounce()) {
+
+            val displayIntent = Intent(this, AudioPlayerActivity::class.java)
+            displayIntent.putExtra(TRACK_TO_OPEN, track)
+            startActivity(displayIntent)
 
 
-        var trackHistory = SearchHistory()
-        trackHistory.addTrackToHistory(sharedPref, track)
-        showHistory()
+            var trackHistory = SearchHistory()
+            trackHistory.addTrackToHistory(sharedPref, track)
+            showHistory()
+        }
 
 
     }
+
+
 
     // оторбражение истории поиска
     private fun showHistory() {
@@ -214,6 +219,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
             binding.trackHistoryRecyclerView.setLayoutManager(layoutManager)
             var adapterHistory = HistoryAdapter(createTrackList1FromJson(trackHistory), this)
             binding.trackHistoryRecyclerView.adapter = adapterHistory
+            binding.placeholderMessage.visibility=View.GONE
 
 
 
@@ -234,11 +240,30 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
                 override fun afterTextChanged(p0: Editable?) {
                 }
             })
-
-
         }
+    }
 
+    // поиск по вводу каждые 2 сек
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
 
+    }
+
+    // контроль нажатий на трек (не быстрее чем 1 сек)
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
+    companion object {
+        const val SEARCH_TYPE = "SEARCH_TYPE"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
 
