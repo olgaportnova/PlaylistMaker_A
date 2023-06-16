@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.player
 
 
 import android.annotation.SuppressLint
@@ -9,7 +9,9 @@ import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
+import com.example.playlistmaker.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -78,7 +80,7 @@ class AudioPlayerActivity() : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mainThreadHandler?.removeCallbacks(timerRunnable)
+        mainThreadHandler.removeCallbacks(timerRunnable)
         mediaPlayer.stop()
         mediaPlayer.release()
     }
@@ -101,7 +103,7 @@ class AudioPlayerActivity() : AppCompatActivity() {
         }
         mediaPlayer.setOnCompletionListener {
             playerState = STATE_PREPARED
-            mainThreadHandler?.removeCallbacks(timerRunnable)
+            mainThreadHandler.removeCallbacks(timerRunnable)
             binding.playButton.setImageResource(R.drawable.ic_play_button)
             binding.currentTime.text = START_TIMER
         }
@@ -122,7 +124,7 @@ class AudioPlayerActivity() : AppCompatActivity() {
     // пауза проигрывания превью
     private fun pausePlayer() {
         mediaPlayer.pause()
-        mainThreadHandler?.removeCallbacks(timerRunnable)
+        mainThreadHandler.removeCallbacks(timerRunnable)
         binding.playButton.setImageResource(R.drawable.ic_play_button)
         playerState = STATE_PAUSED
     }
@@ -132,7 +134,7 @@ class AudioPlayerActivity() : AppCompatActivity() {
         return object:Runnable {
             override fun run() {
                 binding.currentTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format((mediaPlayer.currentPosition))
-                mainThreadHandler?.postDelayed(this, DELAY_MS)}
+                mainThreadHandler.postDelayed(this, DELAY_MS)}
             }
 
 

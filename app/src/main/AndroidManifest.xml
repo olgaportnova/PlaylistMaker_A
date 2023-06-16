@@ -18,33 +18,33 @@
         android:theme="@style/Theme.App"
         tools:targetApi="31" >
         <activity
-            android:name=".SearchActivity"
+            android:name=".ui.history.SearchActivity"
             android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".LibraryActivity"
+            android:name=".presentation.LibraryActivity"
             android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".SettingActivity"
+            android:name=".presentation.SettingActivity"
             android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity android:name=".AudioPlayerActivity"
+        <activity android:name=".ui.player.AudioPlayerActivity"
             android:exported="false">
 
         </activity>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.App">
             <intent-filter>

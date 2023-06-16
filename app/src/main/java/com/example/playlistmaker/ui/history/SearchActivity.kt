@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.history
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -9,13 +9,18 @@ import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.AudioPlayerActivity.Companion.TRACK_TO_OPEN
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.dto.TrackSearchResponse
+import com.example.playlistmaker.ui.player.AudioPlayerActivity.Companion.TRACK_TO_OPEN
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.itunesService
+import com.example.playlistmaker.ui.player.AudioPlayerActivity
+import com.example.playlistmaker.ui.tracks.TrackAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -103,9 +108,9 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
 
 
             itunesService.search(binding.inputEditText.text.toString())
-                .enqueue(object : Callback<SongsResponse> {
+                .enqueue(object : Callback<TrackSearchResponse> {
                     override fun onResponse(
-                        call: Call<SongsResponse>, response: Response<SongsResponse>
+                        call: Call<TrackSearchResponse>, response: Response<TrackSearchResponse>
                     ) {
                         binding.progressBar.visibility = View.GONE
                         if (response.code() == 200) {
@@ -132,7 +137,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
                     }
 
                     override fun onFailure(
-                        call: Call<SongsResponse>, t: Throwable
+                        call: Call<TrackSearchResponse>, t: Throwable
                     ) {
                         binding.progressBar.visibility = View.GONE
                         showMessage(
