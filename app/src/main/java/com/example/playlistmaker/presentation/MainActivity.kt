@@ -1,12 +1,12 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
-import android.widget.Switch
-import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.R
+import com.example.playlistmaker.ui.history.SearchActivity
 
 
 class MainActivity : AppCompatActivity() {
