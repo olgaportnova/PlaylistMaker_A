@@ -1,5 +1,3 @@
-
-
 package com.example.playlistmaker.presentation
 
 
@@ -10,11 +8,13 @@ import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.Track
-import com.example.playlistmaker.data.MediaPlayerRepositoryImpl
+import com.example.playlistmaker.data.dto.TrackDto
+
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.domain.AudioPlayerInteractor
+import com.example.playlistmaker.domain.model.State
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -24,9 +24,8 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAudioPlayerBinding
     private var mainThreadHandler = Handler(Looper.getMainLooper())
     private val timerRunnable = createUpdateTimerTask()
-    private val audioPlayerInteractor = AudioPlayerInteractor(
-        MediaPlayerRepositoryImpl()
-    )
+    private val audioPlayerInteractor: AudioPlayerInteractor =
+        Creator.provideAudioPlayerInteractor()
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +34,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val track = intent.getSerializableExtra("item") as Track
+        val track = intent.getSerializableExtra("item") as TrackDto
         val url = track.previewUrl // url превью 30 сек.
 
         preparePlayer(url)
@@ -49,6 +48,7 @@ class AudioPlayerActivity : AppCompatActivity() {
                     }
                     State.PLAYING, State.PREPARED -> {
                         binding.playButton.setImageResource(R.drawable.ic_pause)
+                        mainThreadHandler.removeCallbacks(timerRunnable)
                         mainThreadHandler.post(timerRunnable)
                     }
                     else -> {}
@@ -85,6 +85,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         audioPlayerInteractor.pausePlayer()
+
     }
 
     override fun onDestroy() {
@@ -93,7 +94,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     // взять год трека из полной даты
-    private fun getFormattedYear(track: Track): String {
+    private fun getFormattedYear(track: TrackDto): String {
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
         val calendar: Calendar = Calendar.getInstance()
         calendar.setTime(format.parse(track.releaseDate))

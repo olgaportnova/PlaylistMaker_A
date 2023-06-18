@@ -1,37 +1,12 @@
-
-
 package com.example.playlistmaker.domain
 
-import com.example.playlistmaker.presentation.State
+import com.example.playlistmaker.domain.model.State
 
-class AudioPlayerInteractor(
-    private val mediaPlayerRepository: MediaPlayerRepository
-) {
+interface AudioPlayerInteractor {
 
-    fun preparePlayer(
-        url: String,
-        onStateChanged: (s: State) -> Unit
-    ) {
-        mediaPlayerRepository.preparePlayer(
-            url,
-            onStateChanged
-        )
-    }
-
-    fun pausePlayer() {
-        mediaPlayerRepository.pause()
-    }
-
-    fun currentPosition(): Int {
-        return mediaPlayerRepository.currentPosition()
-    }
-
-    fun switchPlayer(onStateChangedTo: (s: State) -> Unit) {
-        mediaPlayerRepository.switchPlayerState(onStateChangedTo)
-    }
-
+    fun preparePlayer(url: String, onStateChanged: (s: State) -> Unit)
+    fun pausePlayer()
+    fun currentPosition(): Int
+    fun switchPlayer(onStateChangedTo: (s: State) -> Unit)
 
 }
-
-
-

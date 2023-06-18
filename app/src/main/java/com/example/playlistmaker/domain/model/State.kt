@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker.domain.model
 
 enum class State {
     DEFAULT,

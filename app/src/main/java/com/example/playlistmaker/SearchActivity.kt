@@ -13,16 +13,17 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.data.dto.TrackDto
+import com.example.playlistmaker.data.dto.TrackSearchResponse
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.presentation.AudioPlayerActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.ArrayList
 
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapter.Listener {
-    var tracks = ArrayList<Track>()
+    var tracks = ArrayList<TrackDto>()
     private lateinit var binding: ActivitySearchBinding
     lateinit var sharedPref: SharedPreferences
     lateinit var trackHistory: String
@@ -64,10 +65,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
         // поиск треков по вводу
         binding.inputEditText.addTextChangedListener {
 
-                        binding.clearIcon.visibility = clearButtonVisibility(trackHistory)
-                            searchDebounce()
-
-
+            binding.clearIcon.visibility = clearButtonVisibility(trackHistory)
+            searchDebounce()
 
 
         }
@@ -91,7 +90,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
     private fun searchAction() {
         if (binding.inputEditText.text.isEmpty()) {
             tracks.clear()
-            binding.rcTrackList.visibility=View.GONE
+            binding.rcTrackList.visibility = View.GONE
         }
         if (binding.inputEditText.text.isNotEmpty()) {
 
@@ -102,9 +101,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
 
 
             itunesService.search(binding.inputEditText.text.toString())
-                .enqueue(object : Callback<SongsResponse> {
+                .enqueue(object : Callback<TrackSearchResponse> {
                     override fun onResponse(
-                        call: Call<SongsResponse>, response: Response<SongsResponse>
+                        call: Call<TrackSearchResponse>,
+                        response: Response<TrackSearchResponse>
                     ) {
                         binding.progressBar.visibility = View.GONE
                         if (response.code() == 200) {
@@ -131,7 +131,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
                     }
 
                     override fun onFailure(
-                        call: Call<SongsResponse>, t: Throwable
+                        call: Call<TrackSearchResponse>, t: Throwable
                     ) {
                         binding.progressBar.visibility = View.GONE
                         showMessage(
@@ -185,7 +185,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
 
 
     // добавление трека в историю по клику и открыте в аудиоплеере
-    override fun onClick(track: Track) {
+    override fun onClick(track: TrackDto) {
         if (clickDebounce()) {
 
             val displayIntent = Intent(this, AudioPlayerActivity::class.java)
@@ -200,7 +200,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
 
 
     }
-
 
 
     // оторбражение истории поиска
@@ -218,7 +217,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
             binding.trackHistoryRecyclerView.setLayoutManager(layoutManager)
             var adapterHistory = HistoryAdapter(createTrackList1FromJson(trackHistory), this)
             binding.trackHistoryRecyclerView.adapter = adapterHistory
-            binding.placeholderMessage.visibility=View.GONE
+            binding.placeholderMessage.visibility = View.GONE
 
 
 
@@ -250,7 +249,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
     }
 
     // контроль нажатий на трек (не быстрее чем 1 сек)
-    private fun clickDebounce() : Boolean {
+    private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false

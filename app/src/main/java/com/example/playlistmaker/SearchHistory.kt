@@ -1,20 +1,19 @@
 package com.example.playlistmaker
 
 import android.content.SharedPreferences
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
+import com.example.playlistmaker.data.dto.TrackDto
 import com.google.gson.Gson
 
 const val SEARCH_HISTORY = "search_history"
 const val TRACK_LIST_KEY = "track_list_key"
 
 
-class SearchHistory() {
-    var trackList = arrayListOf<Track>()
+class SearchHistory {
+    var trackList = arrayListOf<TrackDto>()
 
 
     // добавление нового трека в sharedPref
-    fun addTrackToHistory(sharedPreferences: SharedPreferences, track: Track) {
+    fun addTrackToHistory(sharedPreferences: SharedPreferences, track: TrackDto) {
 
         val tracks = sharedPreferences.getString(TRACK_LIST_KEY, null)
         if (tracks != null) {
@@ -43,7 +42,7 @@ class SearchHistory() {
 
         }
         if (tracks == null) {
-            trackList = arrayListOf<Track>(track)
+            trackList = arrayListOf(track)
 
         }
 
@@ -57,19 +56,19 @@ class SearchHistory() {
 
 
 }
-fun createTrackList1FromJson(json: String): Array<Track> {
-    return Gson().fromJson(json, Array<Track>::class.java)
+fun createTrackList1FromJson(json: String): Array<TrackDto> {
+    return Gson().fromJson(json, Array<TrackDto>::class.java)
 
 }
-fun createJsonFromTrackList(trackList: ArrayList<Track>): String {
+fun createJsonFromTrackList(trackList: ArrayList<TrackDto>): String {
     return Gson().toJson(trackList)
 }
-fun createTrackListFromJson(json: String): ArrayList<Track> {
-    return Gson().fromJson(json, ArrayList<Track>()::class.java)
+fun createTrackListFromJson(json: String): ArrayList<TrackDto> {
+    return Gson().fromJson(json, ArrayList<TrackDto>()::class.java)
 
 }
 
-fun createJsonFromTrack(track: Track): String {
+fun createJsonFromTrack(track: TrackDto): String {
     return Gson().toJson(track)
 }
 
