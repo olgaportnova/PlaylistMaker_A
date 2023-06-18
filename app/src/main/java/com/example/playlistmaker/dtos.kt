@@ -22,22 +22,20 @@ data class Track(
     val artistName: String,
     val trackTimeMillis: Int,
     val artworkUrl100: String,
-    val trackId:Int,
-    val collectionName:String,
+    val trackId: Int,
+    val collectionName: String?,
     val releaseDate: String,
-    val primaryGenreName:String,
-    val country:String,
+    val primaryGenreName: String,
+    val country: String,
     val previewUrl: String
-
-): Serializable
-
+) : Serializable
 
 
-
-data class SongsResponse (
-    val results: List<Track>)
+data class SongsResponse(
+    val results: List<Track>
+)
 
 interface Itunes {
-    @GET ("/search?entity=song")
-    fun search(@Query("term") text: String) : Call<SongsResponse>
+    @GET("/search?entity=song")
+    fun search(@Query("term") text: String): Call<SongsResponse>
 }
