@@ -9,13 +9,12 @@ import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.AudioPlayerActivity.Companion.TRACK_TO_OPEN
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.presentation.AudioPlayerActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -190,7 +189,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
         if (clickDebounce()) {
 
             val displayIntent = Intent(this, AudioPlayerActivity::class.java)
-            displayIntent.putExtra(TRACK_TO_OPEN, track)
+            displayIntent.putExtra("item", track)
             startActivity(displayIntent)
 
 
