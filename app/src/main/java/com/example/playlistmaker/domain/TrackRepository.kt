@@ -1,8 +1,8 @@
 package com.example.playlistmaker.domain
 
-import com.example.playlistmaker.data.dto.TrackDto
+import com.example.playlistmaker.domain.model.Track
 
 
 interface TrackRepository {
-    fun search(expression: String): List<TrackDto>
+    fun search(expression: String): List<Track>
 }

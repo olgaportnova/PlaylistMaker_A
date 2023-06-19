@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.databinding.TrackViewBinding
+import com.example.playlistmaker.domain.model.Track
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 
-class TrackAdapter(var tracks: ArrayList<TrackDto>, var listener:Listener): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
+class TrackAdapter(var tracks: ArrayList<Track>, var listener:Listener): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
 
 
     class TrackHolder(item: View) : RecyclerView.ViewHolder(item) {
@@ -22,7 +22,7 @@ class TrackAdapter(var tracks: ArrayList<TrackDto>, var listener:Listener): Recy
         val cornerRadius =
             item.resources.getDimensionPixelSize(R.dimen.radius_art_work)
 
-        fun bind(track: TrackDto, listener: Listener) = with(binding) {
+        fun bind(track: Track, listener: Listener) = with(binding) {
             trackName.text = track.trackName
             artistName.text = track.artistName
             trackTime.text =
@@ -50,6 +50,6 @@ class TrackAdapter(var tracks: ArrayList<TrackDto>, var listener:Listener): Recy
     }
 
     interface Listener {
-        fun onClick(track: TrackDto)
+        fun onClick(track: Track)
     }
 }

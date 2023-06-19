@@ -13,9 +13,9 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.data.dto.TrackSearchResponse
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.AudioPlayerActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,7 +23,7 @@ import retrofit2.Response
 
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapter.Listener {
-    var tracks = ArrayList<TrackDto>()
+    var tracks = ArrayList<Track>()
     private lateinit var binding: ActivitySearchBinding
     lateinit var sharedPref: SharedPreferences
     lateinit var trackHistory: String
@@ -185,7 +185,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
 
 
     // добавление трека в историю по клику и открыте в аудиоплеере
-    override fun onClick(track: TrackDto) {
+    override fun onClick(track: Track) {
         if (clickDebounce()) {
 
             val displayIntent = Intent(this, AudioPlayerActivity::class.java)

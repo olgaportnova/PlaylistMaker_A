@@ -1,12 +1,12 @@
 package com.example.playlistmaker.domain.api
 
-import com.example.playlistmaker.data.dto.TrackDto
+import com.example.playlistmaker.domain.model.Track
 
 
 interface TrackInteractor {
     fun search(expression: String, consumer: TrackConsumer)
 
     interface TrackConsumer {
-        fun consume(foundMovies: List<TrackDto>)
+        fun consume(foundTracks: List<Track>)
     }
 }
