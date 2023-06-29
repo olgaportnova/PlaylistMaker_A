@@ -1,9 +1,9 @@
 
 
-package com.example.playlistmaker.domain.impl
+package com.example.playlistmaker.domain.player.impl
 
-import com.example.playlistmaker.domain.AudioPlayerInteractor
-import com.example.playlistmaker.domain.MediaPlayerRepository
+import com.example.playlistmaker.domain.player.AudioPlayerInteractor
+import com.example.playlistmaker.domain.player.MediaPlayerRepository
 import com.example.playlistmaker.domain.model.State
 
 class AudioPlayerInteractorImpl(

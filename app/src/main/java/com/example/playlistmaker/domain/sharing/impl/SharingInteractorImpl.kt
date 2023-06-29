@@ -31,6 +31,6 @@ class SharingInteractorImpl(
     }
 
     private fun getTermsLink(): Uri {
-        return Uri.parse(" https://yandex.ru/legal/practicum_offer/")
+        return Uri.parse("https://yandex.ru/legal/practicum_offer/")
     }
 }

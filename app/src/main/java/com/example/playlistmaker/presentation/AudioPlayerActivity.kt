@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
-import com.example.playlistmaker.domain.AudioPlayerInteractor
+import com.example.playlistmaker.domain.player.AudioPlayerInteractor
 import com.example.playlistmaker.domain.model.State
 import com.example.playlistmaker.domain.model.Track
 import java.text.SimpleDateFormat
