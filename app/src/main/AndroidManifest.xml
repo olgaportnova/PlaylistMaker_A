@@ -25,14 +25,14 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".LibraryActivity"
+            android:name=".presentation.LibraryActivity"
             android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".SettingActivity"
+            android:name=".presentation.SettingActivity"
             android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"

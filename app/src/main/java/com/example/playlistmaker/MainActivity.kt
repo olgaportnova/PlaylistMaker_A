@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
-import android.widget.Switch
-import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.presentation.LibraryActivity
+import com.example.playlistmaker.presentation.SettingActivity
 
 
 class MainActivity : AppCompatActivity() {

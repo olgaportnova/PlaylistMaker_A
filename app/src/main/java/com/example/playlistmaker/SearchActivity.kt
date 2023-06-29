@@ -1,6 +1,6 @@
 package com.example.playlistmaker
 
-import android.content.Intent
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
@@ -13,29 +13,40 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.data.dto.TrackSearchResponse
+import com.example.playlistmaker.data.history.impl.SEARCH_HISTORY
+import com.example.playlistmaker.data.history.impl.TRACK_LIST_KEY
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.presentation.AudioPlayerActivity
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
+private lateinit var context: Context
+
 class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapter.Listener {
     var tracks = ArrayList<Track>()
     private lateinit var binding: ActivitySearchBinding
     lateinit var sharedPref: SharedPreferences
-    lateinit var trackHistory: String
     private val adapter = TrackAdapter(tracks, this)
     private val searchRunnable = Runnable { searchAction() }
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
+    lateinit var trackHistory: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        context = applicationContext
+        var historyInteractor = Creator.provideHistoryInteractor(context)
+        historyInteractor.getHistoryString()
+
         sharedPref = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
         trackHistory = sharedPref.getString(TRACK_LIST_KEY, null).toString()
+
+
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -50,25 +61,31 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
         // очистка строки поиска
         binding.clearIcon.setOnClickListener {
             binding.inputEditText.setText("")
+            val a = historyInteractor.getHistoryString()
             tracks.clear()
             adapter.notifyDataSetChanged()
-            binding.placeholderMessage.visibility = View.INVISIBLE
+            binding.rcTrackList.visibility=View.GONE
+            binding.placeholderMessage.visibility = View.GONE
+            showHistory()
+
+
         }
 
         // очистка истории поиска
         binding.buttonClearHistory.setOnClickListener {
-            sharedPref.edit().remove(TRACK_LIST_KEY).apply()
+            binding.searchHistoryLayout.visibility = View.VISIBLE
+            historyInteractor.clearHistory()
             showHistory()
+
         }
 
 
         // поиск треков по вводу
         binding.inputEditText.addTextChangedListener {
 
-            binding.clearIcon.visibility = clearButtonVisibility(trackHistory)
+            binding.clearIcon.visibility =
+                clearButtonVisibility(historyInteractor.getHistoryString().toString())
             searchDebounce()
-
-
         }
     }
 
@@ -93,7 +110,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
             binding.rcTrackList.visibility = View.GONE
         }
         if (binding.inputEditText.text.isNotEmpty()) {
-
 
             binding.placeholderMessage.visibility = View.GONE
             binding.rcTrackList.visibility = View.GONE
@@ -187,37 +203,34 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
     // добавление трека в историю по клику и открыте в аудиоплеере
     override fun onClick(track: Track) {
         if (clickDebounce()) {
-
-            val displayIntent = Intent(this, AudioPlayerActivity::class.java)
-            displayIntent.putExtra("item", track)
-            startActivity(displayIntent)
-
-
-            var trackHistory = SearchHistory()
-            trackHistory.addTrackToHistory(sharedPref, track)
-            showHistory()
+            val track = track
+            var historyInteractor = Creator.provideHistoryInteractor(context)
+            historyInteractor.addTrackToHistory(track)
+            historyInteractor.openTrack(track)
         }
-
-
     }
 
 
     // оторбражение истории поиска
     private fun showHistory() {
         // достаем историю из sharedpref
-        var trackHistory = sharedPref.getString(TRACK_LIST_KEY, null)
+
+        var historyInteractor = Creator.provideHistoryInteractor(context)
+        var sharedPrefTest2 = historyInteractor.getHistoryString()
+        binding.searchHistoryLayout.visibility = View.GONE
         // если пустая ничего не показываем
-        if (trackHistory == null) {
+
+        if (sharedPrefTest2 == null) {
             binding.searchHistoryLayout.visibility = View.GONE
             return
         }
-
-        if (trackHistory != null) {
+        if (sharedPrefTest2 != null) {
             val layoutManager = LinearLayoutManager(this)
             binding.trackHistoryRecyclerView.setLayoutManager(layoutManager)
-            var adapterHistory = HistoryAdapter(createTrackList1FromJson(trackHistory), this)
+            var adapterHistory = HistoryAdapter(createTrackList1FromJson(sharedPrefTest2), this)
             binding.trackHistoryRecyclerView.adapter = adapterHistory
             binding.placeholderMessage.visibility = View.GONE
+
 
 
 
@@ -258,6 +271,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
         return current
     }
 
+    fun createTrackList1FromJson(json: String?): Array<Track> {
+        return Gson().fromJson(json, Array<Track>::class.java)
+    }
+
     companion object {
         const val SEARCH_TYPE = "SEARCH_TYPE"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
@@ -266,6 +283,5 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener, HistoryAdapte
 
 
 }
-
 
 
