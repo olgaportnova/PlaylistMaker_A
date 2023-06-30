@@ -7,8 +7,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator.provideSettingsInteractor
-import com.example.playlistmaker.creator.Creator.provideSharingInteractor
+import com.example.playlistmaker.util.Creator.provideSettingsInteractor
+import com.example.playlistmaker.util.Creator.provideSharingInteractor
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.domain.setting.model.ThemeSettings
 

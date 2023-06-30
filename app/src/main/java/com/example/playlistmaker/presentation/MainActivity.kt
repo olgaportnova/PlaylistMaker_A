@@ -1,16 +1,12 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import android.content.Intent
-import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.util.Creator
 import com.example.playlistmaker.databinding.ActivityMainBinding
-import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import com.example.playlistmaker.domain.main_navigation.InternalNavigationInteractor
-import com.example.playlistmaker.presentation.LibraryActivity
-import com.example.playlistmaker.presentation.SettingActivity
 
 
 class MainActivity : AppCompatActivity() {

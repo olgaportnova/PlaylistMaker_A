@@ -1,6 +1,8 @@
-package com.example.playlistmaker.creator
+package com.example.playlistmaker.util
 
+import android.app.Activity
 import android.content.Context
+import com.example.playlistmaker.TrackAdapter
 import com.example.playlistmaker.data.player.impl.MediaPlayerRepositoryImpl
 import com.example.playlistmaker.data.TrackRepositoryImpl
 import com.example.playlistmaker.data.history.impl.HistoryRepositoryImpl
@@ -8,6 +10,7 @@ import com.example.playlistmaker.data.main_navigation.impl.InternalNavigationRep
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.settings.impl.SettingsRepositoryImpl
 import com.example.playlistmaker.data.sharing.impl.ExternalNavigationImpl
+import com.example.playlistmaker.domain.TrackRepository
 import com.example.playlistmaker.domain.player.AudioPlayerInteractor
 import com.example.playlistmaker.domain.player.impl.AudioPlayerInteractorImpl
 import com.example.playlistmaker.domain.api.TrackInteractor
@@ -20,13 +23,17 @@ import com.example.playlistmaker.domain.setting.SettingsInteractor
 import com.example.playlistmaker.domain.setting.impl.SettingsInteractorImpl
 import com.example.playlistmaker.domain.sharing.SharingInteractor
 import com.example.playlistmaker.domain.sharing.impl.SharingInteractorImpl
+import com.example.playlistmaker.presentation.tracks.TrackSearchPresenter
+import com.example.playlistmaker.presentation.tracks.TracksView
 
 object Creator {
 
-    fun provideTrackInteractor(): TrackInteractor {
-        return TrackInteractorImpl(
-            TrackRepositoryImpl(RetrofitNetworkClient())
-        )
+    private fun getTrackRepository(context: Context): TrackRepository {
+        return TrackRepositoryImpl(RetrofitNetworkClient(context))
+    }
+
+    fun provideTrackInteractor(context: Context): TrackInteractor {
+        return TrackInteractorImpl(getTrackRepository(context))
     }
 
     fun provideAudioPlayerInteractor(): AudioPlayerInteractor {
@@ -57,5 +64,10 @@ object Creator {
 
     fun provideNavigationInteractor(context: Context): InternalNavigationInteractor {
         return InternalNavigationInteractorImpl( InternalNavigationRepositoryImpl(context))
+    }
+
+
+    fun provideTrackSearchPresenter(trackView:TracksView, context:Context, adapter: TrackAdapter): TrackSearchPresenter {
+        return TrackSearchPresenter(view = trackView, context = context, adapter=adapter)
     }
 }

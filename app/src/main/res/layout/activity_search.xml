@@ -80,19 +80,19 @@
         android:visibility="visible">
 
         <ImageView
-            android:id="@+id/imageNothingFound"
+            android:id="@+id/imagePlaceholder"
             style="@style/plaseholder_image" />
 
 
         <TextView
-            android:id="@+id/text_nothing_found"
+            android:id="@+id/textPlaceholder"
             style="@style/placeholder_text"
             android:layout_height="102dp"
             tools:text="Проблемы со связью \n \n
 Загрузка не удалась. Проверьте подключение к интернету" />
 
         <Button
-            android:id="@+id/buttonUpdate"
+            android:id="@+id/buttonUpdatePlaceholder"
             style="@style/placeholder_button"
             android:layout_marginTop="24dp"
             android:text="@string/btUpdate"
