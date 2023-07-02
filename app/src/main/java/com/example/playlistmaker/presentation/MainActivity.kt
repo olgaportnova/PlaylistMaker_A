@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
 
         val internalNavigationInteractor = Creator.provideNavigationInteractor(applicationContext)
 
-
         buttonSettings.setOnClickListener { internalNavigationInteractor.toSettingsScreen() }
         buttonLibrary.setOnClickListener { internalNavigationInteractor.toLibraryScreen() }
         buttonSearch.setOnClickListener { internalNavigationInteractor.toSearchScreen() }

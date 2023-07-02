@@ -18,6 +18,7 @@ import com.example.playlistmaker.data.history.impl.SEARCH_HISTORY
 import com.example.playlistmaker.data.history.impl.TRACK_LIST_KEY
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.presentation.tracks.TrackSearchPresenter
 import com.example.playlistmaker.presentation.tracks.TracksView
 import com.example.playlistmaker.ui.tracks.models.TracksState
 import com.google.gson.Gson
@@ -54,7 +55,7 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener, H
     private lateinit var clearIcon: ImageView
 
 
-    private val trackSearchPresenter = Creator.provideTrackSearchPresenter(this, this, adapter)
+    private var trackSearchPresenter: TrackSearchPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -71,7 +72,19 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener, H
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        trackSearchPresenter.onCreate()
+
+
+        trackSearchPresenter = (this.application as? SearchActivity)?.trackSearchPresenter
+        if (trackSearchPresenter == null) {
+            trackSearchPresenter = Creator.provideTrackSearchPresenter(
+                context = this.applicationContext, adapter = adapter
+            )
+            (this.application as? SearchActivity)?.trackSearchPresenter = trackSearchPresenter
+        }
+
+        trackSearchPresenter?.attachView(this)
+
+
         init()
 
         placeholderMessage = findViewById(R.id.placeholderMessage)
@@ -98,8 +111,8 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener, H
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                clearIcon.visibility = trackSearchPresenter.clearButtonVisibility(p0)
-                trackSearchPresenter.searchDebounce(
+                clearIcon.visibility = trackSearchPresenter!!.clearButtonVisibility(p0)
+                trackSearchPresenter!!.searchDebounce(
                     changedText = p0?.toString() ?: ""
                 )
             }
@@ -108,7 +121,7 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener, H
                 }
             }
         )
-        trackSearchPresenter.onCreate()
+        trackSearchPresenter!!.onCreate()
 
 
 
@@ -117,7 +130,7 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener, H
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                trackSearchPresenter.searchDebounce(
+                trackSearchPresenter!!.searchDebounce(
                     changedText = s?.toString() ?: ""
                 )
             }
@@ -157,9 +170,36 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener, H
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        trackSearchPresenter?.attachView(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        trackSearchPresenter?.attachView(this)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        trackSearchPresenter.onDestroy()
+        textWatcher?.let { inputEditText.removeTextChangedListener(it) }
+        trackSearchPresenter?.detachView()
+        trackSearchPresenter?.onDestroy()
+
+
+        if (isFinishing()) {
+            (this.application as? SearchActivity)?.trackSearchPresenter = null
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        trackSearchPresenter?.detachView()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        trackSearchPresenter?.detachView()
     }
 
 
@@ -177,6 +217,7 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener, H
         super.onSaveInstanceState(outState, outPersistentState)
         val inputEditText = findViewById<EditText>(R.id.inputEditText)
         outState.putString(SEARCH_TYPE, inputEditText.text.toString())
+        trackSearchPresenter?.detachView()
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

@@ -10,6 +10,7 @@ private const val DARK_MODE = "dark_mode"
 
 class SettingsRepositoryImpl(context: Context) : SettingsRepository {
 
+
     private val sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
 
     override fun getThemeSettings(): ThemeSettings {

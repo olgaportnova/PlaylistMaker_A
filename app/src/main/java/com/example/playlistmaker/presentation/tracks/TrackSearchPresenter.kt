@@ -13,10 +13,21 @@ import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.tracks.models.TracksState
 
 
-class TrackSearchPresenter(private val view: TracksView,
-                           private val context: Context,
+class TrackSearchPresenter(private val context: Context,
                            private val adapter: TrackAdapter)
 {
+
+    private var view: TracksView? = null
+    private var state: TracksState? = null
+    fun attachView(view: TracksView) {
+        this.view = view
+        state?.let {view.render(it)}
+    }
+
+    fun detachView() {
+        this.view = null
+    }
+
     private val trackInteractor = Creator.provideTrackInteractor(context)
 
     companion object {
@@ -61,15 +72,13 @@ class TrackSearchPresenter(private val view: TracksView,
 
     fun searchAction(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {
-            view.render (
+            renderState(
                 TracksState(
                     tracks,
                     true,
                     null,
                     null,
-                    false
-                )
-                    )
+                    false))
 
             trackInteractor.search(newSearchText, object : TrackInteractor.TrackConsumer {
                 override fun consume(foundTracks: List<Track>?,errorMessage:String?) {
@@ -81,7 +90,7 @@ class TrackSearchPresenter(private val view: TracksView,
                         }
                         when {
                             errorMessage!=null -> {
-                                view.render(
+                                renderState(
                                     TracksState(
                                         emptyList(),
                                         false,
@@ -91,7 +100,7 @@ class TrackSearchPresenter(private val view: TracksView,
                                     )
                             }
                             tracks.isEmpty() -> {
-                                view.render (
+                                renderState(
                                     TracksState(
                                         emptyList(),
                                         false,
@@ -102,7 +111,7 @@ class TrackSearchPresenter(private val view: TracksView,
                             }
 
                             else -> {
-                                view.render(
+                                renderState(
                                     TracksState(
                                         tracks,
                                         false,
@@ -117,5 +126,10 @@ class TrackSearchPresenter(private val view: TracksView,
                 }
             })
         }
+    }
+
+    private fun renderState(state: TracksState) {
+        this.state = state
+        this.view?.render(state)
     }
 }

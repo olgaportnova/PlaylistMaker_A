@@ -5,7 +5,7 @@ import android.content.Intent
 import com.example.playlistmaker.SearchActivity
 import com.example.playlistmaker.data.main_navigation.InternalNavigationRepository
 import com.example.playlistmaker.presentation.LibraryActivity
-import com.example.playlistmaker.presentation.SettingActivity
+import com.example.playlistmaker.presentation.Settings.SettingActivity
 
 class InternalNavigationRepositoryImpl(private val context: Context): InternalNavigationRepository {
     override fun toSettingsScreen() {

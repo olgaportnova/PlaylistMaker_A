@@ -28,6 +28,7 @@ import com.example.playlistmaker.presentation.tracks.TracksView
 
 object Creator {
 
+
     private fun getTrackRepository(context: Context): TrackRepository {
         return TrackRepositoryImpl(RetrofitNetworkClient(context))
     }
@@ -67,7 +68,20 @@ object Creator {
     }
 
 
-    fun provideTrackSearchPresenter(trackView:TracksView, context:Context, adapter: TrackAdapter): TrackSearchPresenter {
-        return TrackSearchPresenter(view = trackView, context = context, adapter=adapter)
+    fun provideTrackSearchPresenter(context:Context, adapter: TrackAdapter): TrackSearchPresenter {
+        return TrackSearchPresenter(context = context, adapter=adapter)
     }
+
+//    fun getRepository(context: Context) :SettingsRepositoryImpl {
+//        return SettingsRepositoryImpl(context)
+//    }
+//
+//    fun provideSettingInteractor(context:Context): SettingsInteractor {
+//        return SettingsInteractorImpl(getRepository(context))
+//    }
+
+
+
+
+
 }

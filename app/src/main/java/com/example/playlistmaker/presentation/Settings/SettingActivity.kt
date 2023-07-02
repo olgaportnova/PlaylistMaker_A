@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker.presentation.Settings
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,24 +6,31 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.util.Creator.provideSettingsInteractor
 import com.example.playlistmaker.util.Creator.provideSharingInteractor
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import com.example.playlistmaker.domain.setting.model.ThemeSettings
+
 
 class SettingActivity() : AppCompatActivity() {
 
 
     private lateinit var context: Context
     private lateinit var binding: ActivitySettingsBinding
-
+    private lateinit var viewModel: SettingViewModel
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        context = applicationContext
 
-        context = getApplicationContext()
+        viewModel = ViewModelProvider(this, SettingViewModel.getViewModelFactory(context))[SettingViewModel::class.java]
+
+        viewModel.getModeLiveData().observe(this) {isDarkMode ->
+            changeMode(isDarkMode)
+        }
+
         val sharingInteractor = provideSharingInteractor(this.applicationContext)
         val settingsInteractor = provideSettingsInteractor(this.applicationContext)
 
@@ -31,21 +38,8 @@ class SettingActivity() : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        // settings part
-        if (settingsInteractor.getThemeSettings()== ThemeSettings.MODE_DARK_YES) {
-            binding.theme.isChecked = true
-        }
-
         binding.theme.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                settingsInteractor.updateThemeSetting(ThemeSettings.MODE_DARK_YES)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                settingsInteractor.updateThemeSetting(ThemeSettings.MODE_DARK_NO)
-            }
-        }
+            viewModel.changeMode(isChecked) }
 
 
         val buttonBack = findViewById<View>(R.id.back)
@@ -58,16 +52,26 @@ class SettingActivity() : AppCompatActivity() {
         // sharing part
 
         binding.support.setOnClickListener {
-            sharingInteractor.openSupport()
+            viewModel.openSupport()
         }
 
         binding.share.setOnClickListener {
-            sharingInteractor.shareApp()
+            viewModel.shareApp()
         }
 
         binding.agreement.setOnClickListener {
-            sharingInteractor.openTerms()
+            viewModel.legalAgreement()
         }
 
+    }
+
+    private fun changeMode (isDarkMode:Boolean) {
+            if(isDarkMode==true) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                binding.theme.isChecked = true
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                binding.theme.isChecked = false
+            }
     }
 }

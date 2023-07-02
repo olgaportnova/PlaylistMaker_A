@@ -9,4 +9,8 @@ interface TrackInteractor {
     interface TrackConsumer {
         fun consume(foundTracks: List<Track>?, errorMessage:String?)
     }
+
+    fun loadSomeData(onComplete : (Boolean) -> Unit) {
+
+    }
 }
