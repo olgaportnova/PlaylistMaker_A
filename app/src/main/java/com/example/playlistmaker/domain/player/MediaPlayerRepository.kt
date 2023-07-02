@@ -14,6 +14,7 @@ interface MediaPlayerRepository {
 
     fun switchPlayerState(onStateChangedTo: (s: State) -> Unit)
 
+
     fun exit()
 }
 

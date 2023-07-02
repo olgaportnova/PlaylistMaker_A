@@ -1,25 +1,22 @@
 package com.example.playlistmaker.presentation.Settings
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.App
-import com.example.playlistmaker.domain.setting.SettingsInteractor
-import com.example.playlistmaker.domain.setting.model.ThemeSettings
-import com.example.playlistmaker.domain.sharing.SharingInteractor
-import com.example.playlistmaker.util.Creator
-import com.example.playlistmaker.util.MyApplication
-import com.github.javafaker.Bool
+import com.example.playlistmaker.domain.setting.settings.SettingsInteractor
+import com.example.playlistmaker.domain.setting.settings.model.ThemeSettings
+import com.example.playlistmaker.domain.setting.sharing.SharingInteractor
+
 
 class SettingViewModel(private val settingsInteractor: SettingsInteractor,
-                       private val sharingInteractor: SharingInteractor)
+                       private val sharingInteractor: SharingInteractor
+)
     : ViewModel() {
 
 

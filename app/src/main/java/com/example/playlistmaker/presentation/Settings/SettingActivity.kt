@@ -13,8 +13,8 @@ import com.example.playlistmaker.util.Creator.provideSharingInteractor
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 
-class SettingActivity() : AppCompatActivity() {
 
+class SettingActivity() : AppCompatActivity() {
 
     private lateinit var context: Context
     private lateinit var binding: ActivitySettingsBinding
@@ -30,10 +30,6 @@ class SettingActivity() : AppCompatActivity() {
         viewModel.getModeLiveData().observe(this) {isDarkMode ->
             changeMode(isDarkMode)
         }
-
-        val sharingInteractor = provideSharingInteractor(this.applicationContext)
-        val settingsInteractor = provideSettingsInteractor(this.applicationContext)
-
 
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)

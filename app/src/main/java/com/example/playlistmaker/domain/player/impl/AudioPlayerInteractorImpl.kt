@@ -27,7 +27,10 @@ class AudioPlayerInteractorImpl(
 
     override fun switchPlayer(onStateChangedTo: (s: State) -> Unit) {
         mediaPlayerRepository.switchPlayerState(onStateChangedTo)
+
     }
+
+
 
 
 }

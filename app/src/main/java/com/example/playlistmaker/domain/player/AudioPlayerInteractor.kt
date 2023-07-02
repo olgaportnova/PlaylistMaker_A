@@ -9,4 +9,6 @@ interface AudioPlayerInteractor {
     fun currentPosition(): Int
     fun switchPlayer(onStateChangedTo: (s: State) -> Unit)
 
+
+
 }

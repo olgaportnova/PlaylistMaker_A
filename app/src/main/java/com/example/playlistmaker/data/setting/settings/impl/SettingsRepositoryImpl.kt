@@ -1,8 +1,8 @@
-package com.example.playlistmaker.data.settings.impl
+package com.example.playlistmaker.data.setting.settings.impl
 
 import android.content.Context
-import com.example.playlistmaker.data.settings.SettingsRepository
-import com.example.playlistmaker.domain.setting.model.ThemeSettings
+import com.example.playlistmaker.data.setting.settings.SettingsRepository
+import com.example.playlistmaker.domain.setting.settings.model.ThemeSettings
 
 
 private const val SHARED_PREFS_NAME = "shared_prefs_name"

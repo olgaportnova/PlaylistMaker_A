@@ -6,14 +6,14 @@ import com.example.playlistmaker.domain.model.State
 
 class MediaPlayerRepositoryImpl : MediaPlayerRepository {
 
-    private var playerState = State.DEFAULT
+    private var playerState = State.PREPARED
     private lateinit var mediaPlayer: MediaPlayer
 
     override fun preparePlayer(
         url: String,
         onStateChangedTo: (s: State) -> Unit
     ) {
-        val mediaPlayer = MediaPlayer()
+        var mediaPlayer = MediaPlayer()
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
@@ -26,7 +26,10 @@ class MediaPlayerRepositoryImpl : MediaPlayerRepository {
 
         }
         this.mediaPlayer = mediaPlayer
+
     }
+
+
 
     override fun pause() {
         this.mediaPlayer.pause()
@@ -39,18 +42,24 @@ class MediaPlayerRepositoryImpl : MediaPlayerRepository {
     override fun switchPlayerState(onStateChangedTo: (s: State) -> Unit) {
         when (playerState) {
             State.DEFAULT -> {}
-            State.PLAYING -> {
-                mediaPlayer.pause()
-                playerState = State.PAUSED
-                onStateChangedTo(State.PAUSED)
-            }
+
             State.PREPARED, State.PAUSED -> {
                 mediaPlayer.start()
                 playerState = State.PLAYING
                 onStateChangedTo(State.PLAYING)
+
+            }
+            State.PLAYING -> {
+                mediaPlayer.pause()
+                playerState = State.PAUSED
+                onStateChangedTo(State.PAUSED)
+
             }
         }
     }
+
+
+
 
     override fun exit() {
         mediaPlayer.stop()

@@ -1,7 +1,7 @@
-package com.example.playlistmaker.data.sharing
+package com.example.playlistmaker.data.setting.sharing
 
 import android.net.Uri
-import com.example.playlistmaker.domain.sharing.model.EmailData
+import com.example.playlistmaker.domain.setting.sharing.model.EmailData
 
 interface ExternalNavigator {
 

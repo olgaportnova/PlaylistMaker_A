@@ -4,15 +4,16 @@ import android.app.Application
 import android.content.Context
 
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.data.settings.impl.SettingsRepositoryImpl
-import com.example.playlistmaker.data.sharing.impl.ExternalNavigationImpl
-import com.example.playlistmaker.domain.setting.SettingsInteractor
-import com.example.playlistmaker.domain.setting.impl.SettingsInteractorImpl
-import com.example.playlistmaker.domain.setting.model.ThemeSettings
-import com.example.playlistmaker.domain.sharing.SharingInteractor
-import com.example.playlistmaker.domain.sharing.impl.SharingInteractorImpl
-import com.example.playlistmaker.util.Creator
-import com.example.playlistmaker.util.MyApplication
+import com.example.playlistmaker.data.player.impl.MediaPlayerRepositoryImpl
+import com.example.playlistmaker.data.setting.settings.impl.SettingsRepositoryImpl
+import com.example.playlistmaker.data.setting.sharing.impl.ExternalNavigationImpl
+import com.example.playlistmaker.domain.player.AudioPlayerInteractor
+import com.example.playlistmaker.domain.player.impl.AudioPlayerInteractorImpl
+import com.example.playlistmaker.domain.setting.settings.SettingsInteractor
+import com.example.playlistmaker.domain.setting.settings.impl.SettingsInteractorImpl
+import com.example.playlistmaker.domain.setting.settings.model.ThemeSettings
+import com.example.playlistmaker.domain.setting.sharing.SharingInteractor
+import com.example.playlistmaker.domain.setting.sharing.impl.SharingInteractorImpl
 
 const val APP_PREFERENCES = "my_settings"
 const val DARK_THEME = "dark_theme"
@@ -78,6 +79,13 @@ class App:Application() {
 
     fun provideSharingInteractor(context: Context): SharingInteractor {
         return SharingInteractorImpl(getSharingRepository(context))
+    }
+    fun getAudioPlayerRepository() : MediaPlayerRepositoryImpl {
+        return MediaPlayerRepositoryImpl ()
+    }
+
+    fun provideAudioPlayerInteractor(): AudioPlayerInteractor {
+        return AudioPlayerInteractorImpl(getAudioPlayerRepository())
     }
 
 
