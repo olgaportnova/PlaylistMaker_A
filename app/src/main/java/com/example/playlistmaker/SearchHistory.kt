@@ -1,15 +1,14 @@
 package com.example.playlistmaker
 
 import android.content.SharedPreferences
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
+import com.example.playlistmaker.domain.model.Track
 import com.google.gson.Gson
 
 const val SEARCH_HISTORY = "search_history"
 const val TRACK_LIST_KEY = "track_list_key"
 
 
-class SearchHistory() {
+class SearchHistory {
     var trackList = arrayListOf<Track>()
 
 
@@ -43,7 +42,7 @@ class SearchHistory() {
 
         }
         if (tracks == null) {
-            trackList = arrayListOf<Track>(track)
+            trackList = arrayListOf(track)
 
         }
 
