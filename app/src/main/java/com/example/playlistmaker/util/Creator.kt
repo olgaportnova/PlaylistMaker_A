@@ -1,7 +1,7 @@
 package com.example.playlistmaker.util
 
 import android.content.Context
-import com.example.playlistmaker.TrackAdapter
+import com.example.playlistmaker.presentation.search.TrackAdapter
 import com.example.playlistmaker.data.player.impl.MediaPlayerRepositoryImpl
 import com.example.playlistmaker.data.TrackRepositoryImpl
 import com.example.playlistmaker.data.history.impl.HistoryRepositoryImpl

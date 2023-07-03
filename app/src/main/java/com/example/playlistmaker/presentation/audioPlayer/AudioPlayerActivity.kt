@@ -1,12 +1,7 @@
-
-
-package com.example.playlistmaker.presentation
-
+package com.example.playlistmaker.presentation.audioPlayer
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -15,17 +10,14 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.domain.model.State
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.domain.player.AudioPlayerInteractor
-import com.example.playlistmaker.presentation.audioPlayer.AudioPlayerViewModel
-import com.example.playlistmaker.util.Creator
 import java.text.SimpleDateFormat
 import java.util.*
 
-private lateinit var viewModel: AudioPlayerViewModel
 class AudioPlayerActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivityAudioPlayerBinding
+    private lateinit var viewModel: AudioPlayerViewModel
 
 
     @SuppressLint("SuspiciousIndentation")
@@ -72,7 +64,8 @@ class AudioPlayerActivity : AppCompatActivity() {
             trackName.text = trackInfo.trackName
             artistName.text = trackInfo.artistName
             durationResult.text =trackInfo.trackTime
-            Glide.with(coverAP).load(trackInfo.artworkUrl100).placeholder(R.drawable.placeholder_big).into(coverAP)
+            Glide.with(coverAP)
+                .load(trackInfo.artworkUrl100).placeholder(R.drawable.placeholder_big).into(coverAP)
             countryResult.text = trackInfo.country
             yearResult.text = trackInfo.releaseDate
             genreResult.text = trackInfo.primaryGenreName
@@ -99,7 +92,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     private fun changeState(state: State) {
-        if (state == State.PAUSED ) {
+        if (state == State.PAUSED) {
                 binding.playButton.setImageResource(R.drawable.ic_play_button)
             }
         if (state == State.PLAYING)  {

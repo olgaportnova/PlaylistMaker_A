@@ -1,27 +1,24 @@
 package com.example.playlistmaker.ui.tracks.models
 
-import android.app.Application
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import com.example.playlistmaker.App
 import com.example.playlistmaker.domain.api.TrackInteractor
-import com.example.playlistmaker.util.Creator
 import com.example.playlistmaker.util.MyApplication
 import androidx.lifecycle.viewmodel.CreationExtras
 
 class TrackViewModel(
     private val trackId: Int,
     private val tracksInteractor: TrackInteractor
-    ):ViewModel() {
+) : ViewModel() {
 
     private var loadingLiveData = MutableLiveData(true)
 
     init {
-        tracksInteractor.loadSomeData(
+        tracksInteractor.loadTracks(
             onComplete = {
                 loadingLiveData.postValue(false)
                 loadingLiveData.value = false
@@ -48,20 +45,13 @@ class TrackViewModel(
     }
 
 
-
-
-
-
-
-
-
     companion object {
-        fun getViewModelFactory(trackId:Int,context: Context) : ViewModelProvider.Factory =
+        fun getViewModelFactory(trackId: Int, context: Context): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create
-                            (modelClass: Class<T>,
-                            extras: CreationExtras,
+                override fun <T : ViewModel> create(
+                    modelClass: Class<T>,
+                    extras: CreationExtras,
                 ): T {
                     val application = checkNotNull(extras[APPLICATION_KEY])
 

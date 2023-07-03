@@ -2,10 +2,10 @@ package com.example.playlistmaker.data.main_navigation.impl
 
 import android.content.Context
 import android.content.Intent
-import com.example.playlistmaker.SearchActivity
+import com.example.playlistmaker.presentation.search.SearchActivity
 import com.example.playlistmaker.data.main_navigation.InternalNavigationRepository
-import com.example.playlistmaker.presentation.LibraryActivity
-import com.example.playlistmaker.presentation.Settings.SettingActivity
+import com.example.playlistmaker.presentation.library.LibraryActivity
+import com.example.playlistmaker.presentation.settings.SettingActivity
 
 class InternalNavigationRepositoryImpl(private val context: Context): InternalNavigationRepository {
     override fun toSettingsScreen() {

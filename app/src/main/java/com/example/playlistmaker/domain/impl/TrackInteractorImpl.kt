@@ -17,5 +17,13 @@ class TrackInteractorImpl(private val repository: TrackRepository) : TrackIntera
             }
         }
     }
+
+    override fun loadTracks(onComplete: (Boolean) -> Unit) {
+        try {
+            onComplete.invoke(true)
+        } catch (ex: Throwable) {
+            onComplete.invoke(false)
+        }
+    }
 }
 

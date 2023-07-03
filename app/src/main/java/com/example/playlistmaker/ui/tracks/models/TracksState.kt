@@ -10,5 +10,4 @@ data class TracksState(
     val placeholderImage: Int?,
     val needToUpdate:Boolean
 
-
 )

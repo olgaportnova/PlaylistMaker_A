@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.Settings
+package com.example.playlistmaker.presentation.settings
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -12,8 +12,6 @@ import com.example.playlistmaker.App
 import com.example.playlistmaker.domain.setting.settings.SettingsInteractor
 import com.example.playlistmaker.domain.setting.settings.model.ThemeSettings
 import com.example.playlistmaker.domain.setting.sharing.SharingInteractor
-
-
 class SettingViewModel(private val settingsInteractor: SettingsInteractor,
                        private val sharingInteractor: SharingInteractor
 )

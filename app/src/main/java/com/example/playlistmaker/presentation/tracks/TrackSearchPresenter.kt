@@ -6,7 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import com.example.playlistmaker.R
-import com.example.playlistmaker.TrackAdapter
+import com.example.playlistmaker.presentation.search.TrackAdapter
 import com.example.playlistmaker.util.Creator
 import com.example.playlistmaker.domain.api.TrackInteractor
 import com.example.playlistmaker.domain.model.Track
@@ -14,7 +14,8 @@ import com.example.playlistmaker.ui.tracks.models.TracksState
 
 
 class TrackSearchPresenter(private val context: Context,
-                           private val adapter: TrackAdapter)
+                           private val adapter: TrackAdapter
+)
 {
 
     private var view: TracksView? = null

@@ -1,9 +1,7 @@
 package com.example.playlistmaker.domain.history.impl
 
 
-import android.os.Handler
-import android.os.Looper
-import com.example.playlistmaker.HistoryAdapter
+import com.example.playlistmaker.presentation.search.HistoryAdapter
 import com.example.playlistmaker.data.history.HistoryRepository
 import com.example.playlistmaker.domain.history.HistoryInteractor
 import com.example.playlistmaker.domain.model.Track
@@ -13,19 +11,23 @@ import com.google.gson.Gson
 //private val handler = Handler(Looper.getMainLooper())
 
 class HistoryInteractorImpl (private val historyRepository: HistoryRepository) : HistoryInteractor, HistoryAdapter.Listener {
-//
-//    override fun getHistory(): ArrayList<Track> {
-//        val trackHistory = historyRepository.getHistoryString() // тут получили стринг
-//        if (trackHistory != null) {
-//            var adapterHistory = createTrackListFromJson(trackHistory)  // распарсили из Json
-//            return adapterHistory
-//        } else {
-//            return ArrayList<Track>()
-//        }
-//    }
 
-    override fun getHistoryString(): String? {
-        return historyRepository.getHistoryString()
+
+    override fun getHistoryString(): String {
+        var historyString = historyRepository.getHistoryString()
+        if (historyString !=null) {
+            return historyString}
+        else {
+                return ""
+        }
+    }
+
+    override fun getHistoryList() : Array<Track> {
+        if (getHistoryString().isNotEmpty()) {
+            return createTrackList1FromJson(getHistoryString())}
+        else {
+            return arrayOf<Track>()
+        }
 
     }
 
@@ -33,22 +35,17 @@ class HistoryInteractorImpl (private val historyRepository: HistoryRepository) :
     override fun addTrackToHistory(track: Track) {
     //    val currentHistoryArrayList = getHistory() // достаем из SH текущую историю
         var currentHistoryString = getHistoryString()
-        if (currentHistoryString!=null) {
+        if (currentHistoryString.isNotEmpty()) {
         var currentHistoryArrayList = currentHistoryString?.let { createTrackListFromJson(it) }
         var currentHistoryArray = createTrackList1FromJson(currentHistoryString) // создаем из строки список треков array
         if (currentHistoryArrayList!!.size !== 0) { // если история поиска не пустая
-
-            for (i in 0..(currentHistoryArrayList!!.size - 1)) {
-
-                // проверка на дубликат
+            // проверка на дубликат
+            for (i in 0..(currentHistoryArrayList!!.size - 1)){
                 if (track.trackId == currentHistoryArray[i].trackId) {
                     currentHistoryArrayList.removeAt(i)
-                    currentHistoryArrayList.add(0, track)
                     break
                 }
-
             }
-
             if (currentHistoryArrayList.size >= 10) {
                 currentHistoryArrayList.removeAt(9)
                 currentHistoryArrayList.add(0, track)
@@ -101,7 +98,7 @@ class HistoryInteractorImpl (private val historyRepository: HistoryRepository) :
         return Gson().fromJson(json, ArrayList<Track>()::class.java)
     }
 
-    fun createTrackList1FromJson(json: String?): Array<Track> {
+    fun createTrackList1FromJson(json: String): Array<Track> {
         return Gson().fromJson(json, Array<Track>::class.java)
     }
 

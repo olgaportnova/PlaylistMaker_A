@@ -5,6 +5,7 @@ import com.example.playlistmaker.domain.model.Track
 
 interface HistoryInteractor {
 
+
     fun addTrackToHistory(track: Track)
 
 //    fun getHistory(): ArrayList<Track>
@@ -16,4 +17,6 @@ interface HistoryInteractor {
     fun updateHistory(updatedHistoryList :ArrayList<Track>) :Unit
 
     fun openTrack(track: Track)
+
+    fun getHistoryList() : Array<Track>
 }

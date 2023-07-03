@@ -5,13 +5,16 @@ import android.os.PersistableBundle
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModelProvider
 
-class TrackActivity: ComponentActivity() {
+class TrackActivity : ComponentActivity() {
 
-    private  lateinit var viewModel: TrackViewModel
+    private lateinit var viewModel: TrackViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this, TrackViewModel.getViewModelFactory(123, this)) [TrackViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            TrackViewModel.getViewModelFactory(123, this)
+        )[TrackViewModel::class.java]
 
 
         viewModel.getLoadingLiveData().observe(this) { isLoading ->
@@ -22,8 +25,6 @@ class TrackActivity: ComponentActivity() {
 //        viewModel.addLoadingObserver { isLoading ->
 //            changeProgressBarVisibility(isLoading)
 //        }
-
-
 
 
     }
