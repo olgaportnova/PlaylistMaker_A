@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -172,7 +173,7 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener,
 //    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
 //        super.onSaveInstanceState(outState, outPersistentState)
 //        outState.putString(SEARCH_TYPE, binding.inputEditText.text.toString())
-//  //      trackSearchPresenter?.detachView()
+//
 //    }
 //
 //    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -254,6 +255,9 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener,
                 }
             else -> showContent(updatedStatus.tracks)
         }
+        if (binding.trackHistoryRecyclerView.visibility == View.VISIBLE) {
+            binding.placeholderMessage.visibility = View.GONE
+        }
     }
     fun showLoading() {
         binding.apply {
@@ -288,6 +292,15 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener,
     }
 
     fun showContent(tracks: List<Track>) {
+        binding.apply {
+            adapter.tracks = ArrayList(tracks)
+            rcTrackList.visibility = View.VISIBLE
+            placeholderMessage.visibility = View.GONE
+            progressBar.visibility = View.GONE
+        }
+    }
+
+    fun showHistoryUI() {
         binding.apply {
             adapter.tracks = ArrayList(tracks)
             rcTrackList.visibility = View.VISIBLE
