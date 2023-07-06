@@ -4,11 +4,9 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
@@ -17,11 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.presentation.tracks.TrackSearchPresenter
 import com.example.playlistmaker.presentation.tracks.TracksView
 import com.example.playlistmaker.ui.tracks.models.TracksState
-import com.example.playlistmaker.util.Creator
-import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener,
     HistoryAdapter.Listener {
@@ -31,7 +26,8 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener,
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
-    private lateinit var searchViewModel: SearchViewModel
+    private lateinit var historyViewModel: HistoryViewModel
+    private lateinit var searchTrackViewModel: SearchViewModel
 
 
     var tracks = ArrayList<Track>()
@@ -42,47 +38,56 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener,
     private var textWatcher: TextWatcher? = null
     private lateinit var context: Context
 
-    private lateinit var placeholderMessage: LinearLayout
-    private lateinit var rcTrackList: RecyclerView
-    private lateinit var progressBar: ProgressBar
     private lateinit var newUpdatedHistory: Array<Track>
 
 
-    private var trackSearchPresenter: TrackSearchPresenter? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        context = applicationContext
+        super.onCreate(savedInstanceState)
+        binding = ActivitySearchBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        adapter.tracks = tracks
 
 
         // cоздание viewModel для истории
+        historyViewModel = ViewModelProvider(
+            this,
+            HistoryViewModel.getViewModelFactory(context)
+        )[HistoryViewModel::class.java]
 
-        context = applicationContext
-        searchViewModel = ViewModelProvider(
+        historyViewModel.getHistoryLiveData().observe(this) { updatedHistory ->
+            updatedHistory(updatedHistory)
+        }
+        newUpdatedHistory = historyViewModel.getUpdatedHistory()
+
+
+
+
+        // cоздание viewModel для поиска
+        searchTrackViewModel = ViewModelProvider(
             this,
             SearchViewModel.getViewModelFactory(context)
         )[SearchViewModel::class.java]
 
-        searchViewModel.getHistoryLiveData().observe(this) { updatedHistory ->
-            updatedHistory(updatedHistory)
+        searchTrackViewModel.getSearchTrackStatusLiveData().observe(this) { updatedStatus ->
+            updatedViewBasedOnStatus(updatedStatus)
         }
-        newUpdatedHistory = searchViewModel.getUpdatedHistory()
+        newUpdatedHistory = historyViewModel.getUpdatedHistory()
 
 
 
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-
-        trackSearchPresenter = (this.application as? SearchActivity)?.trackSearchPresenter
-        if (trackSearchPresenter == null) {
-            trackSearchPresenter = Creator.provideTrackSearchPresenter(
-                context = this.applicationContext, adapter = adapter
-            )
-            (this.application as? SearchActivity)?.trackSearchPresenter = trackSearchPresenter
-        }
-
-        trackSearchPresenter?.attachView(this)
-
+//        trackSearchPresenter = (this.application as? SearchActivity)?.trackSearchPresenter
+//        if (trackSearchPresenter == null) {
+//            trackSearchPresenter = Creator.provideTrackSearchPresenter(
+//                context = this.applicationContext, adapter = adapter
+//            )
+//            (this.application as? SearchActivity)?.trackSearchPresenter = trackSearchPresenter
+//        }
+//
+//        trackSearchPresenter?.attachView(this)
+//
 
         init()
 
@@ -92,7 +97,7 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener,
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                trackSearchPresenter?.searchDebounce(
+                searchTrackViewModel.searchDebounce(
                     changedText = p0?.toString() ?: ""
                 )
             }
@@ -101,7 +106,7 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener,
             }
         }
         )
-        trackSearchPresenter!!.onCreate()
+   //     searchTrackViewModel.onCreate()
 
 
 
@@ -110,7 +115,7 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener,
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                trackSearchPresenter!!.searchDebounce(
+                searchTrackViewModel.searchDebounce(
                     changedText = s?.toString() ?: ""
                 )
             }
@@ -135,56 +140,24 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener,
             adapter.notifyDataSetChanged()
             binding.rcTrackList.visibility = View.GONE
             binding.placeholderMessage.visibility = View.GONE
-            showHistory(searchViewModel.getUpdatedHistory())
+            showHistory(historyViewModel.getUpdatedHistory())
         }
 
         // очистка истории поиска
         binding.buttonClearHistory.setOnClickListener {
             binding.searchHistoryLayout.visibility = View.VISIBLE
-            searchViewModel.clearHistory()
-            showHistory(searchViewModel.getUpdatedHistory())
+            historyViewModel.clearHistory()
+            showHistory(historyViewModel.getUpdatedHistory())
 
         }
     }
+
 
     private fun updatedHistory(updatedHistory: Array<Track>): Array<Track> {
         newUpdatedHistory = updatedHistory
         return newUpdatedHistory
 
     }
-
-    override fun onStart() {
-        super.onStart()
-        trackSearchPresenter?.attachView(this)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        trackSearchPresenter?.attachView(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        textWatcher?.let { binding.inputEditText.removeTextChangedListener(it) }
-        trackSearchPresenter?.detachView()
-        trackSearchPresenter?.onDestroy()
-
-
-        if (isFinishing()) {
-            (this.application as? SearchActivity)?.trackSearchPresenter = null
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        trackSearchPresenter?.detachView()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        trackSearchPresenter?.detachView()
-    }
-
 
     private fun init() {
         binding.apply {
@@ -196,24 +169,24 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener,
 
 
     // сохранение состояния
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
-        outState.putString(SEARCH_TYPE, binding.inputEditText.text.toString())
-        trackSearchPresenter?.detachView()
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        binding.inputEditText.text = savedInstanceState.getString(SEARCH_TYPE) as Editable
-    }
+//    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+//        super.onSaveInstanceState(outState, outPersistentState)
+//        outState.putString(SEARCH_TYPE, binding.inputEditText.text.toString())
+//  //      trackSearchPresenter?.detachView()
+//    }
+//
+//    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+//        super.onRestoreInstanceState(savedInstanceState)
+//        binding.inputEditText.text = savedInstanceState.getString(SEARCH_TYPE) as Editable
+//    }
 
 
     // добавление трека в историю по клику и открыте в аудиоплеере
     override fun onClick(track: Track) {
         if (clickDebounce()) {
-            searchViewModel.addNewTrackToHistory(track)
-            showHistory(searchViewModel.getUpdatedHistory())
-            searchViewModel.openTrackAudioPlayer(track)
+            historyViewModel.addNewTrackToHistory(track)
+            showHistory(historyViewModel.getUpdatedHistory())
+            historyViewModel.openTrackAudioPlayer(track)
         }
     }
 
@@ -264,33 +237,28 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener,
         return current
     }
 
-    fun createTrackList1FromJson(json: String?): Array<Track> {
-        return Gson().fromJson(json, Array<Track>::class.java)
-    }
 
 
     // cостояния и отрисовка элементов UI
-    override fun render(
-        state: TracksState
-    ) {
+
+    override fun updatedViewBasedOnStatus(updatedStatus: TracksState) {
         when {
-            state.isLoading -> showLoading()
-            state.placeholderMessage != null ->
+            updatedStatus.isLoading -> showLoading()
+            updatedStatus.placeholderMessage != null ->
                 when {
-                    state.needToUpdate -> showError(
-                        state.placeholderMessage,
-                        state.placeholderImage!!
+                    updatedStatus.needToUpdate -> showError(
+                        updatedStatus.placeholderMessage,
+                        updatedStatus.placeholderImage!!
                     )
-                    else -> showEmpty(state.placeholderMessage, state.placeholderImage!!)
+                    else -> showEmpty(updatedStatus.placeholderMessage, updatedStatus.placeholderImage!!)
                 }
-            else -> showContent(state.tracks)
+            else -> showContent(updatedStatus.tracks)
         }
     }
-
     fun showLoading() {
         binding.apply {
-            binding.rcTrackList.visibility = View.GONE
-            binding.placeholderMessage.visibility = View.GONE
+            rcTrackList.visibility = View.GONE
+            placeholderMessage.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
         }
     }
@@ -321,18 +289,11 @@ class SearchActivity : AppCompatActivity(), TracksView, TrackAdapter.Listener,
 
     fun showContent(tracks: List<Track>) {
         binding.apply {
+            adapter.tracks = ArrayList(tracks)
             rcTrackList.visibility = View.VISIBLE
             placeholderMessage.visibility = View.GONE
             progressBar.visibility = View.GONE
         }
     }
-
-    fun showContentHistory(tracks: List<Track>) {
-        rcTrackList.visibility = View.VISIBLE
-        placeholderMessage.visibility = View.GONE
-        progressBar.visibility = View.GONE
-
-    }
-
 
 }

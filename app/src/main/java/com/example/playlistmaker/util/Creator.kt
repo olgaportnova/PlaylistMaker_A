@@ -22,7 +22,7 @@ import com.example.playlistmaker.domain.setting.settings.SettingsInteractor
 import com.example.playlistmaker.domain.setting.settings.impl.SettingsInteractorImpl
 import com.example.playlistmaker.domain.setting.sharing.SharingInteractor
 import com.example.playlistmaker.domain.setting.sharing.impl.SharingInteractorImpl
-import com.example.playlistmaker.presentation.tracks.TrackSearchPresenter
+
 
 object Creator {
 
@@ -66,9 +66,9 @@ object Creator {
     }
 
 
-    fun provideTrackSearchPresenter(context:Context, adapter: TrackAdapter): TrackSearchPresenter {
-        return TrackSearchPresenter(context = context, adapter=adapter)
-    }
+//    fun provideTrackSearchPresenter(context:Context, adapter: TrackAdapter): TrackSearchPresenter {
+//        return TrackSearchPresenter(context = context, adapter=adapter)
+//    }
 
 //    fun getRepository(context: Context) :SettingsRepositoryImpl {
 //        return SettingsRepositoryImpl(context)

@@ -6,6 +6,6 @@ import com.example.playlistmaker.ui.tracks.models.TracksState
 
 interface TracksView {
 
-    fun render (state:TracksState)
+    fun updatedViewBasedOnStatus (state:TracksState)
 
 }
