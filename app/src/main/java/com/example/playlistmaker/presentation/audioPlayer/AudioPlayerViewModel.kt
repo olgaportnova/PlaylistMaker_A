@@ -15,6 +15,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.model.State
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.player.AudioPlayerInteractor
+import com.example.playlistmaker.util.Creator
 import java.util.*
 
 class AudioPlayerViewModel (private val audioPlayerInterator: AudioPlayerInteractor)
@@ -43,7 +44,7 @@ class AudioPlayerViewModel (private val audioPlayerInterator: AudioPlayerInterac
                     statePlayerLiveData.postValue(State.PREPARED)
                     mainThreadHandler.removeCallbacks(timerRunnable)
                 }
-                else -> {}
+                else -> Unit
             }
         }
     }
@@ -51,9 +52,9 @@ class AudioPlayerViewModel (private val audioPlayerInterator: AudioPlayerInterac
      fun createUpdateTimerTask(): Runnable {
         return object : Runnable {
             override fun run() {
-                var a = audioPlayerInterator.currentPosition()
-                mainThreadHandler.postDelayed(this, 300)
-                currentTimerLiveData.postValue(a)
+                var currentTimerPosition = audioPlayerInterator.currentPosition()
+                mainThreadHandler.postDelayed(this, DELAY_UPDATE_TIMER_MC)
+                currentTimerLiveData.postValue(currentTimerPosition)
             }
 
         }
@@ -78,7 +79,7 @@ class AudioPlayerViewModel (private val audioPlayerInterator: AudioPlayerInterac
                             statePlayerLiveData.postValue(State.PREPARED)
                         }
 
-                        else -> {}
+                        else -> Unit
                     }
                 }
 
@@ -86,6 +87,7 @@ class AudioPlayerViewModel (private val audioPlayerInterator: AudioPlayerInterac
 
      fun onPause() {
          mainThreadHandler.removeCallbacks(timerRunnable)
+         statePlayerLiveData.postValue(State.PAUSED)
         audioPlayerInterator.pausePlayer()
 
     }
@@ -95,7 +97,15 @@ class AudioPlayerViewModel (private val audioPlayerInterator: AudioPlayerInterac
 
     }
 
+    fun onResume() {
+        mainThreadHandler.removeCallbacks(timerRunnable)
+        statePlayerLiveData.postValue(State.PAUSED)
+
+    }
+
     companion object {
+
+        const val DELAY_UPDATE_TIMER_MC = 300L
 
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {

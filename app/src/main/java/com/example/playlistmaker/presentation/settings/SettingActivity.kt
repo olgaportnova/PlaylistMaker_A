@@ -49,7 +49,7 @@ class SettingActivity : AppCompatActivity() {
         // sharing part
 
         binding.support.setOnClickListener {
-            viewModel.openSupport()
+            viewModel.openSupport(getString(R.string.subject_message_support),getString(R.string.message_support))
         }
 
         binding.share.setOnClickListener {

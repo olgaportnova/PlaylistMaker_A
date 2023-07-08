@@ -3,6 +3,7 @@ package com.example.playlistmaker.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.example.playlistmaker.data.ERROR_NO_CONNECTION_TO_INTERNET
 import com.example.playlistmaker.data.NetworkClient
 import com.example.playlistmaker.data.dto.Response
 import com.example.playlistmaker.data.dto.TrackSearchRequest
@@ -21,9 +22,9 @@ class RetrofitNetworkClient(private val context: Context)  : NetworkClient {
 
     private val imdbService = retrofit.create(Itunes::class.java)
 
-    override fun doRequest(dto: Any): Response {
+    override fun getTracksFromItunes(dto: Any): Response {
         if (!isConnected()){
-            return Response().apply { resultCode = -1 }
+            return Response().apply { resultCode = ERROR_NO_CONNECTION_TO_INTERNET }
         }
         if (dto !is TrackSearchRequest) {
             return Response().apply { resultCode = 400 }

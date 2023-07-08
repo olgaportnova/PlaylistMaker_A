@@ -48,11 +48,6 @@ dependencies {
     implementation "androidx.activity:activity-ktx:1.6.1"
     implementation "androidx.core:core-ktx:1.9.0"
 
-    def moxyVersion = '2.2.2'
-
-    implementation "com.github.moxy-community:moxy:$moxyVersion"
-    implementation "com.github.moxy-community:moxy-android:$moxyVersion"
-    kapt "com.github.moxy-community:moxy-compiler:$moxyVersion"
 
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0'
     implementation 'com.github.bumptech.glide:glide:4.14.2'

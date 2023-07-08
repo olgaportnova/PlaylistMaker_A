@@ -1,44 +1,50 @@
 package com.example.playlistmaker.domain.history.impl
 
 
-import com.example.playlistmaker.presentation.search.HistoryAdapter
 import com.example.playlistmaker.data.history.HistoryRepository
 import com.example.playlistmaker.domain.history.HistoryInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.google.gson.Gson
+import com.google.gson.internal.LinkedTreeMap
+import com.google.gson.reflect.TypeToken
 
-//private var isClickAllowed = true
-//private val handler = Handler(Looper.getMainLooper())
+const val MAX_NUMBER_OF_TRACK = 10
+const val INDEX_OF_OLDEST_TRACK = 9
+const val INDEX_FOR_NEW_TRACK = 0
 
-class HistoryInteractorImpl (private val historyRepository: HistoryRepository) : HistoryInteractor, HistoryAdapter.Listener {
+
+class HistoryInteractorImpl (private val historyRepository: HistoryRepository) : HistoryInteractor {
 
 
     override fun getHistoryString(): String {
         var historyString = historyRepository.getHistoryString()
-        if (historyString !=null) {
-            return historyString}
-        else {
-                return ""
+        return if (historyString !=null) {
+            historyString
+        } else {
+            ""
         }
     }
 
-    override fun getHistoryList() : Array<Track> {
+    override fun getHistoryList() : ArrayList<Track> {
         if (getHistoryString().isNotEmpty()) {
-            return createTrackList1FromJson(getHistoryString())}
+            var a = createTrackListFromJson(getHistoryString())
+
+
+            return a
+        }
         else {
-            return arrayOf<Track>()
+            return arrayListOf<Track>()
         }
 
     }
 
 
     override fun addTrackToHistory(track: Track) {
-    //    val currentHistoryArrayList = getHistory() // достаем из SH текущую историю
         var currentHistoryString = getHistoryString()
         if (currentHistoryString.isNotEmpty()) {
         var currentHistoryArrayList = currentHistoryString?.let { createTrackListFromJson(it) }
         var currentHistoryArray = createTrackList1FromJson(currentHistoryString) // создаем из строки список треков array
-        if (currentHistoryArrayList!!.size !== 0) { // если история поиска не пустая
+        if (currentHistoryArrayList?.size !== 0) { // если история поиска не пустая
             // проверка на дубликат
             for (i in 0..(currentHistoryArrayList!!.size - 1)){
                 if (track.trackId == currentHistoryArray[i].trackId) {
@@ -46,12 +52,12 @@ class HistoryInteractorImpl (private val historyRepository: HistoryRepository) :
                     break
                 }
             }
-            if (currentHistoryArrayList.size >= 10) {
-                currentHistoryArrayList.removeAt(9)
-                currentHistoryArrayList.add(0, track)
+            if (currentHistoryArrayList.size >= MAX_NUMBER_OF_TRACK) {
+                currentHistoryArrayList.removeAt(INDEX_OF_OLDEST_TRACK)
+                currentHistoryArrayList.add(INDEX_FOR_NEW_TRACK, track)
 
             } else {
-                currentHistoryArrayList.add(0, track)
+                currentHistoryArrayList.add(INDEX_FOR_NEW_TRACK, track)
 
             }
 
@@ -60,8 +66,7 @@ class HistoryInteractorImpl (private val historyRepository: HistoryRepository) :
         } }
         else {
             var currentHistoryArrayList: ArrayList<Track> = arrayListOf() // создаем пустой список истории
-            currentHistoryArrayList.add(0, track)
-            var a = currentHistoryArrayList
+            currentHistoryArrayList.add(INDEX_FOR_NEW_TRACK, track)
             updateHistory(currentHistoryArrayList)
         }
     }
@@ -79,10 +84,7 @@ class HistoryInteractorImpl (private val historyRepository: HistoryRepository) :
         historyRepository.clearHistory()
     }
 
-    override fun onClick(track: Track) {
 
-
-    }
 
 //    fun clickDebounce(): Boolean {
 //        val current = isClickAllowed
@@ -95,7 +97,29 @@ class HistoryInteractorImpl (private val historyRepository: HistoryRepository) :
 
 
     fun createTrackListFromJson(json: String): ArrayList<Track> {
-        return Gson().fromJson(json, ArrayList<Track>()::class.java)
+        var a = Gson().fromJson(json, ArrayList<LinkedTreeMap<String, Any>>()::class.java)
+            var b = ArrayList<Track>()
+        a.forEach { aa ->
+            var g:Double =  aa.get("trackTimeMillis") as Double
+            var g2:Double =  aa.get("trackId") as Double
+
+            b.add(
+                Track(
+                    aa.get("trackName") as String,
+                    aa.get("artistName") as String,
+                    g.toInt(),
+                    aa.get("artworkUrl100") as String,
+                    g2.toInt(),
+                    aa.get("collectionName") as String,
+                    aa.get("releaseDate") as String,
+                    aa.get("primaryGenreName") as String,
+                    aa.get("country") as String,
+                    aa.get("previewUrl") as String
+                    )
+            )
+        }
+
+        return b
     }
 
     fun createTrackList1FromJson(json: String): Array<Track> {

@@ -12,20 +12,21 @@ import com.example.playlistmaker.App
 import com.example.playlistmaker.domain.setting.settings.SettingsInteractor
 import com.example.playlistmaker.domain.setting.settings.model.ThemeSettings
 import com.example.playlistmaker.domain.setting.sharing.SharingInteractor
-class SettingViewModel(private val settingsInteractor: SettingsInteractor,
-                       private val sharingInteractor: SharingInteractor
-)
-    : ViewModel() {
+
+class SettingViewModel(
+    private val settingsInteractor: SettingsInteractor,
+    private val sharingInteractor: SharingInteractor
+) : ViewModel() {
 
 
-    fun startMode (): Boolean {
+    fun isDarkModeOnStart(): Boolean {
         var modeStart = settingsInteractor.getThemeSettings()
         return modeStart == ThemeSettings.MODE_DARK_YES
     }
 
-    private var modeLiveData = MutableLiveData(startMode())
+    private var modeLiveData = MutableLiveData(isDarkModeOnStart())
 
-    fun getModeLiveData() : LiveData<Boolean> = modeLiveData
+    fun getModeLiveData(): LiveData<Boolean> = modeLiveData
 
     init {
         var mode = settingsInteractor.getThemeSettings()
@@ -36,8 +37,35 @@ class SettingViewModel(private val settingsInteractor: SettingsInteractor,
         }
     }
 
-    companion object {
 
+    fun changeMode(isDarkMode: Boolean) {
+        if (isDarkMode == true) {
+            settingsInteractor.updateThemeSetting(ThemeSettings.MODE_DARK_YES)
+            modeLiveData.postValue(true)
+        } else {
+            settingsInteractor.updateThemeSetting(ThemeSettings.MODE_DARK_NO)
+            modeLiveData.postValue(false)
+        }
+    }
+
+
+    // sharing part
+
+    fun openSupport(subject: String, text: String ) {
+        sharingInteractor.openSupport(subject = subject,text = text )
+    }
+
+    fun shareApp() {
+        sharingInteractor.shareApp()
+    }
+
+    fun legalAgreement() {
+        sharingInteractor.openTerms()
+    }
+
+
+
+    companion object {
 
         fun getViewModelFactory(context: Context): ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -50,32 +78,6 @@ class SettingViewModel(private val settingsInteractor: SettingsInteractor,
                 )
             }
         }
-    }
-
-    fun changeMode(isDarkMode:Boolean) {
-        if (isDarkMode == true) {
-            settingsInteractor.updateThemeSetting(ThemeSettings.MODE_DARK_YES)
-            modeLiveData.postValue(true)
-        } else {
-            settingsInteractor.updateThemeSetting(ThemeSettings.MODE_DARK_NO)
-            modeLiveData.postValue(false)
-        }
-    }
-
-
-
-    // sharing part
-
-    fun openSupport() {
-        sharingInteractor.openSupport()
-    }
-
-    fun shareApp() {
-        sharingInteractor.shareApp()
-    }
-
-    fun legalAgreement() {
-        sharingInteractor.openTerms()
     }
 
 }

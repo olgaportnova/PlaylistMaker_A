@@ -18,5 +18,5 @@ interface HistoryInteractor {
 
     fun openTrack(track: Track)
 
-    fun getHistoryList() : Array<Track>
+    fun getHistoryList() : ArrayList<Track>
 }

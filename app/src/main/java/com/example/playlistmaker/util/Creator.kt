@@ -1,10 +1,12 @@
 package com.example.playlistmaker.util
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.example.playlistmaker.presentation.search.TrackAdapter
 import com.example.playlistmaker.data.player.impl.MediaPlayerRepositoryImpl
 import com.example.playlistmaker.data.TrackRepositoryImpl
 import com.example.playlistmaker.data.history.impl.HistoryRepositoryImpl
+import com.example.playlistmaker.data.history.impl.SEARCH_HISTORY
 import com.example.playlistmaker.data.main_navigation.impl.InternalNavigationRepositoryImpl
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.setting.settings.impl.SettingsRepositoryImpl
@@ -27,31 +29,34 @@ import com.example.playlistmaker.domain.setting.sharing.impl.SharingInteractorIm
 object Creator {
 
 
-    private fun getTrackRepository(context: Context): TrackRepository {
-        return TrackRepositoryImpl(RetrofitNetworkClient(context))
+    // setting part
+    fun getSettingRepository(context: Context): SettingsRepositoryImpl {
+        return SettingsRepositoryImpl(context)
     }
 
-    fun provideTrackInteractor(context: Context): TrackInteractor {
-        return TrackInteractorImpl(getTrackRepository(context))
+    fun provideSettingInteractor(context: Context): SettingsInteractor {
+        return SettingsInteractorImpl(getSettingRepository(context))
+    }
+
+
+    // sharing part
+    fun getSharingRepository(context: Context): ExternalNavigationImpl {
+        return ExternalNavigationImpl(context)
+    }
+
+    fun provideSharingInteractor(context: Context): SharingInteractor {
+        return SharingInteractorImpl(getSharingRepository(context))
+    }
+    fun getAudioPlayerRepository() : MediaPlayerRepositoryImpl {
+        return MediaPlayerRepositoryImpl ()
     }
 
     fun provideAudioPlayerInteractor(): AudioPlayerInteractor {
-        return AudioPlayerInteractorImpl(
-            MediaPlayerRepositoryImpl()
-        )
+        return AudioPlayerInteractorImpl(getAudioPlayerRepository())
     }
 
-
-    fun provideSharingInteractor(context: Context): SharingInteractor {
-        return SharingInteractorImpl(
-            ExternalNavigationImpl(context)
-        )
-    }
-
-    fun provideSettingsInteractor(context: Context): SettingsInteractor {
-        return SettingsInteractorImpl(
-            SettingsRepositoryImpl(context)
-        )
+    fun provideNavigationInteractor(context: Context): InternalNavigationInteractor {
+        return InternalNavigationInteractorImpl( InternalNavigationRepositoryImpl(context))
     }
 
     fun provideHistoryInteractor(context: Context): HistoryInteractor {
@@ -60,26 +65,24 @@ object Creator {
         )
     }
 
-
-    fun provideNavigationInteractor(context: Context): InternalNavigationInteractor {
-        return InternalNavigationInteractorImpl( InternalNavigationRepositoryImpl(context))
+    private fun getTrackRepository(context: Context): TrackRepository {
+        return TrackRepositoryImpl(RetrofitNetworkClient(context))
     }
 
+    fun provideTrackInteractor(context: Context): TrackInteractor {
+        return TrackInteractorImpl(getTrackRepository(context))
+    }
 
-//    fun provideTrackSearchPresenter(context:Context, adapter: TrackAdapter): TrackSearchPresenter {
-//        return TrackSearchPresenter(context = context, adapter=adapter)
-//    }
-
-//    fun getRepository(context: Context) :SettingsRepositoryImpl {
-//        return SettingsRepositoryImpl(context)
-//    }
-//
-//    fun provideSettingInteractor(context:Context): SettingsInteractor {
-//        return SettingsInteractorImpl(getRepository(context))
-//    }
-
-
+    fun provideSahredPrefsSearchHistory(context: Context): SharedPreferences {
+        return context.getSharedPreferences(SEARCH_HISTORY, Context.MODE_PRIVATE)
+    }
 
 
 
 }
+
+
+
+
+
+

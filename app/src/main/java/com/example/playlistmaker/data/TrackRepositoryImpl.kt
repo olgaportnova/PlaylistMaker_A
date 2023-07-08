@@ -6,15 +6,18 @@ import com.example.playlistmaker.domain.TrackRepository
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.util.Resource
 
+const val ERROR_NO_CONNECTION_TO_INTERNET =-1
+const val SEARCH_SUCCESS =-1
+
 class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {
 
     override fun search(expression: String): Resource<List<Track>> {
-        val response = networkClient.doRequest(TrackSearchRequest(expression))
+        val response = networkClient.getTracksFromItunes(TrackSearchRequest(expression))
         return when (response.resultCode) {
-            -1 -> {
+            ERROR_NO_CONNECTION_TO_INTERNET -> {
                 Resource.Error("Проверьте подключение к интернету")
             }
-            200 -> {
+            SEARCH_SUCCESS -> {
                 Resource.Success((response as TrackSearchResponse).results.map {
                     Track(
                         it.trackName,

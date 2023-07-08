@@ -7,7 +7,8 @@ data class TracksState(
     val tracks: List<Track>,
     val isLoading: Boolean,
     val placeholderMessage: String?,
-    val placeholderImage: Int?,
-    val needToUpdate:Boolean
+    val needToUpdate:Boolean,
+    val toShowHistory:Boolean,
+    val history: List<Track>
 
 )

@@ -1,10 +1,13 @@
 package com.example.playlistmaker.domain.setting.sharing.impl
 
-import android.net.Uri
+
 import com.example.playlistmaker.data.setting.sharing.ExternalNavigator
 import com.example.playlistmaker.domain.setting.sharing.SharingInteractor
 import com.example.playlistmaker.domain.setting.sharing.model.EmailData
 
+const val LINK_TO_SHARE = "https://practicum.yandex.ru/profile/android-developer/"
+const val SENDER_EMAIL = "yep4yep@gmail.com"
+const val LINK_TERMS = "https://yandex.ru/legal/practicum_offer/"
 class SharingInteractorImpl(
     private val externalNavigator: ExternalNavigator,
 ) : SharingInteractor {
@@ -16,21 +19,16 @@ class SharingInteractorImpl(
         externalNavigator.openLink(getTermsLink())
     }
 
-    override fun openSupport() {
-        externalNavigator.openEmail(getSupportEmailData())
+    override fun openSupport(subject:String, text: String) {
+        externalNavigator.openEmail(EmailData(SENDER_EMAIL,subject,text))
     }
 
     private fun getShareAppLink(): String {
-        return ("https://practicum.yandex.ru/profile/android-developer/")
+        return (LINK_TO_SHARE)
     }
 
-    private fun getSupportEmailData(): EmailData {
-        return EmailData ("yep4yep@gmail.com",
-            "Сообщение разработчикам и разработчицам приложения Playlist Maker",
-            "Спасибо разработчикам и разработчицам за крутое приложение!")
-    }
 
-    private fun getTermsLink(): Uri {
-        return Uri.parse("https://yandex.ru/legal/practicum_offer/")
+    private fun getTermsLink(): String {
+        return LINK_TERMS
     }
 }

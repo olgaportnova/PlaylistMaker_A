@@ -10,9 +10,7 @@ import com.example.playlistmaker.presentation.audioPlayer.AudioPlayerActivity
 private const val SHARED_PREFS_NAME = "shared_prefs_name"
 const val SEARCH_HISTORY = "search_history"
 const val TRACK_LIST_KEY = "track_list_key"
-
-
-
+const val TRACK_TO_OPEN = "item"
 class HistoryRepositoryImpl(context: Context) : HistoryRepository {
 
     var context = context
@@ -37,7 +35,7 @@ class HistoryRepositoryImpl(context: Context) : HistoryRepository {
 
     override fun openTrack(track: Track) {
         val displayIntent = Intent(context, AudioPlayerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        displayIntent.putExtra("item", track)
+        displayIntent.putExtra(TRACK_TO_OPEN, track)
         context.startActivity(displayIntent)
     }
 

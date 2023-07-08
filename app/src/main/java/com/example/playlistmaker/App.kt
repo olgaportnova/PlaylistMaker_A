@@ -25,6 +25,7 @@ import com.example.playlistmaker.domain.setting.settings.impl.SettingsInteractor
 import com.example.playlistmaker.domain.setting.settings.model.ThemeSettings
 import com.example.playlistmaker.domain.setting.sharing.SharingInteractor
 import com.example.playlistmaker.domain.setting.sharing.impl.SharingInteractorImpl
+import com.example.playlistmaker.util.Creator.provideSettingInteractor
 
 const val APP_PREFERENCES = "my_settings"
 const val DARK_THEME = "dark_theme"
@@ -55,24 +56,6 @@ class App:Application() {
     }
 
 
-//    fun switchTheme(darkThemeEnabled: Boolean) {
-//        val sharedPref = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE)
-//        darkTheme = darkThemeEnabled
-//        AppCompatDelegate.setDefaultNightMode(
-//            if (darkThemeEnabled) {
-//                sharedPref.edit()
-//                    .putBoolean(DARK_THEME, true)
-//                    .apply()
-//                AppCompatDelegate.MODE_NIGHT_YES
-//            } else {
-//                sharedPref.edit()
-//                    .putBoolean(DARK_THEME, false)
-//                    .apply()
-//                AppCompatDelegate.MODE_NIGHT_NO
-//            }
-//        )
-//    }
-
     // setting part
     fun getSettingRepository(context: Context): SettingsRepositoryImpl {
         return SettingsRepositoryImpl(context)
@@ -91,8 +74,9 @@ class App:Application() {
     fun provideSharingInteractor(context: Context): SharingInteractor {
         return SharingInteractorImpl(getSharingRepository(context))
     }
-    fun getAudioPlayerRepository() : MediaPlayerRepositoryImpl {
-        return MediaPlayerRepositoryImpl ()
+
+    fun getAudioPlayerRepository(): MediaPlayerRepositoryImpl {
+        return MediaPlayerRepositoryImpl()
     }
 
     fun provideAudioPlayerInteractor(): AudioPlayerInteractor {
@@ -100,7 +84,7 @@ class App:Application() {
     }
 
     fun provideNavigationInteractor(context: Context): InternalNavigationInteractor {
-        return InternalNavigationInteractorImpl( InternalNavigationRepositoryImpl(context))
+        return InternalNavigationInteractorImpl(InternalNavigationRepositoryImpl(context))
     }
 
     fun provideHistoryInteractor(context: Context): HistoryInteractor {
@@ -116,8 +100,8 @@ class App:Application() {
     fun provideTrackInteractor(context: Context): TrackInteractor {
         return TrackInteractorImpl(getTrackRepository(context))
     }
-
-
-
 }
+
+
+
 

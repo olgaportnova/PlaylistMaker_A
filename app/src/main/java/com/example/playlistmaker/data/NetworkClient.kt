@@ -5,5 +5,5 @@ import com.example.playlistmaker.domain.model.Track
 
 interface NetworkClient {
 
-  fun doRequest(dto: Any): Response
+  fun getTracksFromItunes(dto: Any): Response
 }

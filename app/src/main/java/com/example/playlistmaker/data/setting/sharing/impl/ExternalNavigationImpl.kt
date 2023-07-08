@@ -15,9 +15,9 @@ class ExternalNavigationImpl(private val context: Context) : ExternalNavigator {
         context.startActivity(shareIntent)
     }
 
-    override fun openLink(link: Uri) {
+    override fun openLink(link: String) {
         val agreementIntent = Intent(Intent.ACTION_VIEW).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        agreementIntent.data = link
+        agreementIntent.data = Uri.parse(link)
         context.startActivity(agreementIntent)
     }
 

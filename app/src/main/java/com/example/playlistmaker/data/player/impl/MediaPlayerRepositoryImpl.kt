@@ -33,6 +33,7 @@ class MediaPlayerRepositoryImpl : MediaPlayerRepository {
 
     override fun pause() {
         this.mediaPlayer.pause()
+        playerState = State.PREPARED
     }
 
     override fun currentPosition(): Int {
