@@ -1,19 +1,14 @@
 package com.example.playlistmaker.presentation.settings
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.App
-import com.example.playlistmaker.domain.setting.settings.SettingsInteractor
 import com.example.playlistmaker.domain.setting.settings.model.ThemeSettings
-import com.example.playlistmaker.domain.setting.sharing.SharingInteractor
 import com.example.playlistmaker.util.Creator
 
 class SettingViewModel(application: Application) : AndroidViewModel(application) {
@@ -68,7 +63,7 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
 
     companion object {
 
-        fun getViewModelFactory(context: Context): ViewModelProvider.Factory = viewModelFactory {
+        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 SettingViewModel(this[APPLICATION_KEY] as Application)
             }

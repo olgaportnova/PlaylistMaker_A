@@ -1,15 +1,11 @@
 package com.example.playlistmaker.presentation.main
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.App
-import com.example.playlistmaker.domain.main_navigation.InternalNavigationInteractor
 import com.example.playlistmaker.util.Creator
 
 
@@ -34,7 +30,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      companion object {
 
 
-          fun getViewModelFactory(context: Context): ViewModelProvider.Factory = viewModelFactory {
+          fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
                initializer {
                     MainViewModel(this[APPLICATION_KEY] as Application)
                }

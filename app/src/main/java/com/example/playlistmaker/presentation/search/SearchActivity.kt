@@ -41,7 +41,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
         // cоздание viewModel
         searchTrackViewModel = ViewModelProvider(
             this,
-            SearchViewModel.getViewModelFactory(context)
+            SearchViewModel.getViewModelFactory()
         )[SearchViewModel::class.java]
 
         searchTrackViewModel.getSearchTrackStatusLiveData().observe(this) { updatedStatus ->
@@ -59,17 +59,18 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.isNullOrEmpty() != true) {
+                if (s!=null) {
                     searchTrackViewModel.searchDebounce(
                         changedText = s.toString()
                     )
                     binding.clearIcon.visibility =
                         if (binding.inputEditText.hasFocus() && s?.isNotEmpty() == true) View.VISIBLE else View.GONE
                 }
-                else {searchTrackViewModel.getHistory()}
+                else {searchTrackViewModel.showHistory()}
             }
 
             override fun afterTextChanged(s: Editable?) {
+
             }
         }
         textWatcher?.let {
@@ -85,14 +86,14 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
         // очистка строки поиска
         binding.clearIcon.setOnClickListener {
             binding.inputEditText.setText("")
-            searchTrackViewModel.getHistory()
+            searchTrackViewModel.showHistory()
 
         }
 
         // очистка истории поиска
         binding.buttonClearHistory.setOnClickListener {
             searchTrackViewModel.clearHistory()
-            searchTrackViewModel.getHistory()
+            searchTrackViewModel.showHistory()
 
         }
     }
@@ -102,7 +103,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
             rcTrackList.layoutManager = LinearLayoutManager(this@SearchActivity)
 
         }
-        searchTrackViewModel.getHistory()
+        searchTrackViewModel.showHistory()
     }
 
 
@@ -214,6 +215,17 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
 
         }
     }
+
+        override fun onDestroy() {
+            super.onDestroy()
+            searchTrackViewModel.onDestroy()
+        }
+
+        override fun onResume() {
+            super.onResume()
+            searchTrackViewModel.onResume()
+        }
+
 
         companion object {
             const val SEARCH_TYPE = "SEARCH_TYPE"

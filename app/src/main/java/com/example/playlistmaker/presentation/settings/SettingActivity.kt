@@ -28,7 +28,7 @@ class SettingActivity : AppCompatActivity() {
 
 
 
-        viewModel = ViewModelProvider(this, SettingViewModel.getViewModelFactory(context))[SettingViewModel::class.java]
+        viewModel = ViewModelProvider(this, SettingViewModel.getViewModelFactory())[SettingViewModel::class.java]
 
         viewModel.getModeLiveData().observe(this) {isDarkMode ->
             changeMode(isDarkMode)

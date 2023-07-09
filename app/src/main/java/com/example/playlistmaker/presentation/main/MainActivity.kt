@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         context = applicationContext
 
 
-        viewModel = ViewModelProvider(this, MainViewModel.getViewModelFactory(context))[MainViewModel::class.java]
+        viewModel = ViewModelProvider(this, MainViewModel.getViewModelFactory())[MainViewModel::class.java]
 
 
         binding.settings?.setOnClickListener {

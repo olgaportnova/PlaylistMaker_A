@@ -7,7 +7,7 @@
 
     <application
         android:usesCleartextTraffic="true"
-        android:name=".App"
+        android:name=".util.App"
         android:configChanges="uiMode"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
