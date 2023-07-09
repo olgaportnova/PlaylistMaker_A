@@ -1,6 +1,8 @@
 package com.example.playlistmaker.presentation.settings
 
+import android.app.Application
 import android.content.Context
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,12 +14,12 @@ import com.example.playlistmaker.App
 import com.example.playlistmaker.domain.setting.settings.SettingsInteractor
 import com.example.playlistmaker.domain.setting.settings.model.ThemeSettings
 import com.example.playlistmaker.domain.setting.sharing.SharingInteractor
+import com.example.playlistmaker.util.Creator
 
-class SettingViewModel(
-    private val settingsInteractor: SettingsInteractor,
-    private val sharingInteractor: SharingInteractor
-) : ViewModel() {
+class SettingViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val settingsInteractor = Creator.provideSettingInteractor(getApplication<Application>())
+    private val sharingInteractor = Creator.provideSharingInteractor(getApplication<Application>())
 
     fun isDarkModeOnStart(): Boolean {
         var modeStart = settingsInteractor.getThemeSettings()
@@ -51,8 +53,8 @@ class SettingViewModel(
 
     // sharing part
 
-    fun openSupport(subject: String, text: String ) {
-        sharingInteractor.openSupport(subject = subject,text = text )
+    fun openSupport(subject: String, text: String) {
+        sharingInteractor.openSupport(subject = subject, text = text)
     }
 
     fun shareApp() {
@@ -64,18 +66,11 @@ class SettingViewModel(
     }
 
 
-
     companion object {
 
         fun getViewModelFactory(context: Context): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val interactorSetting =
-                    (this[APPLICATION_KEY] as App).provideSettingInteractor(context)
-                val interactorSharing =
-                    (this[APPLICATION_KEY] as App).provideSharingInteractor(context)
-                SettingViewModel(
-                    interactorSetting, interactorSharing
-                )
+                SettingViewModel(this[APPLICATION_KEY] as Application)
             }
         }
     }

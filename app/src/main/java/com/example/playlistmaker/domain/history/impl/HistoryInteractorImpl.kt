@@ -6,7 +6,6 @@ import com.example.playlistmaker.domain.history.HistoryInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.google.gson.Gson
 import com.google.gson.internal.LinkedTreeMap
-import com.google.gson.reflect.TypeToken
 
 const val MAX_NUMBER_OF_TRACK = 10
 const val INDEX_OF_OLDEST_TRACK = 9
@@ -76,24 +75,10 @@ class HistoryInteractorImpl (private val historyRepository: HistoryRepository) :
         historyRepository.updateTrackHistory(updatedHistoryJson)
     }
 
-    override fun openTrack(track:Track) {
-        historyRepository.openTrack(track)
-    }
 
     override fun clearHistory() {
         historyRepository.clearHistory()
     }
-
-
-
-//    fun clickDebounce(): Boolean {
-//        val current = isClickAllowed
-//        if (isClickAllowed) {
-//            isClickAllowed = false
-//            handler.postDelayed({ isClickAllowed = true }, 1000L)
-//        }
-//        return current
-//    }
 
 
     fun createTrackListFromJson(json: String): ArrayList<Track> {
@@ -130,9 +115,6 @@ class HistoryInteractorImpl (private val historyRepository: HistoryRepository) :
         return Gson().toJson(trackList)
     }
 
-    fun createJsonFromTrack(track: Track): String {
-        return Gson().toJson(track)
-    }
 }
 
 

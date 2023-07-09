@@ -5,18 +5,17 @@ import android.app.Application
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.App
-import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.TrackInteractor
 import com.example.playlistmaker.domain.history.HistoryInteractor
+import com.example.playlistmaker.domain.main_navigation.InternalNavigationInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.tracks.models.TracksState
 import com.example.playlistmaker.util.Creator
@@ -24,11 +23,12 @@ import com.example.playlistmaker.util.Creator
 
 class SearchViewModel(
     application: Application,
-    private val searchInteractor: TrackInteractor,
-    private val historyInteractor: HistoryInteractor
+) : AndroidViewModel(application), TrackAdapter.Listener {
 
-) : AndroidViewModel(application) {
-
+    private val searchInteractor = Creator.provideTrackInteractor(getApplication<Application>())
+    private val historyInteractor = Creator.provideHistoryInteractor(getApplication<Application>())
+    private val internalNavigationInteractor =
+        Creator.provideNavigationInteractor(getApplication<Application>())
 
 
     private var searchTrackStatusLiveData = MutableLiveData<TracksState>()
@@ -37,6 +37,7 @@ class SearchViewModel(
 
 
     private val tracks = ArrayList<Track>()
+    private val adapter = TrackAdapter(tracks, this)
     private val handler = Handler(Looper.getMainLooper())
     private var lastSearchText: String? = null
 
@@ -45,11 +46,11 @@ class SearchViewModel(
         searchAction(newSearchText)
     }
 
-//    fun onCreate() {
-//
-//        adapter.tracks = tracks
-//
-//    }
+    fun onCreate() {
+
+        adapter.tracks = tracks
+
+    }
 
 
     fun onDestroy() {
@@ -64,7 +65,7 @@ class SearchViewModel(
     }
 
     fun getHistory() {
-       var updatedHistory =  historyInteractor.getHistoryList()
+        var updatedHistory = historyInteractor.getHistoryList()
         searchTrackStatusLiveData.postValue(
             TracksState(
                 emptyList(),
@@ -84,8 +85,9 @@ class SearchViewModel(
     fun addNewTrackToHistory(track: Track) {
         historyInteractor.addTrackToHistory(track)
     }
+
     fun openTrackAudioPlayer(track: Track) {
-        historyInteractor.openTrack(track)
+        internalNavigationInteractor.openTrack(track)
     }
 
     fun searchAction(newSearchText: String) {
@@ -116,8 +118,7 @@ class SearchViewModel(
                                 TracksState(
                                     emptyList(),
                                     false,
-                                    "Проблемы со связью \n \n Загрузка не удалась. Проверьте подключение к интернету",
-                                    //  Resources.getSystem().getString(R.string.something_went_wrong),
+                                    ERROR_CONNECTION,
                                     needToUpdate = true,
                                     toShowHistory = false,
                                     history = emptyList(),
@@ -129,8 +130,7 @@ class SearchViewModel(
                                 TracksState(
                                     emptyList(),
                                     false,
-                                    "Ничего не нашлось",
-                                    //   getApplication<Application>().getString(R.string.nothing_found),
+                                    ERROR_EMPTY_LIST,
                                     needToUpdate = false,
                                     toShowHistory = false,
                                     history = emptyList(),
@@ -158,25 +158,20 @@ class SearchViewModel(
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val ERROR_CONNECTION = -1
+        private const val ERROR_EMPTY_LIST = -2
 
         fun getViewModelFactory(context: Context): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    val searchInteractor =
-                        (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as App).provideTrackInteractor(
-                            context
-                        )
-                    val historyInteractor =
-                        (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as App).provideHistoryInteractor(
-                            context
-                        )
-                    SearchViewModel(
-                        Application(),
-                        searchInteractor,
-                        historyInteractor
-                    )
+                    SearchViewModel(this[APPLICATION_KEY] as Application)
                 }
             }
+    }
+
+    override fun onClick(track: Track) {
+        addNewTrackToHistory(track)
+        openTrackAudioPlayer(track)
     }
 
 }

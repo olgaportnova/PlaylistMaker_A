@@ -27,13 +27,8 @@ import com.example.playlistmaker.domain.setting.sharing.SharingInteractor
 import com.example.playlistmaker.domain.setting.sharing.impl.SharingInteractorImpl
 import com.example.playlistmaker.util.Creator.provideSettingInteractor
 
-const val APP_PREFERENCES = "my_settings"
-const val DARK_THEME = "dark_theme"
-
 
 class App:Application() {
-    var darkTheme = false
-
 
     override fun onCreate() {
 
@@ -41,9 +36,7 @@ class App:Application() {
         val settingsInteractor = provideSettingInteractor(applicationContext)
         darkMode(settingsInteractor.getThemeSettings())
 
-
         super.onCreate()
-
     }
 
     // устанавливаем dark Mode
@@ -55,51 +48,6 @@ class App:Application() {
         }
     }
 
-
-    // setting part
-    fun getSettingRepository(context: Context): SettingsRepositoryImpl {
-        return SettingsRepositoryImpl(context)
-    }
-
-    fun provideSettingInteractor(context: Context): SettingsInteractor {
-        return SettingsInteractorImpl(getSettingRepository(context))
-    }
-
-
-    // sharing part
-    fun getSharingRepository(context: Context): ExternalNavigationImpl {
-        return ExternalNavigationImpl(context)
-    }
-
-    fun provideSharingInteractor(context: Context): SharingInteractor {
-        return SharingInteractorImpl(getSharingRepository(context))
-    }
-
-    fun getAudioPlayerRepository(): MediaPlayerRepositoryImpl {
-        return MediaPlayerRepositoryImpl()
-    }
-
-    fun provideAudioPlayerInteractor(): AudioPlayerInteractor {
-        return AudioPlayerInteractorImpl(getAudioPlayerRepository())
-    }
-
-    fun provideNavigationInteractor(context: Context): InternalNavigationInteractor {
-        return InternalNavigationInteractorImpl(InternalNavigationRepositoryImpl(context))
-    }
-
-    fun provideHistoryInteractor(context: Context): HistoryInteractor {
-        return HistoryInteractorImpl(
-            HistoryRepositoryImpl(context)
-        )
-    }
-
-    private fun getTrackRepository(context: Context): TrackRepository {
-        return TrackRepositoryImpl(RetrofitNetworkClient(context))
-    }
-
-    fun provideTrackInteractor(context: Context): TrackInteractor {
-        return TrackInteractorImpl(getTrackRepository(context))
-    }
 }
 
 

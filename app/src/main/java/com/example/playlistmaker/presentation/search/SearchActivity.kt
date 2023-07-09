@@ -4,16 +4,12 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.model.Track
@@ -25,10 +21,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
 
     private lateinit var searchTrackViewModel: SearchViewModel
 
-    var tracks = ArrayList<Track>()
-
     private lateinit var binding: ActivitySearchBinding
-    private val adapter = TrackAdapter(tracks, this)
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
     private var textWatcher: TextWatcher? = null
@@ -42,7 +35,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        adapter.tracks = tracks
+
 
 
         // cоздание viewModel
@@ -55,6 +48,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
             updatedViewBasedOnStatus(updatedStatus)
         }
 
+
+        searchTrackViewModel.onCreate()
         init()
 
 
@@ -105,7 +100,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
     private fun init() {
         binding.apply {
             rcTrackList.layoutManager = LinearLayoutManager(this@SearchActivity)
-            rcTrackList.adapter = adapter
 
         }
         searchTrackViewModel.getHistory()
@@ -116,8 +110,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
     // добавление трека в историю по клику и открыте в аудиоплеере
     override fun onClick(track: Track) {
         if (clickDebounce()) {
-            searchTrackViewModel.addNewTrackToHistory(track)
-           searchTrackViewModel.openTrackAudioPlayer(track)
+            searchTrackViewModel.onClick(track)
+
         }
     }
 
@@ -146,10 +140,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
                 }
             updatedStatus.placeholderMessage != null ->
                 when {
-                    updatedStatus.needToUpdate -> showError(
-                        updatedStatus.placeholderMessage,
-                    )
-                    else -> showEmpty(updatedStatus.placeholderMessage)
+                    updatedStatus.needToUpdate -> showError()
+                    else -> showEmpty()
                 }
             else -> showContent(updatedStatus.tracks)
         }
@@ -157,7 +149,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
     }
     fun showLoading() {
         binding.apply {
-
             rcTrackList.visibility = View.GONE
             placeholderMessage.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
@@ -165,7 +156,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
             textSearchHistory.visibility = View.GONE
         }
     }
-    fun showError(errorMessage: String) {
+    fun showError() {
         binding.apply {
             rcTrackList.visibility = View.GONE
             progressBar.visibility = View.GONE
@@ -173,13 +164,12 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
             buttonUpdatePlaceholder.visibility = View.VISIBLE
             buttonClearHistory.visibility = View.GONE
             textSearchHistory.visibility = View.GONE
-
-            textPlaceholder.text = errorMessage
+            textPlaceholder.text = getString(R.string.something_went_wrong)
             imagePlaceholder.setImageResource(R.drawable.something_wrong)
 
         }
     }
-    fun showEmpty(emptyMessage: String) {
+    fun showEmpty() {
 
             binding.apply {
                 rcTrackList.visibility = View.GONE
@@ -187,15 +177,14 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
                 placeholderMessage.visibility = View.VISIBLE
                 buttonClearHistory.visibility = View.GONE
                 textSearchHistory.visibility = View.GONE
-                textPlaceholder.text = emptyMessage
+                textPlaceholder.text =  getString(R.string.nothing_found)
                 imagePlaceholder.setImageResource(R.drawable.nothing_found)
             }
 
     }
     fun showContent(tracks: List<Track>) {
         binding.apply {
-            adapter.tracks = ArrayList(tracks)
-            adapter.notifyDataSetChanged()
+            rcTrackList.adapter = TrackAdapter(ArrayList(tracks),this@SearchActivity)
             rcTrackList.visibility = View.VISIBLE
             placeholderMessage.visibility = View.GONE
             progressBar.visibility = View.GONE
@@ -205,9 +194,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
     }
     fun showHistoryUI(updatedHistory: List<Track>) {
         binding.apply {
-
-            adapter.tracks = ArrayList(updatedHistory)
-            adapter.notifyDataSetChanged()
+            rcTrackList.adapter = TrackAdapter(ArrayList(updatedHistory),this@SearchActivity)
             rcTrackList.visibility = View.VISIBLE
             placeholderMessage.visibility = View.GONE
             progressBar.visibility = View.GONE
@@ -218,9 +205,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
     }
     fun showHistoryIsEmpty(updatedHistory: List<Track>) {
         binding.apply {
-
-            adapter.tracks = ArrayList(updatedHistory)
-            adapter.notifyDataSetChanged()
+            rcTrackList.adapter = TrackAdapter(ArrayList(updatedHistory),this@SearchActivity)
             rcTrackList.visibility = View.VISIBLE
             placeholderMessage.visibility = View.GONE
             progressBar.visibility = View.GONE

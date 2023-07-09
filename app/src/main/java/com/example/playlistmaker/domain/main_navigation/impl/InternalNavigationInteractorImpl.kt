@@ -2,6 +2,7 @@ package com.example.playlistmaker.domain.main_navigation.impl
 
 import com.example.playlistmaker.data.main_navigation.InternalNavigationRepository
 import com.example.playlistmaker.domain.main_navigation.InternalNavigationInteractor
+import com.example.playlistmaker.domain.model.Track
 
 class InternalNavigationInteractorImpl (private val internalNavigationRepository: InternalNavigationRepository) : InternalNavigationInteractor {
     override fun toSettingsScreen() {
@@ -15,4 +16,9 @@ class InternalNavigationInteractorImpl (private val internalNavigationRepository
     override fun toSearchScreen() {
         internalNavigationRepository.toSearchScreen()
     }
+
+    override fun openTrack(track: Track) {
+        internalNavigationRepository.openTrack(track)
+    }
+
 }

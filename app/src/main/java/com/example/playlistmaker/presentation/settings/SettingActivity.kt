@@ -14,6 +14,8 @@ import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingActivity : AppCompatActivity() {
 
+
+
     private lateinit var context: Context
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var viewModel: SettingViewModel

@@ -7,7 +7,7 @@ import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.util.Resource
 
 const val ERROR_NO_CONNECTION_TO_INTERNET =-1
-const val SEARCH_SUCCESS =-1
+const val SEARCH_SUCCESS =200
 
 class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {
 

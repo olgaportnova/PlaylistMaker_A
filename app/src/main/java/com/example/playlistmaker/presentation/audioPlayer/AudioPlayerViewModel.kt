@@ -1,8 +1,10 @@
 package com.example.playlistmaker.presentation.audioPlayer
 
+import android.app.Application
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,15 +20,13 @@ import com.example.playlistmaker.domain.player.AudioPlayerInteractor
 import com.example.playlistmaker.util.Creator
 import java.util.*
 
-class AudioPlayerViewModel (private val audioPlayerInterator: AudioPlayerInteractor)
-    : ViewModel() {
+class AudioPlayerViewModel(application: Application) : AndroidViewModel(application) {
 
 
+    private val audioPlayerInterator = Creator.provideAudioPlayerInteractor()
 
     private var mainThreadHandler = Handler(Looper.getMainLooper())
     private val timerRunnable = createUpdateTimerTask()
-
-
     private var statePlayerLiveData = MutableLiveData(State.PREPARED)
 
     fun getStatePlayerLiveData(): LiveData<State> = statePlayerLiveData
@@ -36,11 +36,10 @@ class AudioPlayerViewModel (private val audioPlayerInterator: AudioPlayerInterac
     fun getCurrentTimerLiveData(): LiveData<Int> = currentTimerLiveData
 
 
-
     fun preparePlayer(url: String) {
         audioPlayerInterator.preparePlayer(url) { state ->
             when (state) {
-                State.PREPARED, State.DEFAULT-> {
+                State.PREPARED, State.DEFAULT -> {
                     statePlayerLiveData.postValue(State.PREPARED)
                     mainThreadHandler.removeCallbacks(timerRunnable)
                 }
@@ -49,7 +48,7 @@ class AudioPlayerViewModel (private val audioPlayerInterator: AudioPlayerInterac
         }
     }
 
-     fun createUpdateTimerTask(): Runnable {
+    fun createUpdateTimerTask(): Runnable {
         return object : Runnable {
             override fun run() {
                 var currentTimerPosition = audioPlayerInterator.currentPosition()
@@ -61,33 +60,32 @@ class AudioPlayerViewModel (private val audioPlayerInterator: AudioPlayerInterac
     }
 
 
-        fun changePlayerState () {
-                audioPlayerInterator.switchPlayer { state ->
-                    when (state) {
-                        State.PLAYING -> {
-                            mainThreadHandler.removeCallbacks(timerRunnable)
-                            mainThreadHandler.post(timerRunnable)
-                            statePlayerLiveData.postValue(State.PLAYING)
-                        }
-                        State.PAUSED -> {
-                            mainThreadHandler.removeCallbacks(timerRunnable)
-                            statePlayerLiveData.postValue(State.PAUSED)
-                        }
-                        State.PREPARED-> {
-                            mainThreadHandler.removeCallbacks(timerRunnable)
-                            mainThreadHandler.post(timerRunnable)
-                            statePlayerLiveData.postValue(State.PREPARED)
-                        }
-
-                        else -> Unit
-                    }
+    fun changePlayerState() {
+        audioPlayerInterator.switchPlayer { state ->
+            when (state) {
+                State.PLAYING -> {
+                    mainThreadHandler.removeCallbacks(timerRunnable)
+                    mainThreadHandler.post(timerRunnable)
+                    statePlayerLiveData.postValue(State.PLAYING)
+                }
+                State.PAUSED -> {
+                    mainThreadHandler.removeCallbacks(timerRunnable)
+                    statePlayerLiveData.postValue(State.PAUSED)
+                }
+                State.PREPARED -> {
+                    mainThreadHandler.removeCallbacks(timerRunnable)
+                    mainThreadHandler.post(timerRunnable)
+                    statePlayerLiveData.postValue(State.PREPARED)
                 }
 
+                else -> Unit
+            }
         }
+    }
 
-     fun onPause() {
-         mainThreadHandler.removeCallbacks(timerRunnable)
-         statePlayerLiveData.postValue(State.PAUSED)
+    fun onPause() {
+        mainThreadHandler.removeCallbacks(timerRunnable)
+        statePlayerLiveData.postValue(State.PAUSED)
         audioPlayerInterator.pausePlayer()
 
     }
@@ -109,12 +107,7 @@ class AudioPlayerViewModel (private val audioPlayerInterator: AudioPlayerInterac
 
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val interactor =
-                    (this[APPLICATION_KEY] as App).provideAudioPlayerInteractor()
-
-                AudioPlayerViewModel(
-                    interactor
-                )
+                AudioPlayerViewModel(this[APPLICATION_KEY] as Application)
             }
         }
     }

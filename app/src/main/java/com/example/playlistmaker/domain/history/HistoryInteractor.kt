@@ -8,15 +8,12 @@ interface HistoryInteractor {
 
     fun addTrackToHistory(track: Track)
 
-//    fun getHistory(): ArrayList<Track>
 
     fun getHistoryString(): String?
 
     fun clearHistory(): Unit
 
     fun updateHistory(updatedHistoryList :ArrayList<Track>) :Unit
-
-    fun openTrack(track: Track)
 
     fun getHistoryList() : ArrayList<Track>
 }
