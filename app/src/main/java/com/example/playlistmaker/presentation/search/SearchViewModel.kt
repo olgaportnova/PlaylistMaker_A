@@ -19,7 +19,7 @@ import com.example.playlistmaker.util.Creator
 
 class SearchViewModel(
     application: Application,
-) : AndroidViewModel(application), TrackAdapter.Listener {
+) : AndroidViewModel(application){
 
     private val searchInteractor = Creator.provideTrackInteractor(getApplication<Application>())
     private val historyInteractor = Creator.provideHistoryInteractor(getApplication<Application>())
@@ -33,7 +33,6 @@ class SearchViewModel(
 
 
     private var tracks = ArrayList<Track>()
-    private val adapter = TrackAdapter(tracks, this)
     private val handler = Handler(Looper.getMainLooper())
     private var lastSearchText: String? = null
 
@@ -41,15 +40,11 @@ class SearchViewModel(
         val newSearchText = lastSearchText
         if (newSearchText!!.isEmpty()) {
             getHistory()
+            showHistory()
         } else {
             searchAction(newSearchText)
         }
     }
-
-    fun onCreate() {
-        adapter.tracks = tracks
-    }
-
 
     fun onDestroy() {
         handler.removeCallbacks(searchRunnable)
@@ -163,11 +158,7 @@ class SearchViewModel(
             }
         })
     }
-    override fun onClick(track: Track) {
-        addNewTrackToHistory(track)
-        getHistory()
-        openTrackAudioPlayer(track)
-    }
+
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L

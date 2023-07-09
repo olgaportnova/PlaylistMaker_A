@@ -9,6 +9,7 @@
         tools:context=".presentation.search.SearchActivity"
     >
 
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -68,34 +69,7 @@
         android:visibility="gone"/>
 
 
-    <LinearLayout
-        android:id="@+id/placeholderMessage"
-        style="@style/placeholder_layout"
-        android:layout_height="288dp"
-        android:visibility="visible">
 
-        <ImageView
-            android:id="@+id/imagePlaceholder"
-            style="@style/plaseholder_image" />
-
-
-        <TextView
-            android:id="@+id/textPlaceholder"
-            style="@style/placeholder_text"
-            android:layout_height="102dp"
-            tools:text="Проблемы со связью \n \n
-Загрузка не удалась. Проверьте подключение к интернету" />
-
-        <Button
-            android:id="@+id/buttonUpdatePlaceholder"
-            style="@style/placeholder_button"
-            android:layout_marginTop="24dp"
-            android:text="@string/btUpdate"
-            android:visibility="invisible"
-            app:cornerRadius="54dp" />
-
-
-    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -116,9 +90,9 @@
             <TextView
                 android:id="@+id/textSearchHistory"
                 style="@style/history_headline"
-                android:text="Вы искали"
+                android:text="@string/you_searched"
+                android:gravity="center_horizontal"
                 app:layout_constraintStart_toEndOf="parent"
-                app:layout_constraintEnd_toStartOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility="visible"/>
@@ -140,7 +114,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:id="@+id/buttonClearHistory"
-                android:text="Очистить историю"
+                android:text="@string/text_clear_history"
                 android:gravity="center"
                 app:cornerRadius="54dp"
                 android:layout_marginTop="24dp"
@@ -149,5 +123,49 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="192dp"
+        tools:ignore="ExtraText">
+
+
+        <ImageView
+            android:id="@+id/imagePlaceholder"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center"
+            style="@style/plaseholder_image"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+
+        <TextView
+            app:layout_constraintTop_toBottomOf="@id/imagePlaceholder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center"
+            android:layout_marginTop="24dp"
+            android:id="@+id/textPlaceholder"
+            style="@style/placeholder_text"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            tools:text="@string/something_went_wrong" />
+
+        <Button
+            android:clickable="true"
+            app:layout_constraintTop_toBottomOf="@id/textPlaceholder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center"
+            android:id="@+id/buttonUpdatePlaceholder"
+            style="@style/placeholder_button"
+            android:layout_marginTop="24dp"
+            android:text="@string/btUpdate"
+            android:visibility="invisible"
+            app:cornerRadius="54dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

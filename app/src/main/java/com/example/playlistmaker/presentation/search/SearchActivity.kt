@@ -48,8 +48,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
             updatedViewBasedOnStatus(updatedStatus)
         }
 
-
-        searchTrackViewModel.onCreate()
         init()
 
 
@@ -96,6 +94,12 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
             searchTrackViewModel.showHistory()
 
         }
+
+        binding.buttonUpdatePlaceholder.setOnClickListener {
+            var searchTextRequest = binding.inputEditText.text.toString()
+            searchTrackViewModel.searchAction(searchTextRequest)
+        }
+
     }
 
     private fun init() {
@@ -107,12 +111,12 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
     }
 
 
-
     // добавление трека в историю по клику и открыте в аудиоплеере
     override fun onClick(track: Track) {
         if (clickDebounce()) {
-            searchTrackViewModel.onClick(track)
-
+            searchTrackViewModel.addNewTrackToHistory(track)
+            searchTrackViewModel.getHistory()
+            searchTrackViewModel.openTrackAudioPlayer(track)
         }
     }
 
@@ -151,7 +155,9 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
     fun showLoading() {
         binding.apply {
             rcTrackList.visibility = View.GONE
-            placeholderMessage.visibility = View.GONE
+            imagePlaceholder.visibility = View.GONE
+            textPlaceholder.visibility = View.GONE
+            buttonUpdatePlaceholder.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             buttonClearHistory.visibility = View.GONE
             textSearchHistory.visibility = View.GONE
@@ -161,12 +167,14 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
         binding.apply {
             rcTrackList.visibility = View.GONE
             progressBar.visibility = View.GONE
-            placeholderMessage.visibility = View.VISIBLE
+            imagePlaceholder.visibility = View.VISIBLE
+            textPlaceholder.visibility = View.VISIBLE
             buttonUpdatePlaceholder.visibility = View.VISIBLE
             buttonClearHistory.visibility = View.GONE
             textSearchHistory.visibility = View.GONE
             textPlaceholder.text = getString(R.string.something_went_wrong)
             imagePlaceholder.setImageResource(R.drawable.something_wrong)
+
 
         }
     }
@@ -175,7 +183,9 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
             binding.apply {
                 rcTrackList.visibility = View.GONE
                 progressBar.visibility = View.GONE
-                placeholderMessage.visibility = View.VISIBLE
+                imagePlaceholder.visibility = View.VISIBLE
+                textPlaceholder.visibility = View.VISIBLE
+                buttonUpdatePlaceholder.visibility = View.GONE
                 buttonClearHistory.visibility = View.GONE
                 textSearchHistory.visibility = View.GONE
                 textPlaceholder.text =  getString(R.string.nothing_found)
@@ -187,7 +197,9 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
         binding.apply {
             rcTrackList.adapter = TrackAdapter(ArrayList(tracks),this@SearchActivity)
             rcTrackList.visibility = View.VISIBLE
-            placeholderMessage.visibility = View.GONE
+            imagePlaceholder.visibility = View.GONE
+            textPlaceholder.visibility = View.GONE
+            buttonUpdatePlaceholder.visibility = View.GONE
             progressBar.visibility = View.GONE
             buttonClearHistory.visibility = View.GONE
             textSearchHistory.visibility = View.GONE
@@ -197,7 +209,9 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
         binding.apply {
             rcTrackList.adapter = TrackAdapter(ArrayList(updatedHistory),this@SearchActivity)
             rcTrackList.visibility = View.VISIBLE
-            placeholderMessage.visibility = View.GONE
+            imagePlaceholder.visibility = View.GONE
+            textPlaceholder.visibility = View.GONE
+            buttonUpdatePlaceholder.visibility = View.GONE
             progressBar.visibility = View.GONE
             buttonClearHistory.visibility = View.VISIBLE
             textSearchHistory.visibility = View.VISIBLE
@@ -208,7 +222,9 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
         binding.apply {
             rcTrackList.adapter = TrackAdapter(ArrayList(updatedHistory),this@SearchActivity)
             rcTrackList.visibility = View.VISIBLE
-            placeholderMessage.visibility = View.GONE
+            imagePlaceholder.visibility = View.GONE
+            textPlaceholder.visibility = View.GONE
+            buttonUpdatePlaceholder.visibility = View.GONE
             progressBar.visibility = View.GONE
             buttonClearHistory.visibility = View.GONE
             textSearchHistory.visibility = View.GONE

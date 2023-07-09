@@ -23,4 +23,6 @@
     <string name="year">Год</string>
     <string name="album">Альбом</string>
     <string name="duration">Длительность</string>
+    <string name="you_searched">Вы искали</string>
+    <string name="text_clear_history">Очистить историю</string>
 </resources>
