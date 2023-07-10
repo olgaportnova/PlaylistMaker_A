@@ -15,19 +15,14 @@ import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.tracks.models.TracksState
 
-class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
-    {
-
+class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
     private lateinit var searchTrackViewModel: SearchViewModel
-
     private lateinit var binding: ActivitySearchBinding
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
     private var textWatcher: TextWatcher? = null
     private lateinit var context: Context
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -35,7 +30,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
 
         // cоздание viewModel
@@ -57,14 +51,15 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s!=null) {
+                if (s != null) {
                     searchTrackViewModel.searchDebounce(
                         changedText = s.toString()
                     )
                     binding.clearIcon.visibility =
                         if (binding.inputEditText.hasFocus() && s?.isNotEmpty() == true) View.VISIBLE else View.GONE
+                } else {
+                    searchTrackViewModel.showHistory()
                 }
-                else {searchTrackViewModel.showHistory()}
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -120,8 +115,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
         }
     }
 
-
-
     // контроль нажатий на трек (не быстрее чем 1 сек)
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
@@ -135,7 +128,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
 
     // cостояния и отрисовка элементов UI
 
-     fun updatedViewBasedOnStatus(updatedStatus: TracksState) {
+    fun updatedViewBasedOnStatus(updatedStatus: TracksState) {
         when {
             updatedStatus.isLoading -> showLoading()
             updatedStatus.toShowHistory ->
@@ -152,6 +145,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
         }
 
     }
+
     fun showLoading() {
         binding.apply {
             rcTrackList.visibility = View.GONE
@@ -163,6 +157,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
             textSearchHistory.visibility = View.GONE
         }
     }
+
     fun showError() {
         binding.apply {
             rcTrackList.visibility = View.GONE
@@ -178,24 +173,26 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
 
         }
     }
+
     fun showEmpty() {
 
-            binding.apply {
-                rcTrackList.visibility = View.GONE
-                progressBar.visibility = View.GONE
-                imagePlaceholder.visibility = View.VISIBLE
-                textPlaceholder.visibility = View.VISIBLE
-                buttonUpdatePlaceholder.visibility = View.GONE
-                buttonClearHistory.visibility = View.GONE
-                textSearchHistory.visibility = View.GONE
-                textPlaceholder.text =  getString(R.string.nothing_found)
-                imagePlaceholder.setImageResource(R.drawable.nothing_found)
-            }
+        binding.apply {
+            rcTrackList.visibility = View.GONE
+            progressBar.visibility = View.GONE
+            imagePlaceholder.visibility = View.VISIBLE
+            textPlaceholder.visibility = View.VISIBLE
+            buttonUpdatePlaceholder.visibility = View.GONE
+            buttonClearHistory.visibility = View.GONE
+            textSearchHistory.visibility = View.GONE
+            textPlaceholder.text = getString(R.string.nothing_found)
+            imagePlaceholder.setImageResource(R.drawable.nothing_found)
+        }
 
     }
+
     fun showContent(tracks: List<Track>) {
         binding.apply {
-            rcTrackList.adapter = TrackAdapter(ArrayList(tracks),this@SearchActivity)
+            rcTrackList.adapter = TrackAdapter(ArrayList(tracks), this@SearchActivity)
             rcTrackList.visibility = View.VISIBLE
             imagePlaceholder.visibility = View.GONE
             textPlaceholder.visibility = View.GONE
@@ -205,9 +202,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
             textSearchHistory.visibility = View.GONE
         }
     }
+
     fun showHistoryUI(updatedHistory: List<Track>) {
         binding.apply {
-            rcTrackList.adapter = TrackAdapter(ArrayList(updatedHistory),this@SearchActivity)
+            rcTrackList.adapter = TrackAdapter(ArrayList(updatedHistory), this@SearchActivity)
             rcTrackList.visibility = View.VISIBLE
             imagePlaceholder.visibility = View.GONE
             textPlaceholder.visibility = View.GONE
@@ -218,9 +216,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
 
         }
     }
+
     fun showHistoryIsEmpty(updatedHistory: List<Track>) {
         binding.apply {
-            rcTrackList.adapter = TrackAdapter(ArrayList(updatedHistory),this@SearchActivity)
+            rcTrackList.adapter = TrackAdapter(ArrayList(updatedHistory), this@SearchActivity)
             rcTrackList.visibility = View.VISIBLE
             imagePlaceholder.visibility = View.GONE
             textPlaceholder.visibility = View.GONE
@@ -232,20 +231,20 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener
         }
     }
 
-        override fun onDestroy() {
-            super.onDestroy()
-            searchTrackViewModel.onDestroy()
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        searchTrackViewModel.onDestroy()
+    }
 
-        override fun onResume() {
-            super.onResume()
-            searchTrackViewModel.onResume()
-        }
+    override fun onResume() {
+        super.onResume()
+        searchTrackViewModel.onResume()
+    }
 
 
-        companion object {
-            const val SEARCH_TYPE = "SEARCH_TYPE"
-            private const val CLICK_DEBOUNCE_DELAY_MC= 1000L
-        }
+    companion object {
+        const val SEARCH_TYPE = "SEARCH_TYPE"
+        private const val CLICK_DEBOUNCE_DELAY_MC = 1000L
+    }
 
 }
