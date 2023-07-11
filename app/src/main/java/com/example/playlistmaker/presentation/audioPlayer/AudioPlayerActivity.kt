@@ -1,6 +1,7 @@
 package com.example.playlistmaker.presentation.audioPlayer
 
 import android.annotation.SuppressLint
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -12,14 +13,17 @@ import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.domain.model.State
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.audioPlayer.model.TrackInfo
+import com.example.playlistmaker.presentation.main.MainViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.java.KoinJavaComponent.inject
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AudioPlayerActivity : AppCompatActivity() {
+class AudioPlayerActivity (): AppCompatActivity() {
 
+    private val viewModel: AudioPlayerViewModel by viewModel()
 
     private lateinit var binding: ActivityAudioPlayerBinding
-    private lateinit var viewModel: AudioPlayerViewModel
 
 
     @SuppressLint("SuspiciousIndentation")
@@ -33,13 +37,6 @@ class AudioPlayerActivity : AppCompatActivity() {
         val trackInfo = track.toTrackInfo(track)
         val url = track.previewUrl // url превью 30 сек.
 
-
-
-
-        viewModel = ViewModelProvider(
-            this,
-            AudioPlayerViewModel.getViewModelFactory()
-        )[AudioPlayerViewModel::class.java]
 
         viewModel.getStatePlayerLiveData().observe(this) { state ->
             changeState(state)

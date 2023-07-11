@@ -2,6 +2,7 @@
 
 package com.example.playlistmaker.domain.player.impl
 
+import android.media.MediaPlayer
 import com.example.playlistmaker.domain.player.AudioPlayerInteractor
 import com.example.playlistmaker.domain.player.MediaPlayerRepository
 import com.example.playlistmaker.domain.model.State

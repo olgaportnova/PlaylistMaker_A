@@ -11,16 +11,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-class RetrofitNetworkClient(private val context: Context)  : NetworkClient {
-
-    private val itunesBaseUrl = "http://itunes.apple.com"
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(itunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val imdbService = retrofit.create(Itunes::class.java)
+class RetrofitNetworkClient(private val imdbService: Itunes,
+                            private val context: Context)  : NetworkClient {
 
     override fun getTracksFromItunes(dto: Any): Response {
         if (!isConnected()){

@@ -13,30 +13,26 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.presentation.main.MainViewModel
 import com.example.playlistmaker.ui.tracks.models.TracksState
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
-    private lateinit var searchTrackViewModel: SearchViewModel
+    private val searchTrackViewModel: SearchViewModel by viewModel()
     private lateinit var binding: ActivitySearchBinding
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
     private var textWatcher: TextWatcher? = null
-    private lateinit var context: Context
+  //  private lateinit var context: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        context = applicationContext
+  //      context = applicationContext
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        // cоздание viewModel
-        searchTrackViewModel = ViewModelProvider(
-            this,
-            SearchViewModel.getViewModelFactory()
-        )[SearchViewModel::class.java]
 
         searchTrackViewModel.getSearchTrackStatusLiveData().observe(this) { updatedStatus ->
             updatedViewBasedOnStatus(updatedStatus)

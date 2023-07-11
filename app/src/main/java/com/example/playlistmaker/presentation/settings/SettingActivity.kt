@@ -9,26 +9,22 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-
+import com.example.playlistmaker.presentation.main.MainViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SettingActivity : AppCompatActivity() {
 
-
-
-    private lateinit var context: Context
+    private val viewModel: SettingViewModel by viewModel()
+ //   private lateinit var context: Context
     private lateinit var binding: ActivitySettingsBinding
-    private lateinit var viewModel: SettingViewModel
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        context = applicationContext
+  //      context = applicationContext
 
-
-
-        viewModel = ViewModelProvider(this, SettingViewModel.getViewModelFactory())[SettingViewModel::class.java]
 
         viewModel.getModeLiveData().observe(this) {isDarkMode ->
             changeMode(isDarkMode)
@@ -45,8 +41,6 @@ class SettingActivity : AppCompatActivity() {
         buttonBack.setOnClickListener {
             finish()
         }
-
-
 
         // sharing part
 

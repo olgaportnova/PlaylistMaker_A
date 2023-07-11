@@ -6,6 +6,7 @@ import com.example.playlistmaker.domain.history.HistoryInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.google.gson.Gson
 import com.google.gson.internal.LinkedTreeMap
+import org.koin.java.KoinJavaComponent.inject
 
 const val MAX_NUMBER_OF_TRACK = 10
 const val INDEX_OF_OLDEST_TRACK = 9
