@@ -3,6 +3,7 @@ package com.example.playlistmaker.data.player.impl
 import android.media.MediaPlayer
 import com.example.playlistmaker.domain.player.MediaPlayerRepository
 import com.example.playlistmaker.domain.model.State
+import org.koin.java.KoinJavaComponent.getKoin
 
 class MediaPlayerRepositoryImpl (private val mediaPlayer: MediaPlayer) : MediaPlayerRepository {
 
@@ -12,6 +13,7 @@ class MediaPlayerRepositoryImpl (private val mediaPlayer: MediaPlayer) : MediaPl
         url: String,
         onStateChangedTo: (s: State) -> Unit
     ) {
+        mediaPlayer.reset()
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {

@@ -11,6 +11,7 @@ import com.example.playlistmaker.data.setting.settings.SettingsRepository
 import com.example.playlistmaker.data.setting.settings.impl.SettingsRepositoryImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
+import org.koin.dsl.bind
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

@@ -15,6 +15,8 @@ import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.audioPlayer.model.TrackInfo
 import com.example.playlistmaker.presentation.main.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.java.KoinJavaComponent
+import org.koin.java.KoinJavaComponent.getKoin
 import org.koin.java.KoinJavaComponent.inject
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,7 +26,6 @@ class AudioPlayerActivity (): AppCompatActivity() {
     private val viewModel: AudioPlayerViewModel by viewModel()
 
     private lateinit var binding: ActivityAudioPlayerBinding
-
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
