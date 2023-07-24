@@ -1,18 +1,19 @@
 package com.example.playlistmaker.data.player.impl
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.domain.model.State
 import com.example.playlistmaker.domain.player.MediaPlayerRepository
+import com.example.playlistmaker.domain.model.State
 
-class MediaPlayerRepositoryImpl (private val mediaPlayer: MediaPlayer) : MediaPlayerRepository {
-
+class MediaPlayerRepositoryImpl : MediaPlayerRepository {
 
     private var playerState = State.PREPARED
+    private lateinit var mediaPlayer: MediaPlayer
+
     override fun preparePlayer(
         url: String,
         onStateChangedTo: (s: State) -> Unit
     ) {
-        mediaPlayer.reset()
+        var mediaPlayer = MediaPlayer()
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
@@ -24,6 +25,7 @@ class MediaPlayerRepositoryImpl (private val mediaPlayer: MediaPlayer) : MediaPl
             onStateChangedTo(State.PREPARED)
 
         }
+        this.mediaPlayer = mediaPlayer
 
     }
 

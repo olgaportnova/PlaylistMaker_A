@@ -1,30 +1,21 @@
 package com.example.playlistmaker.util
 
 import android.app.Application
+
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.di.dataModule
-import com.example.playlistmaker.di.interactorModule
-import com.example.playlistmaker.di.repositoryModule
-import com.example.playlistmaker.di.viewModelModule
-import com.example.playlistmaker.domain.setting.settings.SettingsInteractor
 import com.example.playlistmaker.domain.setting.settings.model.ThemeSettings
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.GlobalContext.startKoin
-import org.koin.java.KoinJavaComponent.getKoin
+import com.example.playlistmaker.util.Creator.provideSettingInteractor
 
 
-class App ():Application() {
+class App:Application() {
 
     override fun onCreate() {
-        super.onCreate()
-        startKoin {
-            androidContext(this@App)
-            modules(dataModule, interactorModule, repositoryModule, viewModelModule)
-        }
 
-        val settingsInteractor: SettingsInteractor = getKoin().get()
+        // достаем из SH dark mode
+        val settingsInteractor = provideSettingInteractor(applicationContext)
         darkMode(settingsInteractor.getThemeSettings())
 
+        super.onCreate()
     }
 
     // устанавливаем dark Mode

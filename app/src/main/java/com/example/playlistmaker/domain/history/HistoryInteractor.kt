@@ -16,5 +16,4 @@ interface HistoryInteractor {
     fun updateHistory(updatedHistoryList :ArrayList<Track>) :Unit
 
     fun getHistoryList() : ArrayList<Track>
-
 }

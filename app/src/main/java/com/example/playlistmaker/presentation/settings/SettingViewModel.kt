@@ -1,15 +1,20 @@
 package com.example.playlistmaker.presentation.settings
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.playlistmaker.domain.setting.settings.SettingsInteractor
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.domain.setting.settings.model.ThemeSettings
-import com.example.playlistmaker.domain.setting.sharing.SharingInteractor
+import com.example.playlistmaker.util.Creator
 
-class SettingViewModel(private val settingsInteractor:SettingsInteractor,
-                       private val sharingInteractor:SharingInteractor
-                       ) : ViewModel() {
+class SettingViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val settingsInteractor = Creator.provideSettingInteractor(getApplication<Application>())
+    private val sharingInteractor = Creator.provideSharingInteractor(getApplication<Application>())
 
     fun isDarkModeOnStart(): Boolean {
         var modeStart = settingsInteractor.getThemeSettings()
@@ -40,7 +45,9 @@ class SettingViewModel(private val settingsInteractor:SettingsInteractor,
         }
     }
 
+
     // sharing part
+
     fun openSupport(subject: String, text: String) {
         sharingInteractor.openSupport(subject = subject, text = text)
     }
@@ -51,6 +58,16 @@ class SettingViewModel(private val settingsInteractor:SettingsInteractor,
 
     fun legalAgreement() {
         sharingInteractor.openTerms()
+    }
+
+
+    companion object {
+
+        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                SettingViewModel(this[APPLICATION_KEY] as Application)
+            }
+        }
     }
 
 }

@@ -1,17 +1,23 @@
 package com.example.playlistmaker.presentation.main
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMainBinding
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.example.playlistmaker.presentation.settings.SettingViewModel
+import com.example.playlistmaker.util.Creator
+
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: MainViewModel by viewModel()
- //   private lateinit var context: Context
+    private lateinit var context: Context
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: MainViewModel
 
 
     @SuppressLint("MissingInflatedId")
@@ -19,8 +25,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-      //  context = applicationContext
+        context = applicationContext
 
+
+        viewModel = ViewModelProvider(this, MainViewModel.getViewModelFactory())[MainViewModel::class.java]
 
 
         binding.settings?.setOnClickListener {

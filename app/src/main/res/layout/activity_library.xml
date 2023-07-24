@@ -1,81 +1,9 @@
-
-<!--    <FrameLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="56dp">-->
-<!--    <ImageView-->
-<!--        style="@style/BackIconHead"-->
-<!--        android:src="@drawable/arrow"-->
-<!--        android:id="@+id/back" />-->
-<!--    <TextView-->
-<!--        style="@style/HeadText"-->
-<!--        android:text="Медиатека"/>-->
-<!--    </FrameLayout>-->
-
-
-<androidx.constraintlayout.widget.ConstraintLayout
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-
-    <FrameLayout
-        android:id="@+id/header"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="56dp">
-    <ImageView
-        style="@style/BackIconHead"
-        android:src="@drawable/arrow"
-        android:id="@+id/back" />
-    <TextView
-        android:id="@+id/headerText"
-        style="@style/HeadText"
-        android:text="Медиатека" />
-    </FrameLayout>
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header"
-        app:tabTextAppearance="@style/TextTabLayout"
-        app:tabIndicatorAnimationMode="elastic"
-        app:tabTextColor="?attr/colorOnSecondary"
-        app:tabSelectedTextColor="?attr/colorOnSecondary"
-        app:tabIndicatorColor="?attr/colorOnSecondary"
-        app:tabInlineLabel="true"
-        style="@style/tab_indicator"
-        >
-
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Избранные треки"
-
-            />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Плейлисты"
-            />
-
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:layout_marginTop="128dp"
-        android:id="@+id/viewPagerLibrary"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+    tools:context=".presentation.library.LibraryActivity">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

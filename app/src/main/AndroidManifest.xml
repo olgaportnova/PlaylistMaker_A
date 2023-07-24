@@ -26,6 +26,13 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".presentation.library.LibraryActivity"
+            android:exported="false" >
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".presentation.settings.SettingActivity"
             android:exported="false" >
             <meta-data
@@ -33,11 +40,6 @@
                 android:value="" />
         </activity>
         <activity android:name=".presentation.audioPlayer.AudioPlayerActivity"
-            android:exported="false">
-
-        </activity>
-
-        <activity android:name=".presentation.library.LibraryActivity"
             android:exported="false">
 
         </activity>
