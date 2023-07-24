@@ -7,9 +7,6 @@ import com.example.playlistmaker.data.ERROR_NO_CONNECTION_TO_INTERNET
 import com.example.playlistmaker.data.NetworkClient
 import com.example.playlistmaker.data.dto.Response
 import com.example.playlistmaker.data.dto.TrackSearchRequest
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-
 
 class RetrofitNetworkClient(private val imdbService: Itunes,
                             private val context: Context)  : NetworkClient {

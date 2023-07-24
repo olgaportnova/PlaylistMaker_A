@@ -1,9 +1,8 @@
 package com.example.playlistmaker.data.player.impl
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.domain.player.MediaPlayerRepository
 import com.example.playlistmaker.domain.model.State
-import org.koin.java.KoinJavaComponent.getKoin
+import com.example.playlistmaker.domain.player.MediaPlayerRepository
 
 class MediaPlayerRepositoryImpl (private val mediaPlayer: MediaPlayer) : MediaPlayerRepository {
 

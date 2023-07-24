@@ -10,9 +10,6 @@ import com.example.playlistmaker.domain.player.AudioPlayerInteractor
 
 class AudioPlayerViewModel(private val audioPlayerInterator: AudioPlayerInteractor ) : ViewModel() {
 
-
-  //  private val audioPlayerInterator = Creator.provideAudioPlayerInteractor()
-
     private var mainThreadHandler = Handler(Looper.getMainLooper())
     private val timerRunnable = createUpdateTimerTask()
     private var statePlayerLiveData = MutableLiveData(State.PREPARED)

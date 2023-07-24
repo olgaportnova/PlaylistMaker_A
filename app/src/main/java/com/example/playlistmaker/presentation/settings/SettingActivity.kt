@@ -1,15 +1,12 @@
 package com.example.playlistmaker.presentation.settings
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import com.example.playlistmaker.presentation.main.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 

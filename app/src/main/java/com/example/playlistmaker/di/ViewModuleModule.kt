@@ -1,6 +1,8 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.presentation.audioPlayer.AudioPlayerViewModel
+import com.example.playlistmaker.presentation.library.FavPlaylistFragmentViewModel
+import com.example.playlistmaker.presentation.library.FavTracksFragmentViewModel
 import com.example.playlistmaker.presentation.main.MainViewModel
 import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.presentation.settings.SettingViewModel
@@ -26,6 +28,16 @@ import org.koin.dsl.module
         viewModel {
             SearchViewModel(get(),get(),get())
         }
+
+        viewModel {
+            FavPlaylistFragmentViewModel()
+        }
+
+        viewModel {
+            FavTracksFragmentViewModel()
+        }
+
+
 
 
 

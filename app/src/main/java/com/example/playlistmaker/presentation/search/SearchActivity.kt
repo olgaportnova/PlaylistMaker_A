@@ -1,6 +1,5 @@
 package com.example.playlistmaker.presentation.search
 
-import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -8,12 +7,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.presentation.main.MainViewModel
 import com.example.playlistmaker.ui.tracks.models.TracksState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

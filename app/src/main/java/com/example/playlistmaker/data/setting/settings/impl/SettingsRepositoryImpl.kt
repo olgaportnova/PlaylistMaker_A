@@ -1,6 +1,5 @@
 package com.example.playlistmaker.data.setting.settings.impl
 
-import android.content.Context
 import android.content.SharedPreferences
 import com.example.playlistmaker.data.setting.settings.SettingsRepository
 import com.example.playlistmaker.domain.setting.settings.model.ThemeSettings
