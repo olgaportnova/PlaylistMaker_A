@@ -1,22 +1,14 @@
 package com.example.playlistmaker.presentation.audioPlayer
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.model.State
-import com.example.playlistmaker.util.Creator
+import com.example.playlistmaker.domain.player.AudioPlayerInteractor
 
-class AudioPlayerViewModel(application: Application) : AndroidViewModel(application) {
-
-
-    private val audioPlayerInterator = Creator.provideAudioPlayerInteractor()
+class AudioPlayerViewModel(private val audioPlayerInterator: AudioPlayerInteractor ) : ViewModel() {
 
     private var mainThreadHandler = Handler(Looper.getMainLooper())
     private val timerRunnable = createUpdateTimerTask()
@@ -98,10 +90,5 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
 
         const val DELAY_UPDATE_TIMER_MC = 300L
 
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                AudioPlayerViewModel(this[APPLICATION_KEY] as Application)
-            }
-        }
     }
 }
