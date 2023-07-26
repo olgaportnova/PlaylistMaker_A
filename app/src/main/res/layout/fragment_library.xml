@@ -15,14 +15,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="56dp">
-    <ImageView
-        style="@style/BackIconHead"
-        android:src="@drawable/arrow"
-        android:id="@+id/back" />
     <TextView
         android:id="@+id/headerText"
         style="@style/HeadText"
-        android:text="Медиатека" />
+        android:text="Медиатека"
+        android:layout_marginStart="16dp"/>
     </FrameLayout>
 
     <com.google.android.material.tabs.TabLayout
@@ -37,8 +34,8 @@
         app:tabTextColor="?attr/colorOnSecondary"
         app:tabSelectedTextColor="?attr/colorOnSecondary"
         app:tabIndicatorColor="?attr/colorOnSecondary"
+        app:tabIndicatorFullWidth="false"
         app:tabInlineLabel="true"
-        style="@style/tab_indicator"
         >
 
 

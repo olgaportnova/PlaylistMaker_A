@@ -269,10 +269,22 @@
     </style>
 
     <style name="tab_indicator" parent="Widget.MaterialComponents.TabLayout">
-        <item name="tabIndicatorColor">@color/white</item>
         <item name="tabIndicatorFullWidth">false</item>
         <item name="tabInlineLabel">true</item>
 
     </style>
+
+    <style name='MainLayout'>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+
+    </style>
+
+    <style name="divider_context_nav_bar">
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
 
 </resources>

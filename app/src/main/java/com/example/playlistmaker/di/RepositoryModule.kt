@@ -12,13 +12,12 @@ import com.example.playlistmaker.data.setting.sharing.ExternalNavigator
 import com.example.playlistmaker.data.setting.sharing.impl.ExternalNavigationImpl
 import com.example.playlistmaker.domain.TrackRepository
 import com.example.playlistmaker.domain.player.MediaPlayerRepository
-import com.example.playlistmaker.domain.setting.settings.impl.SettingsInteractorImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 
-    val repositoryModule = module {
+val repositoryModule = module {
 
         single<TrackRepository> {
             TrackRepositoryImpl(get())

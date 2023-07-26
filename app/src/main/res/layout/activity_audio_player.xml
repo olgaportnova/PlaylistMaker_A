@@ -48,7 +48,7 @@
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toStartOf="@+id/left_guideline"
         app:layout_constraintTop_toBottomOf="@+id/back_from_AP"
-        app:srcCompat="@drawable/cover_tools" />
+        />
 
     <TextView
         android:id="@+id/track_name"

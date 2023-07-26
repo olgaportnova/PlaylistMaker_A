@@ -3,24 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.playlistmaker.presentation.settings.SettingsFragment"
 
     >
 
 <FrameLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <ImageView
-        style="@style/BackIconHead"
-        android:src="@drawable/arrow"
-        android:id="@+id/back" />
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp">
+
     <TextView
         style="@style/HeadText"
+        android:layout_marginLeft="16dp"
         android:text="@string/settings" />
 
-
-
-
-<FrameLayout
+    <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="61dp"
     android:layout_marginTop="80dp"

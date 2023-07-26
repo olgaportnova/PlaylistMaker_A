@@ -5,39 +5,47 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.tracks.models.TracksState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
+class SearchFragment : Fragment(), TrackAdapter.Listener {
 
+    private lateinit var binding: FragmentSearchBinding
     private val searchTrackViewModel: SearchViewModel by viewModel()
-    private lateinit var binding: ActivitySearchBinding
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
     private var textWatcher: TextWatcher? = null
-  //  private lateinit var context: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-  //      context = applicationContext
         super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
 
-        searchTrackViewModel.getSearchTrackStatusLiveData().observe(this) { updatedStatus ->
+        searchTrackViewModel.getSearchTrackStatusLiveData().observe(viewLifecycleOwner) { updatedStatus ->
             updatedViewBasedOnStatus(updatedStatus)
         }
 
         init()
-
-
 
         textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -63,12 +71,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
             binding.inputEditText.addTextChangedListener(it)
         }
 
-
-        // стрелка назад в меню
-        binding.back.setOnClickListener {
-            finish()
-        }
-
         // очистка строки поиска
         binding.clearIcon.setOnClickListener {
             binding.inputEditText.setText("")
@@ -92,7 +94,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
     private fun init() {
         binding.apply {
-            rcTrackList.layoutManager = LinearLayoutManager(this@SearchActivity)
+            rcTrackList.layoutManager = LinearLayoutManager(requireContext())
 
         }
         searchTrackViewModel.showHistory()
@@ -100,7 +102,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
 
     // добавление трека в историю по клику и открыте в аудиоплеере
-    override fun onClick(track: Track) {
+     override fun onClick(track: Track) {
         if (clickDebounce()) {
             searchTrackViewModel.addNewTrackToHistory(track)
             searchTrackViewModel.getHistory()
@@ -117,6 +119,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
         }
         return current
     }
+
+
 
 
     // cостояния и отрисовка элементов UI
@@ -185,7 +189,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
     fun showContent(tracks: List<Track>) {
         binding.apply {
-            rcTrackList.adapter = TrackAdapter(ArrayList(tracks), this@SearchActivity)
+            rcTrackList.adapter = TrackAdapter(ArrayList(tracks), this@SearchFragment )
             rcTrackList.visibility = View.VISIBLE
             imagePlaceholder.visibility = View.GONE
             textPlaceholder.visibility = View.GONE
@@ -198,7 +202,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
     fun showHistoryUI(updatedHistory: List<Track>) {
         binding.apply {
-            rcTrackList.adapter = TrackAdapter(ArrayList(updatedHistory), this@SearchActivity)
+            rcTrackList.adapter = TrackAdapter(ArrayList(updatedHistory), this@SearchFragment )
             rcTrackList.visibility = View.VISIBLE
             imagePlaceholder.visibility = View.GONE
             textPlaceholder.visibility = View.GONE
@@ -212,7 +216,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
     fun showHistoryIsEmpty(updatedHistory: List<Track>) {
         binding.apply {
-            rcTrackList.adapter = TrackAdapter(ArrayList(updatedHistory), this@SearchActivity)
+            rcTrackList.adapter = TrackAdapter(ArrayList(updatedHistory), this@SearchFragment )
             rcTrackList.visibility = View.VISIBLE
             imagePlaceholder.visibility = View.GONE
             textPlaceholder.visibility = View.GONE
@@ -223,6 +227,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
         }
     }
+
+
+
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -239,5 +247,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
         const val SEARCH_TYPE = "SEARCH_TYPE"
         private const val CLICK_DEBOUNCE_DELAY_MC = 1000L
     }
+
+
 
 }
