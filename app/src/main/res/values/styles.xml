@@ -288,7 +288,6 @@
     </style>
 
     <style name="tab_indicator" parent="Widget.MaterialComponents.TabLayout">>
-        <item name="tabIndicatorColor">@color/black</item>
         <item name="tabIndicatorFullWidth">false</item>
         <item name="tabInlineLabel">true</item>
 
