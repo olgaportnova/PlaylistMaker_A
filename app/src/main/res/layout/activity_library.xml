@@ -1,15 +1,4 @@
 
-<!--    <FrameLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="56dp">-->
-<!--    <ImageView-->
-<!--        style="@style/BackIconHead"-->
-<!--        android:src="@drawable/arrow"-->
-<!--        android:id="@+id/back" />-->
-<!--    <TextView-->
-<!--        style="@style/HeadText"-->
-<!--        android:text="Медиатека"/>-->
-<!--    </FrameLayout>-->
 
 
 <androidx.constraintlayout.widget.ConstraintLayout

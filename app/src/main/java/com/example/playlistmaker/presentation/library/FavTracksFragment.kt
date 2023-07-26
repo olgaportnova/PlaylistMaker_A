@@ -8,18 +8,21 @@ import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavPlaylistsBinding
 import com.example.playlistmaker.databinding.FragmentFavTracksBinding
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavTracksFragment : Fragment() {
 
 
-    private val favTracksFragmentViewModel: FavTracksFragmentViewModel by viewModel()
+    private val favTracksFragmentViewModel: FavTracksFragmentViewModel by activityViewModel()
 
-    private lateinit var binding: FragmentFavTracksBinding
+
+    private var _binding: FragmentFavTracksBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        binding = FragmentFavTracksBinding.inflate(inflater, container, false)
+        _binding = FragmentFavTracksBinding.inflate(inflater, container, false)
         return binding.root
     }
 

@@ -7,17 +7,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavPlaylistsBinding
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavPlaylistFragment : Fragment() {
 
-    private val favPlaylistFragmentViewModel: FavPlaylistFragmentViewModel by viewModel()
+    private val favPlaylistFragmentViewModel: FavPlaylistFragmentViewModel by activityViewModel()
 
-    private lateinit var binding: FragmentFavPlaylistsBinding
+
+    private var _binding: FragmentFavPlaylistsBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        binding = FragmentFavPlaylistsBinding.inflate(inflater, container, false)
+        _binding = FragmentFavPlaylistsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -27,14 +30,6 @@ class FavPlaylistFragment : Fragment() {
         }
 
 
-
-//    override fun onCreateView(
-//        inflater: LayoutInflater, container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View {
-//
-//        return inflater.inflate(R.layout.fragment_fav_playlists,container,false)
-//    }
 
     companion object {
         @JvmStatic

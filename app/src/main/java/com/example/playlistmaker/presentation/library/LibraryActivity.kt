@@ -16,6 +16,8 @@ class LibraryActivity : AppCompatActivity() {
     private lateinit var fragListTitles: List<String>
     private lateinit var binding: ActivityLibraryBinding
 
+    private lateinit var tabMediator: TabLayoutMediator
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -31,15 +33,21 @@ class LibraryActivity : AppCompatActivity() {
         val adapter = ViewPageLibraryAdapter(this, fragList)
         binding.viewPagerLibrary.adapter = adapter
 
-        TabLayoutMediator(binding.tabLayout, binding.viewPagerLibrary) { tab, pos ->
+        tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPagerLibrary) { tab, pos ->
             tab.text = fragListTitles[pos]
-        }.attach()
+        }
+        tabMediator.attach()
 
 
 
         binding.back.setOnClickListener {
             finish()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tabMediator.detach()
     }
 }
 
