@@ -37,8 +37,8 @@
         app:tabTextColor="?attr/colorOnSecondary"
         app:tabSelectedTextColor="?attr/colorOnSecondary"
         app:tabIndicatorColor="?attr/colorOnSecondary"
+        app:tabIndicatorFullWidth="false"
         app:tabInlineLabel="true"
-        style="@style/tab_indicator"
         >
 
 
