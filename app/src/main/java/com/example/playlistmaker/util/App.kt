@@ -1,7 +1,6 @@
 package com.example.playlistmaker.util
 
 import android.app.Application
-
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.di.dataModule
 import com.example.playlistmaker.di.interactorModule
@@ -10,11 +9,8 @@ import com.example.playlistmaker.di.viewModelModule
 import com.example.playlistmaker.domain.setting.settings.SettingsInteractor
 import com.example.playlistmaker.domain.setting.settings.model.ThemeSettings
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.GlobalContext.get
 import org.koin.core.context.GlobalContext.startKoin
-import org.koin.dsl.module
 import org.koin.java.KoinJavaComponent.getKoin
-import org.koin.java.KoinJavaComponent.inject
 
 
 class App ():Application() {

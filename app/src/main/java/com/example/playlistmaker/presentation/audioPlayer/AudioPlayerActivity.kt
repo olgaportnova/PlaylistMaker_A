@@ -1,11 +1,9 @@
 package com.example.playlistmaker.presentation.audioPlayer
 
 import android.annotation.SuppressLint
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.history.impl.TRACK_TO_OPEN
@@ -13,11 +11,7 @@ import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.domain.model.State
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.audioPlayer.model.TrackInfo
-import com.example.playlistmaker.presentation.main.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.java.KoinJavaComponent
-import org.koin.java.KoinJavaComponent.getKoin
-import org.koin.java.KoinJavaComponent.inject
 import java.text.SimpleDateFormat
 import java.util.*
 
