@@ -5,6 +5,7 @@
         <item name="android:layout_gravity">end</item>
         <item name="android:thumbTint">#3772E7</item>
         <item name="android:trackTint">#3772E7</item>
+        <item name="android:layout_marginEnd">10dp</item>
     </style>
 
     <style name="EditTextBar">
