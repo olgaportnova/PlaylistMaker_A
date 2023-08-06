@@ -35,6 +35,15 @@ class SearchFragment : Fragment(), TrackAdapter.Listener {
     ): View? {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
+
+
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        binding.clearIcon.visibility =
+            if (binding.inputEditText.text.isNotEmpty()) View.VISIBLE else View.GONE
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,11 +53,16 @@ class SearchFragment : Fragment(), TrackAdapter.Listener {
         searchTrackViewModel.getSearchTrackStatusLiveData().observe(viewLifecycleOwner) { updatedStatus ->
             updatedViewBasedOnStatus(updatedStatus)
         }
+        binding.clearIcon.visibility =
+            if (binding.inputEditText.text.isNotEmpty()) View.VISIBLE else View.GONE
+
+
 
         init()
 
         textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
