@@ -48,7 +48,7 @@
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toStartOf="@+id/left_guideline"
         app:layout_constraintTop_toBottomOf="@+id/back_from_AP"
-        app:srcCompat="@drawable/cover_tools" />
+        />
 
     <TextView
         android:id="@+id/track_name"
@@ -80,13 +80,14 @@
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/artist_name"
-
+        android:background="@null"
         style="@style/ic_add_to_pl" />
 
 
 
     <ImageButton
         android:id="@+id/play_button"
+        android:background="@null"
         android:src="@drawable/ic_play_button"
         app:layout_constraintEnd_toStartOf="@+id/favorite_button"
         app:layout_constraintStart_toEndOf="@id/add_to_PL_button"
@@ -96,6 +97,7 @@
     <ImageButton
         android:id="@+id/favorite_button"
         android:src="@drawable/ic_fav_botton"
+        android:background="@null"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@+id/play_button"
         app:layout_constraintTop_toTopOf="@id/add_to_PL_button"

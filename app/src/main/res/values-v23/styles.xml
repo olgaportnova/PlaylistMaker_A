@@ -5,6 +5,7 @@
         <item name="android:layout_gravity">end</item>
         <item name="android:thumbTint">#AEAFB4</item>
         <item name="android:trackTint">#AEAFB4</item>
+
     </style>
 
     <style name="EditTextBar">

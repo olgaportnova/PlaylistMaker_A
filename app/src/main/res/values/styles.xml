@@ -78,7 +78,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:background">@color/blue </item>
 
     </style>
 
@@ -292,5 +291,14 @@
         <item name="tabInlineLabel">true</item>
 
     </style>
+
+    <style name="divider_context_nav_bar">
+        <item name="android:backgroundTint">#E6E8EB</item>
+        <item name="android:background">#E6E8EB</item>
+    </style>
+
+
+
+
 
 </resources>

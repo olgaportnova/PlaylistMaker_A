@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_navigation_graph"
+    app:startDestination="@id/libraryFragment">
+
+    <fragment
+        android:id="@+id/libraryFragment"
+        android:name="com.example.playlistmaker.presentation.library.LibraryFragment"
+        android:label="LibraryFragment" >
+        <action
+            android:id="@+id/action_libraryFragment_to_favPlaylistFragment"
+            app:destination="@id/favPlaylistFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_favTracksFragment"
+            app:destination="@id/favTracksFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.playlistmaker.presentation.search.SearchFragment"
+        android:label="SearchFragment" >
+        <action
+            android:id="@+id/action_searchFragment_to_audioPlayerActivity"
+            app:destination="@id/audioPlayerActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.playlistmaker.presentation.settings.SettingsFragment"
+        android:label="SettingsFragment" />
+    <activity
+        android:id="@+id/audioPlayerActivity"
+        android:name="com.example.playlistmaker.presentation.audioPlayer.AudioPlayerActivity"
+        android:label="AudioPlayerActivity" />
+    <fragment
+        android:id="@+id/favPlaylistFragment"
+        android:name="com.example.playlistmaker.presentation.library.FavPlaylistFragment"
+        android:label="FavPlaylistFragment" />
+    <fragment
+        android:id="@+id/favTracksFragment"
+        android:name="com.example.playlistmaker.presentation.library.FavTracksFragment"
+        android:label="FavTracksFragment" />
+</navigation>
