@@ -6,11 +6,15 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.TrackInteractor
 import com.example.playlistmaker.domain.history.HistoryInteractor
 import com.example.playlistmaker.domain.main_navigation.InternalNavigationInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.tracks.models.TracksState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class SearchViewModel(
@@ -28,6 +32,7 @@ class SearchViewModel(
     private var tracks = ArrayList<Track>()
     private val handler = Handler(Looper.getMainLooper())
     private var lastSearchText: String? = null
+    private var searchJob: Job? = null
 
     private val searchRunnable = Runnable {
         val newSearchText = lastSearchText
@@ -51,10 +56,19 @@ class SearchViewModel(
     }
 
     // поиск по вводу каждые 2 сек
+
     fun searchDebounce(changedText: String) {
-        this.lastSearchText = changedText
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        if (lastSearchText == changedText) {
+            return
+        }
+
+        lastSearchText = changedText
+
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            searchAction(changedText)
+        }
     }
 
     fun getHistory():ArrayList<Track> {
