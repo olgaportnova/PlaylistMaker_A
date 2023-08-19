@@ -70,7 +70,6 @@ class AudioPlayerActivity (): AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        viewModel.onDestroy()
         super.onDestroy()
 
     }
@@ -86,6 +85,11 @@ class AudioPlayerActivity (): AppCompatActivity() {
             binding.playButton.setImageResource(R.drawable.ic_play_button)
             binding.currentTime.text = "00:00"
         }
+        if (state == State.DEFAULT) {
+            binding.playButton.setImageResource(R.drawable.ic_play_button)
+            binding.currentTime.text = "00:00"
+        }
+
     }
 
     private fun changeTimer(currentTimer: Int) {

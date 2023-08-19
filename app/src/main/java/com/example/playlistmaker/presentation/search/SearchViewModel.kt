@@ -14,7 +14,9 @@ import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.tracks.models.TracksState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+
 
 
 class SearchViewModel(
@@ -22,6 +24,12 @@ class SearchViewModel(
     private val historyInteractor: HistoryInteractor,
     private val internalNavigationInteractor: InternalNavigationInteractor
 ) : ViewModel(){
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val ERROR_CONNECTION = -1
+        private const val ERROR_EMPTY_LIST = -2
+
+    }
 
 
     private var searchTrackStatusLiveData = MutableLiveData<TracksState>()
@@ -113,17 +121,22 @@ class SearchViewModel(
                 )
             )
         }
+        viewModelScope.launch {
+            searchInteractor
+                .search(newSearchText)
+                .collect { pair ->
+                    processResult(pair.first, pair.second)
+                }
+        }
+    }
 
-        searchInteractor.search(newSearchText, object : TrackInteractor.TrackConsumer {
-            override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
-                handler.post {
-
-                    if (foundTracks != null) {
+        private fun processResult(foundTracks: List<Track>?, errorMessage: String?) {
+            val tracks = mutableListOf<Track>()
+            if (foundTracks != null) {
                         tracks.clear()
                         tracks.addAll(foundTracks)
                     }
-                    when {
-                        errorMessage != null -> {
+            when { errorMessage != null -> {
                             searchTrackStatusLiveData.postValue(
                                 TracksState(
                                     emptyList(),
@@ -163,17 +176,13 @@ class SearchViewModel(
                     }
                 }
             }
-        })
-    }
 
 
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private const val ERROR_CONNECTION = -1
-        private const val ERROR_EMPTY_LIST = -2
 
-    }
 
-}
+
+
+
+
 
 

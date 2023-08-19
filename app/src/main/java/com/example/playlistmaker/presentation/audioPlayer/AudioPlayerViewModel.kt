@@ -5,13 +5,18 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.model.State
 import com.example.playlistmaker.domain.player.AudioPlayerInteractor
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class AudioPlayerViewModel(private val audioPlayerInterator: AudioPlayerInteractor ) : ViewModel() {
 
-    private var mainThreadHandler = Handler(Looper.getMainLooper())
-    private val timerRunnable = createUpdateTimerTask()
+
+    private var timerJob: Job? = null
+
     private var statePlayerLiveData = MutableLiveData(State.PREPARED)
 
     fun getStatePlayerLiveData(): LiveData<State> = statePlayerLiveData
@@ -26,68 +31,64 @@ class AudioPlayerViewModel(private val audioPlayerInterator: AudioPlayerInteract
             when (state) {
                 State.PREPARED, State.DEFAULT -> {
                     statePlayerLiveData.postValue(State.PREPARED)
-                    mainThreadHandler.removeCallbacks(timerRunnable)
                 }
                 else -> Unit
             }
         }
     }
 
-    fun createUpdateTimerTask(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                var currentTimerPosition = audioPlayerInterator.currentPosition()
-                mainThreadHandler.postDelayed(this, DELAY_UPDATE_TIMER_MC)
-                currentTimerLiveData.postValue(currentTimerPosition)
-            }
 
+    private fun startTimer(state: State) {
+        timerJob = viewModelScope.launch {
+            while (state==State.PLAYING) {
+                delay(DELAY_UPDATE_TIMER_MC)
+                currentTimerLiveData.postValue(audioPlayerInterator.currentPosition())
+            }
+            timerJob?.cancel()
         }
     }
-
 
     fun changePlayerState() {
         audioPlayerInterator.switchPlayer { state ->
             when (state) {
                 State.PLAYING -> {
-                    mainThreadHandler.removeCallbacks(timerRunnable)
-                    mainThreadHandler.post(timerRunnable)
+                    currentTimerLiveData.postValue(audioPlayerInterator.currentPosition())
                     statePlayerLiveData.postValue(State.PLAYING)
+                    startTimer(state)
                 }
                 State.PAUSED -> {
-                    mainThreadHandler.removeCallbacks(timerRunnable)
+                    timerJob?.cancel()
                     statePlayerLiveData.postValue(State.PAUSED)
                 }
                 State.PREPARED -> {
-                    mainThreadHandler.removeCallbacks(timerRunnable)
-                    mainThreadHandler.post(timerRunnable)
+                    startTimer(state)
                     statePlayerLiveData.postValue(State.PREPARED)
+                    currentTimerLiveData.postValue(TIMER_START)
                 }
-
-                else -> Unit
+                State.DEFAULT -> {
+                    timerJob?.cancel()
+                    statePlayerLiveData.postValue(State.DEFAULT)
+                    currentTimerLiveData.postValue(TIMER_START)
+                }
             }
         }
     }
 
     fun onPause() {
-        mainThreadHandler.removeCallbacks(timerRunnable)
         statePlayerLiveData.postValue(State.PAUSED)
         audioPlayerInterator.pausePlayer()
 
     }
 
-    fun onDestroy() {
-        mainThreadHandler.removeCallbacks(timerRunnable)
 
-    }
 
     fun onResume() {
-        mainThreadHandler.removeCallbacks(timerRunnable)
         statePlayerLiveData.postValue(State.PAUSED)
 
     }
 
     companion object {
-
+        const val TIMER_START = 0
         const val DELAY_UPDATE_TIMER_MC = 300L
 
     }

@@ -4,5 +4,5 @@ import com.example.playlistmaker.data.dto.Response
 
 interface NetworkClient {
 
-  fun getTracksFromItunes(dto: Any): Response
+  suspend fun getTracksFromItunes(dto: Any): Response
 }
