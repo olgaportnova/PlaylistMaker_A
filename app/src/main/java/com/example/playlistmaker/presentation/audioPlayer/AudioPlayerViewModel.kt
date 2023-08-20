@@ -22,7 +22,6 @@ class AudioPlayerViewModel(private val audioPlayerInterator: AudioPlayerInteract
     fun getStatePlayerLiveData(): LiveData<State> = statePlayerLiveData
 
     private var currentTimerLiveData = MutableLiveData(0)
-
     fun getCurrentTimerLiveData(): LiveData<Int> = currentTimerLiveData
 
 
@@ -31,6 +30,8 @@ class AudioPlayerViewModel(private val audioPlayerInterator: AudioPlayerInteract
             when (state) {
                 State.PREPARED, State.DEFAULT -> {
                     statePlayerLiveData.postValue(State.PREPARED)
+                    currentTimerLiveData.postValue(TIMER_START)
+
                 }
                 else -> Unit
             }

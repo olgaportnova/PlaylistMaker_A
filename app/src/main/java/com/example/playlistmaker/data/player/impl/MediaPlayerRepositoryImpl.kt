@@ -4,17 +4,16 @@ import android.media.MediaPlayer
 import com.example.playlistmaker.domain.model.State
 import com.example.playlistmaker.domain.player.MediaPlayerRepository
 
-class MediaPlayerRepositoryImpl (private val mediaPlayer: MediaPlayer) : MediaPlayerRepository {
+class MediaPlayerRepositoryImpl () : MediaPlayerRepository {
 
 
+    private val mediaPlayer: MediaPlayer = MediaPlayer()
     private var playerState = State.PREPARED
+
     override fun preparePlayer(
         url: String,
         onStateChangedTo: (s: State) -> Unit
     ) {
-        mediaPlayer.reset()
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
             playerState = State.PREPARED
             onStateChangedTo(State.PREPARED)
@@ -24,6 +23,10 @@ class MediaPlayerRepositoryImpl (private val mediaPlayer: MediaPlayer) : MediaPl
             onStateChangedTo(State.PREPARED)
 
         }
+        mediaPlayer.reset()
+        mediaPlayer.setDataSource(url)
+        mediaPlayer.prepareAsync()
+
 
     }
 
