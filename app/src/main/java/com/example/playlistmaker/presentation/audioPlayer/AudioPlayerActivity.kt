@@ -32,14 +32,15 @@ class AudioPlayerActivity (): AppCompatActivity() {
         val trackInfo = track.toTrackInfo(track)
         val url = track.previewUrl // url превью 30 сек.
 
+        viewModel.getCurrentTimerLiveData().observe(this) { currentTimer ->
+            changeTimer(currentTimer)
+        }
 
         viewModel.getStatePlayerLiveData().observe(this) { state ->
             changeState(state)
         }
 
-        viewModel.getCurrentTimerLiveData().observe(this) { currentTimer ->
-            changeTimer(currentTimer)
-        }
+
 
         viewModel.preparePlayer(url)
 
