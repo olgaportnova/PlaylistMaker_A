@@ -50,6 +50,7 @@ class AudioPlayerViewModel(private val audioPlayerInterator: AudioPlayerInteract
             }
         }
         if (state==State.PREPARED) {
+            timerJob?.cancel()
             currentTimerLiveData.postValue(TIMER_START)
         }
         }

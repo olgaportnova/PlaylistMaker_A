@@ -46,6 +46,8 @@ class SearchFragment : Fragment(), TrackAdapter.Listener {
         binding.clearIcon.visibility =
             if (binding.inputEditText.text.isNotEmpty()) View.VISIBLE else View.GONE
 
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

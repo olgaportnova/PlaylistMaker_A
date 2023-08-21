@@ -54,11 +54,15 @@ class SearchViewModel(
 
     fun onDestroy() {
         handler.removeCallbacks(searchRunnable)
+        lastSearchText=null
     }
 
     fun onResume() {
         getHistory()
-        if (tracks.isEmpty()){
+        if (lastSearchText?.isNotEmpty() == true) {
+            searchAction(lastSearchText!!)
+        }
+        else {
             showHistory()
         }
     }
@@ -66,7 +70,7 @@ class SearchViewModel(
     // поиск по вводу каждые 2 сек
 
     fun searchDebounce(changedText: String) {
-        if (lastSearchText == changedText) {
+        if (lastSearchText == changedText || changedText.isEmpty()) {
             return
         }
 
@@ -74,8 +78,9 @@ class SearchViewModel(
 
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            delay(SEARCH_DEBOUNCE_DELAY)
-            searchAction(changedText)
+                delay(SEARCH_DEBOUNCE_DELAY)
+                searchAction(changedText)
+
         }
     }
 
