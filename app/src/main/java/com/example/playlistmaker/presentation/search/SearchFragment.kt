@@ -9,18 +9,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.tracks.models.TracksState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment(), TrackAdapter.Listener {
 
     private lateinit var binding: FragmentSearchBinding
     private val searchTrackViewModel: SearchViewModel by viewModel()
-    private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
     private var textWatcher: TextWatcher? = null
 
@@ -44,10 +46,15 @@ class SearchFragment : Fragment(), TrackAdapter.Listener {
         binding.clearIcon.visibility =
             if (binding.inputEditText.text.isNotEmpty()) View.VISIBLE else View.GONE
 
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
 
 
         searchTrackViewModel.getSearchTrackStatusLiveData().observe(viewLifecycleOwner) { updatedStatus ->
@@ -129,10 +136,14 @@ class SearchFragment : Fragment(), TrackAdapter.Listener {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MC)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY_MC)
+                isClickAllowed = true
+            }
         }
         return current
     }
+
 
 
 
@@ -251,10 +262,6 @@ class SearchFragment : Fragment(), TrackAdapter.Listener {
         searchTrackViewModel.onDestroy()
     }
 
-    override fun onResume() {
-        super.onResume()
-        searchTrackViewModel.onResume()
-    }
 
 
     companion object {

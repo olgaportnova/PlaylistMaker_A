@@ -2,9 +2,11 @@ package com.example.playlistmaker.presentation.audioPlayer
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.history.impl.TRACK_TO_OPEN
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
@@ -28,18 +30,20 @@ class AudioPlayerActivity (): AppCompatActivity() {
         binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         val track = intent.getSerializableExtra(TRACK_TO_OPEN) as Track
         val trackInfo = track.toTrackInfo(track)
         val url = track.previewUrl // url превью 30 сек.
 
+        viewModel.getCurrentTimerLiveData().observe(this) { currentTimer ->
+            changeTimer(currentTimer)
+        }
 
         viewModel.getStatePlayerLiveData().observe(this) { state ->
             changeState(state)
         }
 
-        viewModel.getCurrentTimerLiveData().observe(this) { currentTimer ->
-            changeTimer(currentTimer)
-        }
+
 
         viewModel.preparePlayer(url)
 
@@ -70,7 +74,6 @@ class AudioPlayerActivity (): AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        viewModel.onDestroy()
         super.onDestroy()
 
     }
@@ -86,6 +89,11 @@ class AudioPlayerActivity (): AppCompatActivity() {
             binding.playButton.setImageResource(R.drawable.ic_play_button)
             binding.currentTime.text = "00:00"
         }
+        if (state == State.DEFAULT) {
+            binding.playButton.setImageResource(R.drawable.ic_play_button)
+            binding.currentTime.text = "00:00"
+        }
+
     }
 
     private fun changeTimer(currentTimer: Int) {
@@ -95,13 +103,17 @@ class AudioPlayerActivity (): AppCompatActivity() {
 
 
     private fun init(trackInfo: TrackInfo) {
+        val px = (this.baseContext.resources.displayMetrics.densityDpi
+                / DisplayMetrics.DENSITY_DEFAULT)
+        val radius = resources.getDimensionPixelSize(R.dimen.album_cover_corner_radius)
         binding.apply {
             binding.currentTime.text = "00:00"
             trackName.text = trackInfo.trackName
             artistName.text = trackInfo.artistName
             durationResult.text = trackInfo.trackTime
             Glide.with(coverAP)
-                .load(trackInfo.artworkUrl100).placeholder(R.drawable.placeholder_big).into(coverAP)
+                .load(trackInfo.artworkUrl100).placeholder(R.drawable.placeholder_big).centerCrop()
+                .transform(RoundedCorners(radius)).into(coverAP)
             countryResult.text = trackInfo.country
             yearResult.text = trackInfo.releaseDate
             genreResult.text = trackInfo.primaryGenreName
