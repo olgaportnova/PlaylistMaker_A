@@ -262,10 +262,6 @@ class SearchFragment : Fragment(), TrackAdapter.Listener {
         searchTrackViewModel.onDestroy()
     }
 
-    override fun onResume() {
-        super.onResume()
-        searchTrackViewModel.onResume()
-    }
 
 
     companion object {

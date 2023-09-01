@@ -57,20 +57,16 @@ class SearchViewModel(
         lastSearchText=null
     }
 
-    fun onResume() {
-        getHistory()
-        if (lastSearchText?.isNotEmpty() == true) {
-            searchAction(lastSearchText!!)
-        }
-        else {
-            showHistory()
-        }
-    }
+
 
     // поиск по вводу каждые 2 сек
 
     fun searchDebounce(changedText: String) {
-        if (lastSearchText == changedText || changedText.isEmpty()) {
+        if (lastSearchText == changedText) {
+            return
+        }
+        if (changedText.isEmpty()) {
+            showHistory()
             return
         }
 

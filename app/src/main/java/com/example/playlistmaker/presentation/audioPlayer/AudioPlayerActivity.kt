@@ -105,7 +105,7 @@ class AudioPlayerActivity (): AppCompatActivity() {
     private fun init(trackInfo: TrackInfo) {
         val px = (this.baseContext.resources.displayMetrics.densityDpi
                 / DisplayMetrics.DENSITY_DEFAULT)
-        val radius = 8 * px
+        val radius = resources.getDimensionPixelSize(R.dimen.album_cover_corner_radius)
         binding.apply {
             binding.currentTime.text = "00:00"
             trackName.text = trackInfo.trackName
