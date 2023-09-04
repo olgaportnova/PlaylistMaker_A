@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -13,9 +15,13 @@ import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.domain.model.State
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.audioPlayer.model.TrackInfo
+import com.example.playlistmaker.presentation.search.SearchViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.coroutines.CoroutineContext
 
 class AudioPlayerActivity (): AppCompatActivity() {
 
@@ -35,12 +41,17 @@ class AudioPlayerActivity (): AppCompatActivity() {
         val trackInfo = track.toTrackInfo(track)
         val url = track.previewUrl // url превью 30 сек.
 
+
         viewModel.getCurrentTimerLiveData().observe(this) { currentTimer ->
             changeTimer(currentTimer)
         }
 
         viewModel.getStatePlayerLiveData().observe(this) { state ->
             changeState(state)
+        }
+
+        viewModel.getIsFavourite().observe(this) { isFavourite ->
+            changeFavouriteIcon(isFavourite)
         }
 
 
@@ -52,6 +63,22 @@ class AudioPlayerActivity (): AppCompatActivity() {
             viewModel.changePlayerState()
         }
 
+        binding.favoriteButton.setOnClickListener{
+            lifecycleScope.launch {
+            viewModel.onFavoriteClicked(track = track)}
+        }
+
+
+
+        lifecycleScope.launch {
+            val isFavorite = viewModel.checkIfTrackIsFavorite(track.trackId)
+            changeFavouriteIcon(isFavorite)
+        }
+
+
+
+
+
         // нажание на кнопку назад
         binding.backFromAP.setOnClickListener {
             finish()
@@ -60,6 +87,8 @@ class AudioPlayerActivity (): AppCompatActivity() {
         init(trackInfo)
 
     }
+
+
 
     override fun onPause() {
         viewModel.onPause()
@@ -101,8 +130,19 @@ class AudioPlayerActivity (): AppCompatActivity() {
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(currentTimer)
     }
 
+    private fun changeFavouriteIcon(favourite: Boolean?) {
+        if (favourite == true) {
+            binding.favoriteButton.setImageResource(R.drawable.ic_fav_botton_pressed)
+        }
+        else {
+            binding.favoriteButton.setImageResource(R.drawable.ic_fav_botton)
+        }
+
+    }
+
 
     private fun init(trackInfo: TrackInfo) {
+        changeFavouriteIcon(trackInfo.isFavorite)
         val px = (this.baseContext.resources.displayMetrics.densityDpi
                 / DisplayMetrics.DENSITY_DEFAULT)
         val radius = resources.getDimensionPixelSize(R.dimen.album_cover_corner_radius)
@@ -127,5 +167,11 @@ class AudioPlayerActivity (): AppCompatActivity() {
     }
 
 }
+
+
+
+
+
+
 
 

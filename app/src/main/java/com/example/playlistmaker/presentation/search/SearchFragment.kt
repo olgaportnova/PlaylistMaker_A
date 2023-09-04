@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.presentation.audioPlayer.AudioPlayerViewModel
 import com.example.playlistmaker.ui.tracks.models.TracksState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ class SearchFragment : Fragment(), TrackAdapter.Listener {
 
     private lateinit var binding: FragmentSearchBinding
     private val searchTrackViewModel: SearchViewModel by viewModel()
+    private val playerViewModel: AudioPlayerViewModel by viewModel()
     private var isClickAllowed = true
     private var textWatcher: TextWatcher? = null
 
@@ -47,7 +49,10 @@ class SearchFragment : Fragment(), TrackAdapter.Listener {
             if (binding.inputEditText.text.isNotEmpty()) View.VISIBLE else View.GONE
 
 
+    }
 
+    override fun onResume() {
+        super.onResume()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -123,10 +128,11 @@ class SearchFragment : Fragment(), TrackAdapter.Listener {
 
 
     // добавление трека в историю по клику и открыте в аудиоплеере
-     override fun onClick(track: Track) {
+    override fun onClick(track: Track) {
         if (clickDebounce()) {
             searchTrackViewModel.addNewTrackToHistory(track)
             searchTrackViewModel.getHistory()
+
             searchTrackViewModel.openTrackAudioPlayer(track)
         }
     }
@@ -266,7 +272,7 @@ class SearchFragment : Fragment(), TrackAdapter.Listener {
 
     companion object {
         const val SEARCH_TYPE = "SEARCH_TYPE"
-        private const val CLICK_DEBOUNCE_DELAY_MC = 1000L
+        const val CLICK_DEBOUNCE_DELAY_MC = 1000L
     }
 
 

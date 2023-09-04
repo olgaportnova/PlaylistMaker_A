@@ -27,6 +27,12 @@ class TrackInteractorImpl(private val repository: TrackRepository) : TrackIntera
     override fun loadTracks(onComplete: (Boolean) -> Unit) {
         onComplete(true)
         }
+
+    override fun getFavIndicators(): Flow<List<Int>> {
+       return repository.getFavIndicators()
     }
+
+
+}
 
 

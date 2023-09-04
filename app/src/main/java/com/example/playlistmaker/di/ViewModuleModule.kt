@@ -15,7 +15,7 @@ import org.koin.dsl.module
 
 
         viewModel {
-            AudioPlayerViewModel(get())
+            AudioPlayerViewModel(get(),get())
         }
 
         viewModel {
@@ -31,7 +31,7 @@ import org.koin.dsl.module
         }
 
         viewModel {
-            FavTracksFragmentViewModel()
+            FavTracksFragmentViewModel(androidContext(), get())
         }
 
 

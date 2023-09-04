@@ -96,7 +96,9 @@
 
     <ImageButton
         android:id="@+id/favorite_button"
-        android:src="@drawable/ic_fav_botton"
+        android:src="@drawable/fav_button"
+        android:clickable="true"
+        android:onClick="myButtonClicked"
         android:background="@null"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@+id/play_button"
