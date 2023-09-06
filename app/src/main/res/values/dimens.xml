@@ -25,6 +25,7 @@
     <dimen name="track_name_frame_marginStart">8dp</dimen>
     <dimen name="track_name_frame_marginTop">14dp</dimen>
     <dimen name="radius_art_work">2dp</dimen>
+    <dimen name="radius_playlist_cover">8dp</dimen>
     <dimen name="album_cover_corner_radius">8dp</dimen>
 
 

@@ -59,6 +59,7 @@ class FavTracksFragment : Fragment(), TrackAdapter.Listener {
             is FavoriteState.Content -> showContent(state.tracks)
             is FavoriteState.Empty -> showEmpty(state.message)
             is FavoriteState.Loading -> {}
+            else -> {}
         }
     }
 

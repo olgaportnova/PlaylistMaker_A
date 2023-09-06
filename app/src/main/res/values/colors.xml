@@ -12,4 +12,10 @@
     <color name="setting_head">#1A1B22</color>
     <color name="artist_time_track_light_mode">#AEAFB4 </color>
 
+    // screen create new playlist
+        <color name="colorHintNormal">#1A1B22</color>
+        <color name="colorHintFocused">#3772E7</color>
+
+
+
 </resources>

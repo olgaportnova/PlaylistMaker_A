@@ -1,0 +1,38 @@
+package com.example.playlistmaker.domain.impl
+
+import com.example.playlistmaker.domain.db.PlaylistInteractor
+import com.example.playlistmaker.domain.db.PlaylistRepository
+import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.domain.model.Track
+import kotlinx.coroutines.flow.Flow
+
+class PlaylistInteractorImpl(
+    private val playlistRepository: PlaylistRepository
+): PlaylistInteractor {
+
+
+    override fun getAllFavouritePlaylists(): Flow<List<Playlist>> {
+        return playlistRepository.getAllFavouritePlaylists()
+    }
+
+    override suspend fun createNewPlaylist(playlist: Playlist) {
+        playlistRepository.createNewPlaylist(playlist)
+    }
+
+    override suspend fun deleteNewPlaylist(playlist: Playlist) {
+        playlistRepository.deleteNewPlaylist(playlist)
+    }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        playlistRepository.updatePlaylist(playlist)
+    }
+
+    override suspend fun addTrackToPlaylist(playlistId:Int, trackId:String) {
+        playlistRepository.addTrackToPlaylist(playlistId, trackId)
+    }
+
+    override suspend fun insertTrackDetailIntoPlaylistInfo(track: Track) {
+        playlistRepository.insertTrackDetailIntoPlaylistInfo(track)
+    }
+
+}

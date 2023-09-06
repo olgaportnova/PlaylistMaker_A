@@ -1,7 +1,7 @@
 package com.example.playlistmaker.data.favorites
 
 import com.example.playlistmaker.data.db.AppDatabase
-import com.example.playlistmaker.data.db.TrackDbConvertor
+import com.example.playlistmaker.data.db.convertors.TrackDbConvertor
 import com.example.playlistmaker.data.db.entity.TrackEntity
 import com.example.playlistmaker.domain.db.FavouriteRepository
 import com.example.playlistmaker.domain.model.Track

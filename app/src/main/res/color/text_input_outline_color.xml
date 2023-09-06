@@ -1,0 +1,13 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Состояние, когда элемент в фокусе и не пустой -->
+    <item android:color="#FF3772E7" android:state_focused="true" android:state_empty="false" />
+
+    <!-- Состояние, когда элемент в фокусе и пустой -->
+    <item android:color="#FF888888" android:state_focused="true"  android:state_empty="true" />
+
+    <!-- Состояние, когда элемент не в фокусе и не пустой -->
+    <item android:color="#FF000000" android:state_focused="false" android:state_empty="false" />
+
+    <!-- Состояние, когда элемент не в фокусе и пустой -->
+    <item android:color="#FF888888" android:state_focused="false" android:state_empty="true" />
+</selector>
