@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface FavouriteInteractor {
     fun getAllFavouriteTracks() : Flow<List<Track>>
-    fun getIdOfFavTracks() : Flow<List<Int>>
+    fun getIdOfFavouriteTracks() : Flow<List<Int>>
 }

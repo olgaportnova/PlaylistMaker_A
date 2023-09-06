@@ -9,11 +9,11 @@ class FavouriteInteractorImpl(
     private val favouriteRepository: FavouriteRepository
 ): FavouriteInteractor {
     override fun getAllFavouriteTracks(): Flow<List<Track>> {
-        return favouriteRepository.favouriteTracks()
+        return favouriteRepository.getAllFavouriteTracks()
     }
 
-    override fun getIdOfFavTracks(): Flow<List<Int>> {
-        return favouriteRepository.getFavIndicators()
+    override fun getIdOfFavouriteTracks(): Flow<List<Int>> {
+        return favouriteRepository.getFavouriteIndicators()
     }
 
 }

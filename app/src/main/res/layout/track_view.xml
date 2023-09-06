@@ -16,11 +16,12 @@
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
+            android:layout_height="wrap_content"
             android:id="@+id/trackName"
             style="@style/track_name"
             tools:text="Song #1"
@@ -30,7 +31,7 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="13dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="1dp"
             android:orientation="horizontal">
@@ -39,6 +40,7 @@
                 android:id="@+id/artistName"
                 style="@style/artist_time_track"
                 android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom|start"
                 tools:text="The Beatles" />
 
@@ -46,6 +48,7 @@
                 style="@style/ellipse_devider"
                 android:src="@drawable/ic_ellipse" />
             <TextView
+                android:layout_height="wrap_content"
                 android:id="@+id/trackTime"
                 style="@style/artist_time_track"
                 android:layout_weight="0"

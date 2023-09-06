@@ -1,12 +1,8 @@
 package com.example.playlistmaker.presentation.audioPlayer
 
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.db.FavouriteInteractor
 import com.example.playlistmaker.domain.model.State
@@ -14,11 +10,8 @@ import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.player.AudioPlayerInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 class AudioPlayerViewModel(
@@ -56,9 +49,9 @@ class AudioPlayerViewModel(
 
     suspend fun checkIfTrackIsFavorite(trackId: Int): Boolean {
         val favIndicatorsDeferred = viewModelScope.async {
-            favouriteInterator.getIdOfFavTracks()
+            favouriteInterator.getIdOfFavouriteTracks()
         }
-        val favIndicators: Flow<List<Int>> = favouriteInterator.getIdOfFavTracks()
+        val favIndicators: Flow<List<Int>> = favouriteInterator.getIdOfFavouriteTracks()
 
         val favIndicatorsList: MutableList<Int> = mutableListOf()
 

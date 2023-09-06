@@ -4,6 +4,6 @@ import com.example.playlistmaker.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 
 interface FavouriteRepository {
-    fun favouriteTracks() : Flow<List<Track>>
-    fun getFavIndicators() : Flow<List<Int>>
+    fun getAllFavouriteTracks() : Flow<List<Track>>
+    fun getFavouriteIndicators() : Flow<List<Int>>
 }
