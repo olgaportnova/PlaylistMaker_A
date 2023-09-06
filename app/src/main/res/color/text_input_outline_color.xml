@@ -1,0 +1,11 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+<!-- Цвет при активации или фокусе -->
+<item android:color="#FF3772E7" android:state_focused="true" />
+<item android:color="#FF3772E7" android:state_activated="true" />
+
+<!-- Цвет, когда есть текст -->
+<item android:color="#FF3772E7" app:state_not_empty="true" />
+
+<!-- Обычный цвет обводки -->
+<item android:color="#FF888888" />
+</selector>

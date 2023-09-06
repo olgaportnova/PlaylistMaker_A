@@ -1,8 +1,8 @@
 package com.example.playlistmaker.data.history.impl
 
 
-import android.content.SharedPreferences
 import com.example.playlistmaker.data.db.AppDatabase
+import android.content.SharedPreferences
 import com.example.playlistmaker.data.history.HistoryRepository
 
 const val SEARCH_HISTORY = "search_history"

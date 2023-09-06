@@ -1,9 +1,8 @@
 package com.example.playlistmaker.data.player.impl
 
-import android.media.MediaPlayer
 import com.example.playlistmaker.data.db.AppDatabase
-import com.example.playlistmaker.data.db.TrackDbConvertor
-import com.example.playlistmaker.data.dto.TrackDto
+import android.media.MediaPlayer
+import com.example.playlistmaker.data.db.convertors.TrackDbConvertor
 import com.example.playlistmaker.domain.model.State
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.player.MediaPlayerRepository

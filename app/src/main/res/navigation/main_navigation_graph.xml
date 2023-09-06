@@ -33,14 +33,22 @@
         android:label="AudioPlayerActivity" />
     <fragment
         android:id="@+id/favPlaylistFragment"
-        android:name="com.example.playlistmaker.presentation.library.FavPlaylistFragment"
-        android:label="FavPlaylistFragment" />
+        android:name="com.example.playlistmaker.presentation.library.playlists.FavPlaylistFragment"
+        android:label="FavPlaylistFragment" >
+        <action
+            android:id="@+id/action_favPlaylistFragment_to_playlistFragment"
+            app:destination="@id/playlistFragment" />
+    </fragment>
     <fragment
         android:id="@+id/favTracksFragment"
-        android:name="com.example.playlistmaker.presentation.library.FavTracksFragment"
+        android:name="com.example.playlistmaker.presentation.library.tracks.FavTracksFragment"
         android:label="FavTracksFragment" >
         <action
             android:id="@+id/action_favTracksFragment_to_audioPlayerActivity"
             app:destination="@id/audioPlayerActivity" />
     </fragment>
+    <fragment
+        android:id="@+id/playlistFragment"
+        android:name="com.example.playlistmaker.presentation.playlistsCreation.PlaylistCreationFragment"
+        android:label="PlaylistFragment" />
 </navigation>
