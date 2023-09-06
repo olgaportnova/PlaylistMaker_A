@@ -2,7 +2,9 @@ package com.example.playlistmaker.di
 
 import android.content.Context
 import android.media.MediaPlayer
+import androidx.room.Room
 import com.example.playlistmaker.data.NetworkClient
+import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.history.HistoryRepository
 import com.example.playlistmaker.data.history.impl.HistoryRepositoryImpl
 import com.example.playlistmaker.data.network.Itunes
@@ -22,6 +24,13 @@ const val SHARED_PREFS_SEARCH_HISTORY = "search_history"
 
 
     val dataModule = module {
+
+        single {
+            Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+                .addMigrations(AppDatabase.MIGRATION_1_2)
+                .allowMainThreadQueries()
+                .build()
+        }
 
         single<Itunes> {
             Retrofit.Builder()
@@ -45,7 +54,7 @@ const val SHARED_PREFS_SEARCH_HISTORY = "search_history"
 
 
         single<HistoryRepository> {
-            HistoryRepositoryImpl(get())
+            HistoryRepositoryImpl(get(),get())
         }
 
         single<NetworkClient> {

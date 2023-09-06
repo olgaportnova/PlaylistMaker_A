@@ -1,10 +1,17 @@
 package com.example.playlistmaker.data.player.impl
 
 import android.media.MediaPlayer
+import com.example.playlistmaker.data.db.AppDatabase
+import com.example.playlistmaker.data.db.TrackDbConvertor
+import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.domain.model.State
+import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.player.MediaPlayerRepository
 
-class MediaPlayerRepositoryImpl () : MediaPlayerRepository {
+class MediaPlayerRepositoryImpl (
+    private val appDatabase: AppDatabase,
+    private val trackDbConvertor: TrackDbConvertor,
+) : MediaPlayerRepository {
 
 
     private val mediaPlayer: MediaPlayer = MediaPlayer()
@@ -30,6 +37,17 @@ class MediaPlayerRepositoryImpl () : MediaPlayerRepository {
 
     }
 
+
+
+     override suspend fun saveTrackToFav(track: Track) {
+        var trackEntities =  trackDbConvertor.map(track)
+        appDatabase.trackDao().insertTrack(trackEntities)
+    }
+
+    override suspend fun deleteTrackFromFav(track: Track) {
+        val trackEntities =  trackDbConvertor.map(track)
+        appDatabase.trackDao().deleteTrack(trackEntities)
+    }
 
 
     override fun pause() {

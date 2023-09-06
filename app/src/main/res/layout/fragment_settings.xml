@@ -20,11 +20,12 @@
 
     <FrameLayout
     android:layout_width="match_parent"
-    android:layout_height="61dp"
+    android:layout_height="wrap_content"
     android:layout_marginTop="80dp"
     >
     <TextView
         android:text="@string/night_theme"
+        android:layout_height="wrap_content"
 
         style="@style/SettingsScreenText" />
 
@@ -39,7 +40,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="61dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="141dp"
         android:id="@+id/share" >
     <TextView
@@ -56,7 +57,7 @@
     <FrameLayout
         android:id="@+id/support"
         android:layout_width="match_parent"
-        android:layout_height="61dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="202dp">
         <TextView
             style="@style/SettingsScreenText"
@@ -70,13 +71,14 @@
     <FrameLayout
         android:id="@+id/agreement"
         android:layout_width="match_parent"
-        android:layout_height="61dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="263dp">
 
         <TextView
             style="@style/SettingsScreenText"
+            android:layout_marginEnd="30dp"
             android:text="@string/agreement"
-            android:layout_height="61dp"/>
+            android:layout_height="wrap_content"/>
 
         <ImageView
             style="@style/SettingsScreenIcons"

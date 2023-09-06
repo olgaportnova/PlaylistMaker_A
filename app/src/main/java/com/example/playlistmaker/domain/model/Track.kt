@@ -15,7 +15,8 @@ data class Track(
     val releaseDate: String,
     val primaryGenreName:String,
     val country:String,
-    val previewUrl: String
+    val previewUrl: String,
+    var isFavorite: Boolean = false
 
 ): Serializable {
 
@@ -31,7 +32,8 @@ fun toTrackInfo(track:Track) = TrackInfo(
     releaseDate = track.getFormattedYear(track),
     primaryGenreName = track.primaryGenreName,
     country = track.country,
-    previewUrl = track.previewUrl
+    previewUrl = track.previewUrl,
+    isFavorite=track.isFavorite
 
 )
 

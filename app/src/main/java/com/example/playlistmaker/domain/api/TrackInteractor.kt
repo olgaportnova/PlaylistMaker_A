@@ -9,4 +9,6 @@ interface TrackInteractor {
 
 
     fun loadTracks(onComplete : (Boolean) -> Unit)
+
+    fun getFavIndicators() :  Flow<List<Int>>
 }

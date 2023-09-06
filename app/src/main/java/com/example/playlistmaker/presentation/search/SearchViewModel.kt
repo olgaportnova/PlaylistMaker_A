@@ -16,7 +16,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 
 class SearchViewModel(
@@ -57,6 +58,9 @@ class SearchViewModel(
         lastSearchText=null
     }
 
+    fun onResume() {
+
+    }
 
 
     // поиск по вводу каждые 2 сек
@@ -74,8 +78,8 @@ class SearchViewModel(
 
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-                delay(SEARCH_DEBOUNCE_DELAY)
-                searchAction(changedText)
+            delay(SEARCH_DEBOUNCE_DELAY)
+            searchAction(changedText)
 
         }
     }
@@ -131,59 +135,61 @@ class SearchViewModel(
         }
     }
 
-        private fun processResult(foundTracks: List<Track>?, errorMessage: String?) {
-            val tracks = mutableListOf<Track>()
-            if (foundTracks != null) {
-                        tracks.clear()
-                        tracks.addAll(foundTracks)
+    suspend fun updateIdOfFavTracks(): List<Int> {
+        return suspendCancellableCoroutine { continuation ->
+            viewModelScope.launch {
+                searchInteractor
+                    .getFavIndicators()
+                    .collect { favIndicators ->
+                        continuation.resume(favIndicators)
                     }
-            when { errorMessage != null -> {
-                            searchTrackStatusLiveData.postValue(
-                                TracksState(
-                                    emptyList(),
-                                    false,
-                                    ERROR_CONNECTION,
-                                    needToUpdate = true,
-                                    toShowHistory = false,
-                                    history = emptyList(),
-                                )
-                            )
-                        }
-                        tracks.isEmpty() -> {
-                            searchTrackStatusLiveData.postValue(
-                                TracksState(
-                                    emptyList(),
-                                    false,
-                                    ERROR_EMPTY_LIST,
-                                    needToUpdate = false,
-                                    toShowHistory = false,
-                                    history = emptyList(),
-                                )
-                            )
-                        }
+            }
+        }
+    }
 
-                        else -> {
-                            searchTrackStatusLiveData.postValue(
-                                TracksState(
-                                    tracks,
-                                    false,
-                                    null,
-                                    needToUpdate = false,
-                                    toShowHistory = false,
-                                    history = emptyList(),
-                                )
-                            )
-                        }
-                    }
-                }
+    private fun processResult(foundTracks: List<Track>?, errorMessage: String?) {
+        val tracks = mutableListOf<Track>()
+        if (foundTracks != null) {
+            tracks.clear()
+            tracks.addAll(foundTracks)
+        }
+        when { errorMessage != null -> {
+            searchTrackStatusLiveData.postValue(
+                TracksState(
+                    emptyList(),
+                    false,
+                    ERROR_CONNECTION,
+                    needToUpdate = true,
+                    toShowHistory = false,
+                    history = emptyList(),
+                )
+            )
+        }
+            tracks.isEmpty() -> {
+                searchTrackStatusLiveData.postValue(
+                    TracksState(
+                        emptyList(),
+                        false,
+                        ERROR_EMPTY_LIST,
+                        needToUpdate = false,
+                        toShowHistory = false,
+                        history = emptyList(),
+                    )
+                )
             }
 
-
-
-
-
-
-
-
-
-
+            else -> {
+                searchTrackStatusLiveData.postValue(
+                    TracksState(
+                        tracks,
+                        false,
+                        null,
+                        needToUpdate = false,
+                        toShowHistory = false,
+                        history = emptyList(),
+                    )
+                )
+            }
+        }
+    }
+}

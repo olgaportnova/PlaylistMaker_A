@@ -38,5 +38,9 @@
     <fragment
         android:id="@+id/favTracksFragment"
         android:name="com.example.playlistmaker.presentation.library.FavTracksFragment"
-        android:label="FavTracksFragment" />
+        android:label="FavTracksFragment" >
+        <action
+            android:id="@+id/action_favTracksFragment_to_audioPlayerActivity"
+            app:destination="@id/audioPlayerActivity" />
+    </fragment>
 </navigation>
