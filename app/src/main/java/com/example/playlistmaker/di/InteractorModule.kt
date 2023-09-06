@@ -3,9 +3,11 @@ package com.example.playlistmaker.di
 import android.media.MediaPlayer
 import com.example.playlistmaker.domain.api.TrackInteractor
 import com.example.playlistmaker.domain.db.FavouriteInteractor
+import com.example.playlistmaker.domain.db.PlaylistInteractor
 import com.example.playlistmaker.domain.history.HistoryInteractor
 import com.example.playlistmaker.domain.history.impl.HistoryInteractorImpl
 import com.example.playlistmaker.domain.impl.FavouriteInteractorImpl
+import com.example.playlistmaker.domain.impl.PlaylistInteractorImpl
 import com.example.playlistmaker.domain.impl.TrackInteractorImpl
 import com.example.playlistmaker.domain.main_navigation.InternalNavigationInteractor
 import com.example.playlistmaker.domain.main_navigation.impl.InternalNavigationInteractorImpl
@@ -23,6 +25,10 @@ import org.koin.dsl.module
 
         single<FavouriteInteractor> {
             FavouriteInteractorImpl(get())
+        }
+
+        single<PlaylistInteractor> {
+            PlaylistInteractorImpl(get())
         }
 
         single<TrackInteractor> {

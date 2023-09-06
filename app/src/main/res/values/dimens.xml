@@ -25,7 +25,17 @@
     <dimen name="track_name_frame_marginStart">8dp</dimen>
     <dimen name="track_name_frame_marginTop">14dp</dimen>
     <dimen name="radius_art_work">2dp</dimen>
+    <dimen name="radius_playlist_cover">8dp</dimen>
     <dimen name="album_cover_corner_radius">8dp</dimen>
+
+    //bottom_sheet
+    <dimen name="bottom_sheet_height">505dp</dimen>
+    <dimen name="bottom_sheet_paddings_horizontal">505dp</dimen>
+
+    //tracklist_small_view
+    <dimen name="image_margin">8dp</dimen>
+
+
 
 
 

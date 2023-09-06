@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.library
+package com.example.playlistmaker.presentation.library.tracks
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.databinding.FragmentFavTracksBinding
-import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.search.SearchFragment
 import com.example.playlistmaker.presentation.search.SearchViewModel
@@ -59,6 +58,7 @@ class FavTracksFragment : Fragment(), TrackAdapter.Listener {
             is FavoriteState.Content -> showContent(state.tracks)
             is FavoriteState.Empty -> showEmpty(state.message)
             is FavoriteState.Loading -> {}
+            else -> {}
         }
     }
 

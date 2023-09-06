@@ -1,13 +1,13 @@
-package com.example.playlistmaker.data.db
+package com.example.playlistmaker.data.db.convertors
 
 import com.example.playlistmaker.data.db.entity.TrackEntity
-import com.example.playlistmaker.data.dto.TrackDto
+import com.example.playlistmaker.data.db.entity.TrackInPlaylistsEntity
 import com.example.playlistmaker.domain.model.Track
 
-class TrackDbConvertor {
+class TrackInPlaylistsEntityDbConvertor {
 
-    fun map(track: Track) : TrackEntity {
-        return TrackEntity(
+    fun map(track: Track) : TrackInPlaylistsEntity {
+        return TrackInPlaylistsEntity(
             track.trackId,
             track.artworkUrl100,
             track.trackName,
@@ -20,7 +20,7 @@ class TrackDbConvertor {
             track.previewUrl
         )
     }
-    fun map(track: TrackEntity): Track {
+    fun map(track: TrackInPlaylistsEntity): Track {
         return Track(
             track.trackName,
             track.artistName,
@@ -34,4 +34,5 @@ class TrackDbConvertor {
             track.previewUrl
             )
     }
+
 }

@@ -1,7 +1,6 @@
 package com.example.playlistmaker.domain.history.impl
 
 
-import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.history.HistoryRepository
 import com.example.playlistmaker.domain.db.FavouriteRepository
 import com.example.playlistmaker.domain.history.HistoryInteractor

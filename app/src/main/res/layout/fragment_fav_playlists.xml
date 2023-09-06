@@ -5,40 +5,56 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+
 
         <Button
             android:id="@+id/buttonCreateNewPlaylist"
             style="@style/button_create_new_playlist"
-            android:layout_marginTop="16dp"
             android:clickable="true"
             android:fontFamily="@font/ys_display_medium"
-            android:gravity="center"
             android:text="@string/newPlaylist"
             android:textAllCaps="false"
-            app:layout_constraintBottom_toTopOf="@id/imageNoFavTracks"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+
+            android:id="@+id/recyclerViewPlaylists"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:foregroundGravity="center_horizontal"
+            android:paddingBottom="190dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/buttonCreateNewPlaylist" />
 
         <ImageView
-            android:id="@+id/imageNoFavTracks"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageNoPlaylists"
             style="@style/plaseholder_image"
-            android:src="@drawable/nothing_found"
-            app:layout_constraintTop_toBottomOf="@id/buttonCreateNewPlaylist"
             android:layout_marginTop="46dp"
+            android:src="@drawable/nothing_found"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/buttonCreateNewPlaylist" />
 
         <TextView
-            app:layout_constraintTop_toBottomOf="@id/imageNoFavTracks"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/imageNoPlaylists"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="center"
             android:layout_marginTop="16dp"
-            android:id="@+id/textPlaceholder"
+            android:id="@+id/textNoPlaylists"
             style="@style/placeholder_text"
-            android:layout_height="wrap_content"
             android:text= "@string/noPlaylistFound" />
 
 

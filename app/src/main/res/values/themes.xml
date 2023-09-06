@@ -3,7 +3,7 @@
     <style name="Theme.App" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">#AEAFB4</item>
-        <item name="colorPrimaryVariant">@color/setting_head</item>
+        <item name="colorPrimaryVariant">@color/text_grey_color</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/white</item>
@@ -13,6 +13,7 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+
 
 
 
