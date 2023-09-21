@@ -20,7 +20,7 @@
     <style name="Widget.App.BottomNavigationView"  parent="Widget.MaterialComponents.BottomNavigationView.Colored">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
         <item name="backgroundColor">@color/white</item>
-        <item name="itemBackground">@color/black</item>
+        <item name="itemBackground">@color/bt_nav_bar_night</item>
         <item name="itemIconTint">@color/white</item>
         <item name="itemTextColor">@color/white</item>
     </style>
@@ -28,7 +28,7 @@
 
     <style name="ThemeOverlay.App.BottomNavigationView" parent="">
         <item name="colorSurface">@null</item>
-        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimary">#1A1B22</item>
         <item name="colorOnPrimary">@color/black</item>
         <item name="itemTextColor">@color/white</item>
         <item name="iconTint">@color/white</item>

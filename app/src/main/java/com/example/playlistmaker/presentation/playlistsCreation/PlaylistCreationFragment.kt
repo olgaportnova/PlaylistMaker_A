@@ -47,6 +47,8 @@ class PlaylistCreationFragment : Fragment() {
 
     private var backNavigationListenerRoot: BackNavigationListenerRoot? = null
     private var backNavigationListenerAudio: BackNavigationListenerAudioPlayer? = null
+
+    // lifecycle functions
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is BackNavigationListenerRoot) {
@@ -56,7 +58,10 @@ class PlaylistCreationFragment : Fragment() {
             backNavigationListenerAudio = context
         }
     }
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
     override fun onDetach() {
         super.onDetach()
         backNavigationListenerRoot = null
@@ -77,54 +82,10 @@ class PlaylistCreationFragment : Fragment() {
 
     }
 
-    private fun setupListeners() {
-        binding.icBackArrow.setOnClickListener {
-            lifecycleScope.launch {
-                navigateBack()
-            }
-        }
-        binding.frameForImage.setOnClickListener { chooseAndUploadImage() }
-        binding.btCreate.setOnClickListener { createNewPlaylist() }
-    }
-
-    private fun setupViewModelObservers() {
-        viewModel.getImageUrlLiveData().observe(viewLifecycleOwner, Observer { url ->
-            urlImageForNewPlaylist = url
-        })
-    }
 
 
 
-    private fun showBackConfirmationDialog() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(context?.getString(R.string.dialog_title))
-            .setMessage(context?.getString(R.string.dialog_message))
-            .setNeutralButton(context?.getString(R.string.dialog_cancel)) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .setPositiveButton(getString(R.string.dialog_finish)) { _, _ ->
-                if(requireActivity() is RootActivity) {
-                lifecycleScope.launch {
-                    backNavigationListenerRoot?.onNavigateBack(true)
-                    }
-                }
-                if (requireActivity() is AudioPlayerActivity){
-                    backNavigationListenerAudio?.onNavigateBack(true)
-                }
-
-            }
-            .show()
-            .apply {
-                getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#3772E7"))
-                getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#3772E7"))
-            }
-    }
-
-    private fun isAnyFieldNotEmpty(): Boolean {
-        return binding.editTextName.text?.isNotEmpty() == true || binding.editTextDetails.text?.isNotEmpty() == true
-    }
-
-
+    // utils functions
     private fun setupTextChangeListener() {
 
         binding.editTextName.addTextChangedListener(object : TextWatcher {
@@ -138,15 +99,34 @@ class PlaylistCreationFragment : Fragment() {
             }
         })
     }
+    private fun setupListeners() {
+        binding.icBackArrow.setOnClickListener {
+            lifecycleScope.launch {
+                navigateBack()
+            }
+        }
+        binding.frameForImage.setOnClickListener { chooseAndUploadImage() }
+        binding.btCreate.setOnClickListener { createNewPlaylist() }
+    }
+    private fun setupViewModelObservers() {
+        viewModel.getImageUrlLiveData().observe(viewLifecycleOwner, Observer { url ->
+            urlImageForNewPlaylist = url
+        })
+    }
+    private fun isAnyFieldNotEmpty(): Boolean {
+        return binding.editTextName.text?.isNotEmpty() == true || binding.editTextDetails.text?.isNotEmpty() == true
+    }
 
 
+
+
+    // functions creating new playlist
     private fun handleSelectedImage(uri: Uri) {
         binding.frameForImage.setImageURI(uri)
         binding.icAddImage.visibility = View.GONE
         isPhotoSelected = true
         saveImageToPrivateStorage(uri)
     }
-
     private fun createNewPlaylist() {
         val playlistName = binding.editTextName.text.toString()
 
@@ -164,17 +144,13 @@ class PlaylistCreationFragment : Fragment() {
             navigateBackAfterCreatingPlaylist()
         }
     }
-
     private fun chooseAndUploadImage() {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
-
     private fun showToastPlaylistCreated(playlistName: String) {
         val message = getString(R.string.playlist_created, playlistName)
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
-
-
     private fun saveImageToPrivateStorage(uri: Uri) {
         val file = ImageStorageHelper.getTemporaryImageFile(requireContext())
         val inputStream = requireActivity().contentResolver.openInputStream(uri)
@@ -183,7 +159,10 @@ class PlaylistCreationFragment : Fragment() {
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
     }
 
-     fun navigateBack() {
+
+
+    // navigation part
+    fun navigateBack() {
         if (activity is RootActivity) {
             if (isAnyFieldNotEmpty() || isPhotoSelected) {
                 showBackConfirmationDialog()
@@ -197,24 +176,39 @@ class PlaylistCreationFragment : Fragment() {
                 backNavigationListenerAudio?.onNavigateBack(true) }
         }
     }
-
-    fun navigateBackAfterCreatingPlaylist() {
+    private fun navigateBackAfterCreatingPlaylist() {
         if (activity is RootActivity) {
             backNavigationListenerRoot?.onNavigateBack(true)
             }
         else if (activity is AudioPlayerActivity) {
                 backNavigationListenerAudio?.onNavigateBack(true) }
         }
+    private fun showBackConfirmationDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(context?.getString(R.string.dialog_title))
+            .setMessage(context?.getString(R.string.dialog_message))
+            .setNeutralButton(context?.getString(R.string.dialog_cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.dialog_finish)) { _, _ ->
+                if(requireActivity() is RootActivity) {
+                    lifecycleScope.launch {
+                        backNavigationListenerRoot?.onNavigateBack(true)
+                    }
+                }
+                if (requireActivity() is AudioPlayerActivity){
+                    backNavigationListenerAudio?.onNavigateBack(true)
+                }
 
-
-
-
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+            }
+            .show()
+            .apply {
+                getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#3772E7"))
+                getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#3772E7"))
+            }
     }
+
+
 
 }
 

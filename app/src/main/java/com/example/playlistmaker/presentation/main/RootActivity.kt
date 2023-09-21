@@ -36,20 +36,22 @@ class RootActivity : AppCompatActivity(), BackNavigationListenerRoot {
     }
 
 
-
     private fun showBottomNavigation() {
         binding.bottomNavigationView.visibility = android.view.View.VISIBLE
+        binding.devider.visibility = android.view.View.VISIBLE
 
     }
     private fun hideBottomNavigation() {
         binding.bottomNavigationView.visibility = android.view.View.GONE
+        binding.devider.visibility = android.view.View.GONE
     }
 
+
+    // navigation functions
     override fun onBackPressed() {
         onNavigateBack(false)
 
     }
-
     private fun backCheckFragment() {
         val currentNavHostFragment = supportFragmentManager.findFragmentById(R.id.container_view)
         if (currentNavHostFragment is NavHostFragment) {
@@ -64,7 +66,6 @@ class RootActivity : AppCompatActivity(), BackNavigationListenerRoot {
             }
         }
     }
-
     override fun onNavigateBack(isEmpty: Boolean) {
         if (isEmpty) super.onBackPressed()
         else backCheckFragment()
