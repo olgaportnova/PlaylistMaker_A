@@ -15,10 +15,6 @@ class PlaylistInteractorImpl(
         return playlistRepository.getTracksOnlyFromPlaylist(listOfId)
     }
 
-//    override fun getTracksOnlyFromPlaylistById(id:Int): Flow<List<Track>?> {
-//        return playlistRepository.getTracksOnlyFromPlaylistById(id)
-//    }
-
     override fun getAllFavouritePlaylists(): Flow<List<Playlist>> {
         return playlistRepository.getAllFavouritePlaylists()
     }
@@ -49,6 +45,10 @@ class PlaylistInteractorImpl(
 
     override suspend fun deleteTrackFromPlaylist(updatedListOfTracks: List<Int>?, playlistId:Int, idTrackToDelete:Int) {
         playlistRepository.deleteTrackFromPlayList(updatedListOfTracks, playlistId, idTrackToDelete)
+    }
+
+    override suspend fun updateDbListOfTracksInAllPlaylists(id: Int, idTrackToDelete: Int) {
+        playlistRepository.updateDbListOfTracksInAllPlaylists(id, idTrackToDelete)
     }
 
 }

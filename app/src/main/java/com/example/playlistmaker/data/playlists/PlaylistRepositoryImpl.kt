@@ -34,21 +34,10 @@ class PlaylistRepositoryImpl(
         }
     }
 
-//    override fun getTracksOnlyFromPlaylistById(id:Int): Flow<List<Track>?> = flow {
-//       val trackInPlaylist = appDatabase.trackInPlaylistDao().getTrackIdByPlaylistId(id)
-//        if (trackInPlaylist == null) {
-//            emit(null)
-//        }else {
-//            emit(convertFromTrackInPlaylistEntityToTrack(trackInPlaylist))
-//        }
-//    }
-
-
     override fun getAllFavouritePlaylists(): Flow<List<Playlist>> = flow {
         val playlists = appDatabase.playlistDao().getAllPlaylists()
         emit(convertFromPlaylistEntity(playlists))
     }
-
 
     override suspend fun getPlaylistsById(id: Int): Playlist {
         val playlists = appDatabase.playlistDao().getPlaylistsById(id)
@@ -86,25 +75,30 @@ class PlaylistRepositoryImpl(
     ) {
         val updatedListOfTrackString = updatedListOfTracks?.joinToString(separator = ",")
         appDatabase.playlistDao().deleteTrackFromPlaylist(updatedListOfTrackString, playlistId)
-//        if (ifTrackIsInAnyPlaylists(idTrackToDelete)) {
-//            appDatabase.trackInPlaylistDao().deleteTrackByIdFromListOfTracksInPlaylists(idTrackToDelete)
-
     }
 
+    override suspend fun updateDbListOfTracksInAllPlaylists(id: Int, idTrackToDelete: Int) {
+        val playlists = appDatabase.playlistDao().getAllPlaylistsExceptOne(id)
 
-//    override suspend fun ifTrackIsInAnyPlaylists(idTrackToDelete: Int): Boolean {
-//        val allPlaylists = appDatabase.playlistDao().getAllPlaylists()
-//
-//        for (playlist in allPlaylists) {
-//            val listOfIds = playlistDbConvertor.convertStringOfIdTrackToList(playlist.idOfTracks)
-//            if (idTrackToDelete in listOfIds) {
-//                return true
-//            }
-//        }
-//
-//        return false
-//    }
+        val hasTrack = playlists.any { playlist ->
+            val trackIdsAsStrings = playlist.idOfTracks?.split(",")
 
+            val trackIdsAsInts = trackIdsAsStrings?.mapNotNull {
+                val trimmed = it.trim()
+                if (trimmed.isNotEmpty()) {
+                    trimmed.toInt()
+                } else {
+                    null
+                }
+            }
+
+            trackIdsAsInts?.contains(idTrackToDelete) ?: false
+        }
+
+        if (!hasTrack) {
+            appDatabase.trackInPlaylistDao().deleteTrackByIdFromListOfTracksInPlaylists(idTrackToDelete)
+        }
+    }
 
     private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
         return playlists.map { playlist -> playlistDbConvertor.map(playlist) }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.playlists.PlaylistInteractor
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PlaylistDetailsFragmentViewModel(
@@ -74,7 +75,14 @@ class PlaylistDetailsFragmentViewModel(
        listOfIdsInPlaylist?.remove(idTrackToDelete)
            playlistInteractor.deleteTrackFromPlaylist(listOfIdsInPlaylist?.toList(), playlist.id, idTrackToDelete)
            getTracksFromOnePlaylistUpdated(listOfIdsInPlaylist?.toList())
+        viewModelScope.launch(Dispatchers.IO) {
+            updateDbListOfTracksInAllPlaylists(playlist.id, idTrackToDelete)
+        }
 
+    }
+
+    suspend fun updateDbListOfTracksInAllPlaylists(playlistId:Int, idTrackToDelete: Int) {
+        playlistInteractor.updateDbListOfTracksInAllPlaylists(playlistId, idTrackToDelete)
     }
 
 

@@ -34,6 +34,10 @@ interface PlaylistDao {
     @Query("SELECT * FROM tracks_in_playlists")
     suspend fun getAllTracksFromPlaylists(): List<TrackInPlaylistsEntity>?
 
+    @Query("SELECT * FROM playlists WHERE id <> :excludedId")
+    suspend fun getAllPlaylistsExceptOne(excludedId: Int): List<PlaylistEntity>
+
+
 
 
     @Query("""
