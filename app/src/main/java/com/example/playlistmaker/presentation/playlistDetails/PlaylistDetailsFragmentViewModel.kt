@@ -42,8 +42,6 @@ class PlaylistDetailsFragmentViewModel(
 
     private fun processResult(tracks: List<Track>?) {
         var totalDuration = 0
-        val a = tracks
-
         if (tracks.isNullOrEmpty()) {
             renderState(TracksInPlaylistState.Empty)
         } else {

@@ -19,15 +19,16 @@ class PlaylistCreationViewModel(
     private val imageUrlLiveData = MutableLiveData<String>()
     fun getImageUrlLiveData(): LiveData<String> = imageUrlLiveData
 
+    private var urlImageForNewPlaylist : String? = null
+
 
     suspend fun createNewPlaylist(
         name: String,
         details: String,
-        imageUrl: String?,
         tracksId: List<Int>?,
         numberOfTracks: Int?
     ) {
-        val newPlaylist = Playlist(0, name, details, imageUrl, tracksId, numberOfTracks)
+        val newPlaylist = Playlist(0, name, details, urlImageForNewPlaylist, tracksId, numberOfTracks)
         playlistInteractor.createNewPlaylist(newPlaylist)
     }
 
@@ -35,6 +36,7 @@ class PlaylistCreationViewModel(
         val file = ImageStorageHelper.getImageFileForPlaylist(context, playlistName)
         val url = file.toUri().toString()
         imageUrlLiveData.postValue(url)
+        urlImageForNewPlaylist = url
     }
 
 

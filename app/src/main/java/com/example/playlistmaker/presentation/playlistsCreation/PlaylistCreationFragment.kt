@@ -131,11 +131,11 @@ class PlaylistCreationFragment : Fragment() {
         val playlistName = binding.editTextName.text.toString()
 
         viewModel.renameImageFile(playlistName)
+        viewModel.getImageUrlFromStorage(playlistName)
         lifecycleScope.launch {
             viewModel.createNewPlaylist(
                 playlistName,
                 binding.editTextDetails.text.toString(),
-                urlImageForNewPlaylist,
                 null,
                 0
             )
@@ -179,10 +179,10 @@ class PlaylistCreationFragment : Fragment() {
     private fun navigateBackAfterCreatingPlaylist() {
         if (activity is RootActivity) {
             backNavigationListenerRoot?.onNavigateBack(true)
-            }
-        else if (activity is AudioPlayerActivity) {
-                backNavigationListenerAudio?.onNavigateBack(true) }
         }
+        else if (activity is AudioPlayerActivity) {
+            backNavigationListenerAudio?.onNavigateBack(true) }
+    }
     private fun showBackConfirmationDialog() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(context?.getString(R.string.dialog_title))
@@ -211,5 +211,4 @@ class PlaylistCreationFragment : Fragment() {
 
 
 }
-
 
