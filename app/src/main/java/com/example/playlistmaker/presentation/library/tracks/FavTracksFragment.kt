@@ -17,7 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavTracksFragment : Fragment(), TrackAdapter.Listener , TrackAdapter.LongClickListener{
+class FavTracksFragment : Fragment(), TrackAdapter.OnItemClickListener , TrackAdapter.OnItemLongClickListener{
 
     private val searchTrackViewModel: SearchViewModel by viewModel()
     private val favTracksFragmentViewModel: FavTracksFragmentViewModel by viewModel()
@@ -85,7 +85,7 @@ class FavTracksFragment : Fragment(), TrackAdapter.Listener , TrackAdapter.LongC
         fun newInstance() = FavTracksFragment()
     }
 
-    override fun onClick(track: Track) {
+    override fun onItemClick(track: Track) {
         if (clickDebounce()) {
             searchTrackViewModel.openTrackAudioPlayer(track)
         }
@@ -104,7 +104,7 @@ class FavTracksFragment : Fragment(), TrackAdapter.Listener , TrackAdapter.LongC
         return current
     }
 
-    override fun onLongClick(track: Track): Boolean {
+    override fun onItemLongClick(track: Track): Boolean {
         return true
     }
 

@@ -24,11 +24,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlaylistDetailsFragment : Fragment(), TrackAdapter.Listener, TrackAdapter.LongClickListener {
+class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, TrackAdapter.OnItemLongClickListener {
 
     private val viewModel: PlaylistDetailsFragmentViewModel by activityViewModel()
     private val searchTrackViewModel: SearchViewModel by viewModel()
-    private var wasLongClickPerformed = false
 
     private var _binding: FragmentPlaylistDetailsBinding? = null
     private val binding get() = _binding!!
@@ -123,17 +122,12 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.Listener, TrackAdapter.
 
 
 
-
-    override fun onClick(track: Track) {
-        if (wasLongClickPerformed) {
-            wasLongClickPerformed = false
-            return
-        } else {
+    override fun onItemClick(track: Track) {
             searchTrackViewModel.openTrackAudioPlayer(track)
-        }
+
     }
-    override fun onLongClick(track: Track): Boolean {
-        wasLongClickPerformed = true
+
+    override fun onItemLongClick(track: Track): Boolean {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(context?.getString(R.string.dialog_delete_title))
             .setMessage(context?.getString(R.string.dialog_delete_message))
@@ -144,6 +138,8 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.Listener, TrackAdapter.
                 lifecycleScope.launch {
                     viewModel.deleteTrackFromPlaylist(track, playlistToCompareId)
                 }
+            }
+            .setOnDismissListener {
             }
             .show()
             .apply {

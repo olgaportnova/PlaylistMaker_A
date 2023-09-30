@@ -1,8 +1,6 @@
 package com.example.playlistmaker.presentation.search
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
@@ -20,7 +18,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment : Fragment(), TrackAdapter.Listener, TrackAdapter.LongClickListener {
+class SearchFragment : Fragment(), TrackAdapter.OnItemClickListener, TrackAdapter.OnItemLongClickListener {
 
     private lateinit var binding: FragmentSearchBinding
     private val searchTrackViewModel: SearchViewModel by viewModel()
@@ -128,7 +126,7 @@ class SearchFragment : Fragment(), TrackAdapter.Listener, TrackAdapter.LongClick
 
 
     // добавление трека в историю по клику и открыте в аудиоплеере
-    override fun onClick(track: Track) {
+    override fun onItemClick(track: Track) {
         if (clickDebounce()) {
             searchTrackViewModel.addNewTrackToHistory(track)
             searchTrackViewModel.getHistory()
@@ -137,7 +135,7 @@ class SearchFragment : Fragment(), TrackAdapter.Listener, TrackAdapter.LongClick
         }
     }
 
-    override fun onLongClick(track: Track): Boolean {
+    override fun onItemLongClick(track: Track): Boolean {
         return true
     }
 
