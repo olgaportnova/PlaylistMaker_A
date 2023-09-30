@@ -347,8 +347,7 @@
     </style>
 
     <style name="bottom_sheet">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">505dp</item>
+        <item name="android:layout_width">match_parent</item>>
         <item name="android:background">@drawable/rounded_bottom_sheet</item>
         <item name="android:backgroundTint">@color/white</item>
         <item name="android:orientation">vertical</item>

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.playlistmaker.data.favorites.entity.TrackEntity
 import com.example.playlistmaker.data.playlists.entity.TrackInPlaylistsEntity
 
 @Dao
@@ -15,6 +16,9 @@ interface TrackInPlaylistDao {
 
     @Query("SELECT * FROM favourite_tracks WHERE track_id = :trackId")
     suspend fun getTrackById(trackId: Int): TrackInPlaylistsEntity?
+
+    @Query("SELECT * FROM tracks_in_playlists")
+    suspend fun getAllTracksFromPlaylists(): List<TrackInPlaylistsEntity>?
 
 
 }

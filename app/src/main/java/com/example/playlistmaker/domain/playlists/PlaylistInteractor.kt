@@ -6,7 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface PlaylistInteractor {
 
+    fun getTracksOnlyFromPlaylist(listOfId:List<Int>): Flow<List<Track>?>
     fun getAllFavouritePlaylists(): Flow<List<Playlist>>
+    suspend fun getPlaylistsById(id:Int): Playlist
     suspend fun createNewPlaylist(playlist: Playlist)
     suspend fun deleteNewPlaylist(playlist: Playlist)
     suspend fun updatePlaylist(playlist: Playlist)

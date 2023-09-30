@@ -234,6 +234,7 @@
         android:id="@+id/standard_bottom_sheet"
         app:behavior_hideable="true"
         app:behavior_peekHeight="505dp"
+        android:layout_height="505dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         style="@style/bottom_sheet">
 

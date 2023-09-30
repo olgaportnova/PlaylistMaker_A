@@ -29,6 +29,7 @@ class RootActivity : AppCompatActivity(), BackNavigationListenerRoot {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
+                R.id.playlistDetailsFragment  -> hideBottomNavigation()
                 R.id.playlistFragment -> hideBottomNavigation()
                 else -> showBottomNavigation()
             }

@@ -1,9 +1,11 @@
 package com.example.playlistmaker.di
 
 import androidx.appcompat.app.AppCompatActivity
+import com.example.playlistmaker.databinding.FragmentPlaylistDetailsBinding
 import com.example.playlistmaker.presentation.audioPlayer.AudioPlayerViewModel
 import com.example.playlistmaker.presentation.library.playlists.FavPlaylistFragmentViewModel
 import com.example.playlistmaker.presentation.library.tracks.FavTracksFragmentViewModel
+import com.example.playlistmaker.presentation.playlistDetails.PlaylistDetailsFragmentViewModel
 import com.example.playlistmaker.presentation.playlistsCreation.PlaylistCreationViewModel
 
 import com.example.playlistmaker.presentation.search.SearchViewModel
@@ -33,6 +35,10 @@ import org.koin.dsl.module
 
         viewModel {
             FavPlaylistFragmentViewModel(get())
+        }
+
+        viewModel {
+            PlaylistDetailsFragmentViewModel(get())
         }
 
         viewModel {

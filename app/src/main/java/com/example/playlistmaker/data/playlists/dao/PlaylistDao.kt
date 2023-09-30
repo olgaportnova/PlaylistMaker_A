@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.playlistmaker.data.playlists.entity.TrackInPlaylistsEntity
 
 @Dao
 interface PlaylistDao {
@@ -20,8 +21,13 @@ interface PlaylistDao {
     @Query("SELECT * FROM playlists")
     suspend fun getAllPlaylists(): List<PlaylistEntity>
 
+    @Query("SELECT * FROM playlists WHERE id = :id")
+    suspend fun getPlaylistsById(id: Int): PlaylistEntity
+
     @Update
     suspend fun updatePlaylist(playlist: PlaylistEntity)
+
+
 
     @Query("""
     UPDATE playlists 

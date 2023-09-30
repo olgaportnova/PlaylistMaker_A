@@ -17,9 +17,33 @@ class PlaylistRepositoryImpl(
     private val trackInPlaylistsEntityDbConvertor: TrackInPlaylistsEntityDbConvertor
 ) : PlaylistRepository {
 
+    override fun getTracksOnlyFromPlaylist(listOfId: List<Int>): Flow<List<Track>?> = flow {
+        val tracksInAllPlaylists = appDatabase.trackInPlaylistDao().getAllTracksFromPlaylists()
+
+        if (tracksInAllPlaylists == null) {
+            emit(null)
+        } else {
+            val filteredTracks = tracksInAllPlaylists.filter { track ->
+                listOfId.contains(track.id)
+            }
+                    if (filteredTracks == null) {
+                        emit(null)
+            }       else {
+                        emit(convertFromTrackInPlaylistEntityToTrack(filteredTracks))
+                    }
+        }
+    }
+
+
     override fun getAllFavouritePlaylists(): Flow<List<Playlist>>  = flow {
        val playlists = appDatabase.playlistDao().getAllPlaylists()
         emit(convertFromPlaylistEntity(playlists))
+    }
+
+
+    override suspend fun getPlaylistsById(id:Int): Playlist {
+        val playlists = appDatabase.playlistDao().getPlaylistsById(id)
+        return convertFromPlaylistEntityOnePlaylist(playlists)
     }
 
     override suspend fun createNewPlaylist(playlist: Playlist) {
@@ -54,11 +78,19 @@ class PlaylistRepositoryImpl(
         return playlists.map { playlist -> playlistDbConvertor.map(playlist) }
     }
 
+    private fun convertFromPlaylistEntityOnePlaylist(playlist: PlaylistEntity): Playlist {
+        return playlistDbConvertor.map(playlist) }
+
+
     private fun convertFromPlaylistToEntity(playlist: Playlist): PlaylistEntity {
         return playlistDbConvertor.map(playlist) }
 
     private fun convertFromTrackToTrackEntity(track: Track): TrackInPlaylistsEntity {
         return trackInPlaylistsEntityDbConvertor.map(track) }
+
+    private fun convertFromTrackInPlaylistEntityToTrack(tracks: List<TrackInPlaylistsEntity>): List<Track> {
+        return tracks.map { track -> trackInPlaylistsEntityDbConvertor.map(track) }
+    }
 
     }
 

@@ -29,7 +29,9 @@ class FavPlaylistFragment : Fragment() {
         _binding = FragmentFavPlaylistsBinding.inflate(inflater, container, false)
         adapter = PlaylistsAdapter(requireContext(), mutableListOf(), object : PlaylistsAdapter.Listener {
             override fun onClick(playlist: Playlist) {
-                // Обработка клика на элементе списка (если нужно)
+                val bundle = Bundle()
+                bundle.putInt("playlistId", playlist.id )
+                findNavController().navigate(R.id.playlistDetailsFragment, bundle)
             }
         })
         binding.recyclerViewPlaylists.adapter = adapter
