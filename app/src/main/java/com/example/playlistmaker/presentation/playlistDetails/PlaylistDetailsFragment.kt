@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -35,6 +36,11 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
     private var playlistId: Int? = -1
     private lateinit var playlistToCompareId: Playlist
 
+    private var adapter = TrackAdapter(
+    arrayListOf(),
+    this@PlaylistDetailsFragment,
+    this@PlaylistDetailsFragment)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,8 +55,9 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
         super.onViewCreated(view, savedInstanceState)
         setupUI()
         setupObservers()
-        setupBackButton()
+        setUpClickListeners()
     }
+
 
     private fun setupUI() {
         binding.recycleViewBottomSheet.layoutManager = LinearLayoutManager(requireContext())
@@ -59,11 +66,21 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
         viewModel.playlistDetails.observe(viewLifecycleOwner, ::initUi)
         viewModel.tracksLiveData.observe(viewLifecycleOwner, ::handleTracksState)
     }
-    private fun setupBackButton() {
+
+    private fun setUpClickListeners() {
         binding.icBackArrow.setOnClickListener {
             findNavController().popBackStack()
         }
+
+        binding.iconShare.setOnClickListener {
+            if (adapter.tracks.size<=0)  {
+                Toast.makeText(requireContext(),context?.getString(R.string.no_tracks_to_share),Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.shareTracks(playlistToCompareId, adapter.tracks)
+            }
+        }
     }
+
 
     private fun initUi(playlist: Playlist) {
 
@@ -92,18 +109,14 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
         val formattedDuration = getFormattedDuration(duration)
         val numberOfTracks = tracks.size
         with(binding) {
-            recycleViewBottomSheet.adapter = TrackAdapter(
-                ArrayList(tracks),
-                this@PlaylistDetailsFragment,
-                this@PlaylistDetailsFragment
-            )
+            adapter.tracks = ArrayList(tracks)
+            recycleViewBottomSheet.adapter = adapter
             recycleViewBottomSheet.visibility = View.VISIBLE
-            playlistMinutes.text =
-                "$formattedDuration ${getMinuteWordForm(formattedDuration.toInt() ?: 0)}"
-            playlistTracks.text =
-                "${numberOfTracks.toString()} ${getTrackWordForm(numberOfTracks ?: 0)}"
+            playlistMinutes.text = "$formattedDuration ${getMinuteWordForm(formattedDuration.toInt() ?: 0)}"
+            playlistTracks.text = "${numberOfTracks.toString()} ${getTrackWordForm(numberOfTracks)}"
         }
     }
+
     private fun handleTracksState(state: TracksInPlaylistState) {
         when (state) {
             is TracksInPlaylistState.Content -> showContent(state.tracks, state.trackDurations)
@@ -119,6 +132,8 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
             playlistTracks.text = "0 треков"
         }
     }
+
+
 
 
 
