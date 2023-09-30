@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentLibraryBinding
+import com.example.playlistmaker.presentation.library.playlists.FavPlaylistFragment
+import com.example.playlistmaker.presentation.library.tracks.FavTracksFragment
 import com.google.android.material.tabs.TabLayoutMediator
 
 class LibraryFragment : Fragment() {
