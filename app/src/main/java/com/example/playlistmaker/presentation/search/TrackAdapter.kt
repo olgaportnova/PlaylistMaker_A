@@ -14,7 +14,7 @@ import java.util.*
 
 
 
-class TrackAdapter(var tracks: ArrayList<Track>, var listener: Listener): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
+class TrackAdapter(var tracks: ArrayList<Track>, var listener: Listener, val longClickListener: LongClickListener): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
 
 
     class TrackHolder(item: View) : RecyclerView.ViewHolder(item) {
@@ -23,7 +23,7 @@ class TrackAdapter(var tracks: ArrayList<Track>, var listener: Listener): Recycl
         val cornerRadius =
             item.resources.getDimensionPixelSize(R.dimen.radius_art_work)
 
-        fun bind(track: Track, listener: Listener) = with(binding) {
+        fun bind(track: Track, listener: Listener, longClickListener: LongClickListener) = with(binding) {
             trackName.text = track.trackName
             artistName.text = track.artistName
             trackTime.text =
@@ -32,6 +32,7 @@ class TrackAdapter(var tracks: ArrayList<Track>, var listener: Listener): Recycl
                 .placeholder(R.drawable.placeholder).into(artWork)
             itemView.setOnClickListener {
                 listener.onClick(track)
+                longClickListener.onLongClick(track)
             }
         }
     }
@@ -46,11 +47,16 @@ class TrackAdapter(var tracks: ArrayList<Track>, var listener: Listener): Recycl
     }
 
     override fun onBindViewHolder(holder: TrackHolder, position: Int) {
-        holder.bind(tracks[position], listener)
+        holder.bind(tracks[position], listener, longClickListener)
 
     }
 
     interface Listener {
         fun onClick(track: Track)
     }
+
+    interface LongClickListener {
+        fun onLongClick(track: Track): Boolean
+    }
+
 }

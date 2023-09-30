@@ -26,22 +26,31 @@ class PlaylistRepositoryImpl(
             val filteredTracks = tracksInAllPlaylists.filter { track ->
                 listOfId.contains(track.id)
             }
-                    if (filteredTracks == null) {
-                        emit(null)
-            }       else {
-                        emit(convertFromTrackInPlaylistEntityToTrack(filteredTracks))
-                    }
+            if (filteredTracks == null) {
+                emit(null)
+            } else {
+                emit(convertFromTrackInPlaylistEntityToTrack(filteredTracks))
+            }
         }
     }
 
+//    override fun getTracksOnlyFromPlaylistById(id:Int): Flow<List<Track>?> = flow {
+//       val trackInPlaylist = appDatabase.trackInPlaylistDao().getTrackIdByPlaylistId(id)
+//        if (trackInPlaylist == null) {
+//            emit(null)
+//        }else {
+//            emit(convertFromTrackInPlaylistEntityToTrack(trackInPlaylist))
+//        }
+//    }
 
-    override fun getAllFavouritePlaylists(): Flow<List<Playlist>>  = flow {
-       val playlists = appDatabase.playlistDao().getAllPlaylists()
+
+    override fun getAllFavouritePlaylists(): Flow<List<Playlist>> = flow {
+        val playlists = appDatabase.playlistDao().getAllPlaylists()
         emit(convertFromPlaylistEntity(playlists))
     }
 
 
-    override suspend fun getPlaylistsById(id:Int): Playlist {
+    override suspend fun getPlaylistsById(id: Int): Playlist {
         val playlists = appDatabase.playlistDao().getPlaylistsById(id)
         return convertFromPlaylistEntityOnePlaylist(playlists)
     }
@@ -61,7 +70,7 @@ class PlaylistRepositoryImpl(
         appDatabase.playlistDao().updatePlaylist(playlistEntity)
     }
 
-    override suspend fun addTrackToPlaylist(playlistId:Int, trackId:String) {
+    override suspend fun addTrackToPlaylist(playlistId: Int, trackId: String) {
         appDatabase.playlistDao().addTrackToPlaylist(playlistId, trackId)
     }
 
@@ -70,8 +79,31 @@ class PlaylistRepositoryImpl(
         appDatabase.trackInPlaylistDao().insertTrack(trackEntity)
     }
 
+    override suspend fun deleteTrackFromPlayList(
+        updatedListOfTracks: List<Int>?,
+        playlistId: Int,
+        idTrackToDelete: Int
+    ) {
+        val updatedListOfTrackString = updatedListOfTracks?.joinToString(separator = ",")
+        appDatabase.playlistDao().deleteTrackFromPlaylist(updatedListOfTrackString, playlistId)
+//        if (ifTrackIsInAnyPlaylists(idTrackToDelete)) {
+//            appDatabase.trackInPlaylistDao().deleteTrackByIdFromListOfTracksInPlaylists(idTrackToDelete)
+
+    }
 
 
+//    override suspend fun ifTrackIsInAnyPlaylists(idTrackToDelete: Int): Boolean {
+//        val allPlaylists = appDatabase.playlistDao().getAllPlaylists()
+//
+//        for (playlist in allPlaylists) {
+//            val listOfIds = playlistDbConvertor.convertStringOfIdTrackToList(playlist.idOfTracks)
+//            if (idTrackToDelete in listOfIds) {
+//                return true
+//            }
+//        }
+//
+//        return false
+//    }
 
 
     private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
@@ -79,20 +111,24 @@ class PlaylistRepositoryImpl(
     }
 
     private fun convertFromPlaylistEntityOnePlaylist(playlist: PlaylistEntity): Playlist {
-        return playlistDbConvertor.map(playlist) }
+        return playlistDbConvertor.map(playlist)
+    }
 
 
     private fun convertFromPlaylistToEntity(playlist: Playlist): PlaylistEntity {
-        return playlistDbConvertor.map(playlist) }
+        return playlistDbConvertor.map(playlist)
+    }
 
     private fun convertFromTrackToTrackEntity(track: Track): TrackInPlaylistsEntity {
-        return trackInPlaylistsEntityDbConvertor.map(track) }
+        return trackInPlaylistsEntityDbConvertor.map(track)
+    }
 
     private fun convertFromTrackInPlaylistEntityToTrack(tracks: List<TrackInPlaylistsEntity>): List<Track> {
         return tracks.map { track -> trackInPlaylistsEntityDbConvertor.map(track) }
     }
+}
 
-    }
+
 
 
 

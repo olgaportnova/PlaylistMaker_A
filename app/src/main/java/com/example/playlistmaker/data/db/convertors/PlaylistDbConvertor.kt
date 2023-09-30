@@ -34,14 +34,14 @@ class PlaylistDbConvertor {
     }
 
 
-    private fun convertIdOfTrackToString(listOfIds: List<Int>?): String? {
+    fun convertIdOfTrackToString(listOfIds: List<Int>?): String? {
         return if (listOfIds ==null) {
             null
         } else {
             Gson().toJson(listOfIds)
         }
     }
-    private fun convertStringOfIdTrackToList(stringOfIds: String?): List<Int> {
+    fun convertStringOfIdTrackToList(stringOfIds: String?): List<Int> {
         return stringOfIds?.split(",")?.mapNotNull { it.toIntOrNull() } ?: emptyList()
     }
 

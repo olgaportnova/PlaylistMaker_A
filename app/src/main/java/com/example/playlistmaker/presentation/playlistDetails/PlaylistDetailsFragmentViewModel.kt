@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.playlists.PlaylistInteractor
-import com.example.playlistmaker.ui.tracks.models.PlaylistsState
 import kotlinx.coroutines.launch
 
 class PlaylistDetailsFragmentViewModel(
@@ -15,28 +14,42 @@ class PlaylistDetailsFragmentViewModel(
 
     ) : ViewModel() {
 
-    private val playlistDetails = MutableLiveData<Playlist>()
-    fun getPlaylistDetails(): LiveData<Playlist> = playlistDetails
+    private val _playlistDetails = MutableLiveData<Playlist>()
+    val playlistDetails: LiveData<Playlist> get() = _playlistDetails
 
-    private val tracksLiveData = MutableLiveData<TracksInPlaylistState>()
-    fun getTracksLiveData(): LiveData<TracksInPlaylistState> = tracksLiveData
+    private val _tracksLiveData = MutableLiveData<TracksInPlaylistState>()
+    val tracksLiveData: LiveData<TracksInPlaylistState> get() = _tracksLiveData
+
 
 
 
     fun getPlaylistById(id: Int) {
         viewModelScope.launch {
             val playlist = playlistInteractor.getPlaylistsById(id)
-            playlistDetails.value = playlist
+            _playlistDetails.value = playlist
         }
     }
 
-    fun getTracksFromOnePlaylist(listOfId: List<Int>) {
+    fun getTracksFromOnePlaylist(playlist: Playlist) {
+        val listOfId = playlist.idOfTracks?.toList()
         viewModelScope.launch {
-            playlistInteractor.getTracksOnlyFromPlaylist(listOfId)
+            playlistInteractor.getTracksOnlyFromPlaylist(listOfId!!)
                 .collect { track ->
                     processResult(track)
-
                 }
+        }
+    }
+
+    private fun getTracksFromOnePlaylistUpdated(updatedListOfId: List<Int>?) {
+        if (updatedListOfId?.isEmpty() == true|| updatedListOfId==null) {
+            processResult(emptyList())
+        } else {
+            viewModelScope.launch {
+                playlistInteractor.getTracksOnlyFromPlaylist(updatedListOfId!!)
+                    .collect { track ->
+                        processResult(track)
+                    }
+            }
         }
     }
 
@@ -53,7 +66,15 @@ class PlaylistDetailsFragmentViewModel(
     }
 
     private fun renderState(state: TracksInPlaylistState) {
-        tracksLiveData.postValue(state)
+        _tracksLiveData.postValue(state)
+    }
+    suspend fun deleteTrackFromPlaylist(track: Track, playlist: Playlist) {
+       val idTrackToDelete = track.trackId
+       var listOfIdsInPlaylist = playlist.idOfTracks?.toMutableList()
+       listOfIdsInPlaylist?.remove(idTrackToDelete)
+           playlistInteractor.deleteTrackFromPlaylist(listOfIdsInPlaylist?.toList(), playlist.id, idTrackToDelete)
+           getTracksFromOnePlaylistUpdated(listOfIdsInPlaylist?.toList())
+
     }
 
 
