@@ -106,7 +106,7 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
         }
 
         binding.deletePlaylist.setOnClickListener {
-            MaterialAlertDialogBuilder(requireContext())
+            MaterialAlertDialogBuilder(requireContext(), R.style.DialogStyle)
                 .setTitle(context?.getString(R.string.dialog_delete_playlist_title))
                 .setMessage(context?.getString(R.string.dialog_delete_playlist_message))
                 .setNeutralButton(context?.getString(R.string.dialog_delete_playlist_cancel)) { dialog, _ ->
@@ -121,10 +121,7 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
                 .setOnDismissListener {
                 }
                 .show()
-                .apply {
-                    getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#3772E7"))
-                    getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#3772E7"))
-                }
+
 
 
         }
@@ -235,7 +232,7 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
     }
 
     override fun onItemLongClick(track: Track): Boolean {
-        MaterialAlertDialogBuilder(requireContext())
+        MaterialAlertDialogBuilder(requireContext(), R.style.DialogStyle)
             .setTitle(context?.getString(R.string.dialog_delete_title))
             .setMessage(context?.getString(R.string.dialog_delete_message))
             .setNeutralButton(context?.getString(R.string.dialog_delete_cancel)) { dialog, _ ->

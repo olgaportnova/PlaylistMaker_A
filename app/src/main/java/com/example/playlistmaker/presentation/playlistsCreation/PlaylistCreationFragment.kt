@@ -111,9 +111,21 @@ class PlaylistCreationFragment : Fragment() {
                 navigateBack()
             }
         }
-        binding.frameForImage.setOnClickListener { chooseAndUploadImage() }
-        binding.btCreate.setOnClickListener { createNewPlaylist() }
+        binding.frameForImage.setOnClickListener {
+            chooseAndUploadImage()
+
+        }
+        binding.btCreate.setOnClickListener {
+            if (editablePlaylist == null) {
+                createNewPlaylist()
+            } else {
+                lifecycleScope.launch {
+                    editPlaylist(editablePlaylist!!)
+                }
+            }
+        }
     }
+
     private fun setupViewModelObservers() {
         viewModel.getImageUrlLiveData().observe(viewLifecycleOwner, Observer { url ->
             urlImageForNewPlaylist = url
@@ -144,6 +156,8 @@ class PlaylistCreationFragment : Fragment() {
         }
 
 
+
+
     }
 
 
@@ -159,29 +173,22 @@ class PlaylistCreationFragment : Fragment() {
     private fun createNewPlaylist() {
         val playlistName = binding.editTextName.text.toString()
 
-        if(isPhotoSelected) {
+        if (isPhotoSelected) {
             viewModel.renameImageFile(playlistName)
             viewModel.getImageUrlFromStorage(playlistName)
-        }
-
-        // Переместите вызов этого внутрь observer
-        viewModel.getImageUrlLiveData().observe(viewLifecycleOwner, Observer { url ->
-            urlImageForNewPlaylist = url
-
-            lifecycleScope.launch {
-                viewModel.createNewPlaylist(
-                    playlistName,
-                    binding.editTextDetails.text.toString(),
-                    urlImageForNewPlaylist,
-                    null,
-                    0
-                )
-                showToastPlaylistCreated(playlistName)
-                navigateBackAfterCreatingPlaylist()
-            }
-        })
-
-        if (!isPhotoSelected) {
+            viewModel.getImageUrlLiveData().observe(viewLifecycleOwner, Observer { url ->
+                urlImageForNewPlaylist = url
+                lifecycleScope.launch {
+                    viewModel.createNewPlaylist(
+                        playlistName,
+                        binding.editTextDetails.text.toString(),
+                        urlImageForNewPlaylist,
+                        null,
+                        0
+                    )
+                }
+            })
+        } else {
             lifecycleScope.launch {
                 viewModel.createNewPlaylist(
                     playlistName,
@@ -190,11 +197,41 @@ class PlaylistCreationFragment : Fragment() {
                     null,
                     0
                 )
-                showToastPlaylistCreated(playlistName)
-                navigateBackAfterCreatingPlaylist()
             }
         }
+        showToastPlaylistCreated(playlistName)
+        navigateBackAfterCreatingPlaylist()
     }
+
+
+    private suspend fun editPlaylist(playlist: Playlist) {
+        val updatedName = binding.editTextName.text.toString()
+        val updatedDetails = binding.editTextDetails.text.toString()
+
+        // Если новое изображение было выбрано, то обновляем URL
+        if (isPhotoSelected) {
+            viewModel.renameImageFile(updatedName)
+            viewModel.getImageUrlFromStorage(updatedName)
+            urlImageForNewPlaylist = viewModel.getImageUrlLiveData().value
+        }
+
+        val updatedImagePath = urlImageForNewPlaylist ?: playlist.imagePath
+
+        // Если idOfTracks или numberOfTracks равны 0, присваиваем null
+        val updatedIdOfTracks = if (playlist.idOfTracks?.isEmpty() == true) null else playlist.idOfTracks
+        val updatedNumberOfTracks = if (playlist.numberOfTracks == 0) null else playlist.numberOfTracks
+
+        val updatedPlaylist = playlist.copy(
+            name = updatedName,
+            details = updatedDetails,
+            imagePath = updatedImagePath,
+            idOfTracks = updatedIdOfTracks,
+            numberOfTracks = updatedNumberOfTracks
+        )
+        viewModel.editPlaylist(updatedPlaylist)
+        findNavController().popBackStack()
+    }
+
 
 
     private fun chooseAndUploadImage() {
@@ -208,9 +245,19 @@ class PlaylistCreationFragment : Fragment() {
         val file = ImageStorageHelper.getTemporaryImageFile(requireContext())
         val inputStream = requireActivity().contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)
-        BitmapFactory.decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+
+        try {
+            BitmapFactory.decodeStream(inputStream).apply {
+                this.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+            }
+        } finally {
+            inputStream?.close()
+            outputStream.close()
+        }
     }
+
+
+
 
 
 

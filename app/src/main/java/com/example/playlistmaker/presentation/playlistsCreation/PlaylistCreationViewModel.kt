@@ -35,6 +35,12 @@ class PlaylistCreationViewModel(
         playlistInteractor.createNewPlaylist(newPlaylist)
     }
 
+    suspend fun editPlaylist(
+       playlist: Playlist
+    ) {
+        playlistInteractor.createNewPlaylist(playlist)
+    }
+
     fun getImageUrlFromStorage(playlistName: String) {
         val file = ImageStorageHelper.getImageFileForPlaylist(context, playlistName)
         val url = file.toUri().toString()
@@ -42,20 +48,24 @@ class PlaylistCreationViewModel(
         urlImageForNewPlaylist = url
     }
 
-
     fun renameImageFile(playlistName: String) {
-            val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
-            val temporaryFileName = "cover.jpg"
-            temporaryFile = File(filePath, temporaryFileName)
+        val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
+        val temporaryFileName = "cover.jpg"
+        temporaryFile = File(filePath, temporaryFileName)
 
-            if (temporaryFile!!.exists()) {
-                val finalFile = File(filePath, "cover_$playlistName.jpg")
-                temporaryFile!!.renameTo(finalFile)
-            } else {
-                urlImageForNewPlaylist = null
-            }
+        val finalFile = File(filePath, "cover_$playlistName.jpg")
 
+        if (finalFile.exists()) {
+            finalFile.delete()
+        }
+
+        if (temporaryFile!!.exists()) {
+            temporaryFile!!.renameTo(finalFile)
+        } else {
+            urlImageForNewPlaylist = null
+        }
     }
+
 
 
 }
