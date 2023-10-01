@@ -59,8 +59,13 @@ class RootActivity : AppCompatActivity(), BackNavigationListenerRoot {
             val childFragmentManager = currentNavHostFragment.childFragmentManager
             val currentFragment = childFragmentManager.primaryNavigationFragment
             if (currentFragment is PlaylistCreationFragment) {
-                lifecycleScope.launch {
-                    currentFragment.navigateBack()
+                val playlistArg = currentFragment.arguments?.getSerializable("EDIT_PLAYLIST")
+                if (playlistArg != null) {
+                    super.onBackPressed()
+                }  else {
+                    lifecycleScope.launch {
+                        currentFragment.navigateBack()
+                    }
                 }
             } else {
                 super.onBackPressed()

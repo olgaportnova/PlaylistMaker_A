@@ -81,7 +81,7 @@ class FavPlaylistFragment : Fragment() {
 
 
     private fun navigateToNewFragment() {
-        findNavController().navigate(R.id.playlistFragment)
+        findNavController().navigate(R.id.playlistFragment,null)
     }
 
     override fun onDestroyView() {

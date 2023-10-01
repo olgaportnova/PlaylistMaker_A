@@ -19,8 +19,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistCreationBinding
+import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.presentation.audioPlayer.AudioPlayerActivity
 import com.example.playlistmaker.presentation.main.RootActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -37,6 +40,7 @@ class PlaylistCreationFragment : Fragment() {
     private val binding get() = _binding!!
     private var isPhotoSelected = false
     private var urlImageForNewPlaylist: String? = null
+    private var editablePlaylist: Playlist? = null
 
     private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -73,10 +77,12 @@ class PlaylistCreationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentPlaylistCreationBinding.inflate(inflater, container, false)
+        editablePlaylist = arguments?.getSerializable("EDIT_PLAYLIST") as? Playlist
 
         setupListeners()
         setupTextChangeListener()
         setupViewModelObservers()
+        editablePlaylist?.let { setupUiEditMode(it) }
 
         return binding.root
 
@@ -117,6 +123,29 @@ class PlaylistCreationFragment : Fragment() {
         return binding.editTextName.text?.isNotEmpty() == true || binding.editTextDetails.text?.isNotEmpty() == true
     }
 
+    private fun setupUiEditMode(playlist: Playlist) {
+        binding.textHeader.text = "Редактировать"
+        binding.editTextName.setText(playlist.name)
+        binding.editTextDetails.setText(playlist.details)
+        binding.btCreate.text = "Сохранить"
+        if (playlist.imagePath!=null) {
+            Glide.with(this)
+                .load(playlist.imagePath)
+                .into(binding.frameForImage)
+            binding.icAddImage.visibility = View.GONE
+        } else {
+            binding.frameForImage.visibility = View.VISIBLE
+            binding.icAddImage.visibility = View.VISIBLE
+        }
+
+
+        binding.icBackArrow.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+
+    }
+
 
 
 
@@ -130,20 +159,44 @@ class PlaylistCreationFragment : Fragment() {
     private fun createNewPlaylist() {
         val playlistName = binding.editTextName.text.toString()
 
-        viewModel.renameImageFile(playlistName)
-        viewModel.getImageUrlFromStorage(playlistName)
-        lifecycleScope.launch {
-            viewModel.createNewPlaylist(
-                playlistName,
-                binding.editTextDetails.text.toString(),
-                null,
-                0
-            )
+        if(isPhotoSelected) {
+            viewModel.renameImageFile(playlistName)
             viewModel.getImageUrlFromStorage(playlistName)
-            showToastPlaylistCreated(playlistName)
-            navigateBackAfterCreatingPlaylist()
+        }
+
+        // Переместите вызов этого внутрь observer
+        viewModel.getImageUrlLiveData().observe(viewLifecycleOwner, Observer { url ->
+            urlImageForNewPlaylist = url
+
+            lifecycleScope.launch {
+                viewModel.createNewPlaylist(
+                    playlistName,
+                    binding.editTextDetails.text.toString(),
+                    urlImageForNewPlaylist,
+                    null,
+                    0
+                )
+                showToastPlaylistCreated(playlistName)
+                navigateBackAfterCreatingPlaylist()
+            }
+        })
+
+        if (!isPhotoSelected) {
+            lifecycleScope.launch {
+                viewModel.createNewPlaylist(
+                    playlistName,
+                    binding.editTextDetails.text.toString(),
+                    null,
+                    null,
+                    0
+                )
+                showToastPlaylistCreated(playlistName)
+                navigateBackAfterCreatingPlaylist()
+            }
         }
     }
+
+
     private fun chooseAndUploadImage() {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
@@ -163,19 +216,22 @@ class PlaylistCreationFragment : Fragment() {
 
     // navigation part
     fun navigateBack() {
-        if (activity is RootActivity) {
-            if (isAnyFieldNotEmpty() || isPhotoSelected) {
-                showBackConfirmationDialog()
-            } else {
-                backNavigationListenerRoot?.onNavigateBack(true)
+            if (activity is RootActivity) {
+                if (isAnyFieldNotEmpty() || isPhotoSelected) {
+                    showBackConfirmationDialog()
+                } else {
+                    backNavigationListenerRoot?.onNavigateBack(true)
+                }
+            } else if (activity is AudioPlayerActivity) {
+                if (isAnyFieldNotEmpty() || isPhotoSelected) {
+                    showBackConfirmationDialog()
+                } else {
+                    backNavigationListenerAudio?.onNavigateBack(true)
+                }
             }
+
         }
-        else if (activity is AudioPlayerActivity) {
-            if (isAnyFieldNotEmpty() || isPhotoSelected) {
-                showBackConfirmationDialog() } else {
-                backNavigationListenerAudio?.onNavigateBack(true) }
-        }
-    }
+
     private fun navigateBackAfterCreatingPlaylist() {
         if (activity is RootActivity) {
             backNavigationListenerRoot?.onNavigateBack(true)

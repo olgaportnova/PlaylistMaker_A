@@ -160,8 +160,14 @@ class AudioPlayerActivity (
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             binding.scrollViewMain.visibility=View.GONE
             binding.fragmentContainer.visibility=View.VISIBLE
+            val fragment = PlaylistCreationFragment()
+            val bundle = Bundle().apply {
+                putSerializable("EDIT_PLAYLIST", null)
+            }
+            fragment.arguments = bundle
+
             val fragmentTransaction = supportFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.fragment_container, PlaylistCreationFragment())
+            fragmentTransaction.replace(R.id.fragment_container, fragment)
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         }
@@ -241,7 +247,10 @@ class AudioPlayerActivity (
     override fun onBackPressed() {
             val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
             if (currentFragment is PlaylistCreationFragment) {
-                onNavigateBack(false)
+                val playlistArg = currentFragment.arguments?.getSerializable("EDIT_PLAYLIST")
+                if (playlistArg == null) {
+                onNavigateBack(false)}
+                else { super.onBackPressed()}
             } else {
                 super.onBackPressed()
             }

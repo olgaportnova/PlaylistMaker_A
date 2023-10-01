@@ -32,6 +32,8 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
     private val viewModel: PlaylistDetailsFragmentViewModel by activityViewModel()
     private val searchTrackViewModel: SearchViewModel by viewModel()
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private var playlistToEdit: Playlist? = null
+
 
     private var _binding: FragmentPlaylistDetailsBinding? = null
     private val binding get() = _binding!!
@@ -126,6 +128,14 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
 
 
         }
+
+        binding.editPlaylist.setOnClickListener {
+            val playlist: Playlist? = playlistToEdit
+            val bundle = Bundle().apply {
+                putSerializable("EDIT_PLAYLIST", playlist)
+            }
+            findNavController().navigate(R.id.playlistFragment, bundle)
+        }
     }
 
     private fun setupBottomSheetBehaviorCallback() {
@@ -161,6 +171,8 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
 
 
     private fun initUi(playlist: Playlist) {
+
+        playlistToEdit = playlist
 
         setupBottomSheet(playlist)
 

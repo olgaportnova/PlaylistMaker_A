@@ -21,6 +21,7 @@
             style="@style/back_arrow_from_playlist_creation" />
 
         <TextView
+            android:id="@+id/text_header"
             android:text="Новый плейлист"
             style="@style/header_new_playlist" />
     </LinearLayout>

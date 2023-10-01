@@ -19,16 +19,19 @@ class PlaylistCreationViewModel(
     private val imageUrlLiveData = MutableLiveData<String>()
     fun getImageUrlLiveData(): LiveData<String> = imageUrlLiveData
 
-    private var urlImageForNewPlaylist : String? = null
+    private var urlImageForNewPlaylist: String? = null
+    private var temporaryFile: File? = null
 
 
     suspend fun createNewPlaylist(
         name: String,
         details: String,
+        urlImageForNewPlaylist: String?,
         tracksId: List<Int>?,
         numberOfTracks: Int?
     ) {
-        val newPlaylist = Playlist(0, name, details, urlImageForNewPlaylist, tracksId, numberOfTracks)
+        val newPlaylist =
+            Playlist(0, name, details, urlImageForNewPlaylist, tracksId, numberOfTracks)
         playlistInteractor.createNewPlaylist(newPlaylist)
     }
 
@@ -40,15 +43,19 @@ class PlaylistCreationViewModel(
     }
 
 
-
     fun renameImageFile(playlistName: String) {
-        val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
-        val temporaryFileName = "cover.jpg"
-        val temporaryFile = File(filePath, temporaryFileName)
+            val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
+            val temporaryFileName = "cover.jpg"
+            temporaryFile = File(filePath, temporaryFileName)
 
-        if (temporaryFile.exists()) {
-            val finalFile = File(filePath, "cover_$playlistName.jpg")
-            temporaryFile.renameTo(finalFile)
-        }
+            if (temporaryFile!!.exists()) {
+                val finalFile = File(filePath, "cover_$playlistName.jpg")
+                temporaryFile!!.renameTo(finalFile)
+            } else {
+                urlImageForNewPlaylist = null
+            }
+
     }
+
+
 }
