@@ -141,4 +141,87 @@
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/dimOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="gone"
+        android:alpha="0"/>
+
+
+    <LinearLayout
+        android:id="@+id/standard_bottom_sheet_menu_details"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="505dp"
+        android:layout_height="505dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        style="@style/bottom_sheet">
+
+        <View style="@style/handler_bottom_sheet" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/menu_playlist_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:background="@drawable/rounded_playlist_cover_small"
+                android:clipToOutline="true"
+                android:id="@+id/playlistCoverImage_Btn_sheet"
+                android:layout_width="@dimen/art_work_width"
+                android:layout_height="@dimen/art_work_height"
+                android:layout_marginTop="@dimen/image_margin"
+                android:layout_marginBottom="@dimen/image_margin"
+                android:scaleType="centerCrop" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    tools:text="Best Songs 2021"
+                    android:id="@+id/playlistName_btn_sheet"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginStart="8dp"
+                    style="@style/playlist_view_small_name" />
+
+                <TextView
+                    tools:text="89 треков"
+                    android:id="@+id/numberOfTracks_btn_sheet"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="1dp"
+                    style="@style/artist_time_track"
+                    android:layout_gravity="bottom|start" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/sharePlaylist"
+            android:layout_marginTop="8dp"
+            android:text="@string/share_bottom_sheet_menu_details_screen"
+            style="@style/btn_botton_sheet_menu" />
+        <Button
+            android:id="@+id/editPlaylist"
+            android:text="@string/edit_bottom_sheet_menu_details_screen"
+            style="@style/btn_botton_sheet_menu"
+            />
+        <Button
+            android:id="@+id/deletePlaylist"
+            android:text="@string/delete_bottom_sheet_menu_details_screen"
+            style="@style/btn_botton_sheet_menu" />
+
+
+    </LinearLayout>
+
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

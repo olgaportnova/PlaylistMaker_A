@@ -49,9 +49,8 @@ class PlaylistRepositoryImpl(
         appDatabase.playlistDao().createPlaylist(playlistEntity)
     }
 
-    override suspend fun deleteNewPlaylist(playlist: Playlist) {
-        val playlistEntity = convertFromPlaylistToEntity(playlist)
-        appDatabase.playlistDao().deletePlaylist(playlistEntity)
+    override suspend fun deleteNewPlaylist(playlistId: Int) {
+        appDatabase.playlistDao().deletePlaylistById(playlistId)
     }
 
     override suspend fun updatePlaylist(playlist: Playlist) {

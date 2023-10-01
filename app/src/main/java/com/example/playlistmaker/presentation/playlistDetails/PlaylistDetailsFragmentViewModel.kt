@@ -89,6 +89,17 @@ class PlaylistDetailsFragmentViewModel(
         playlistInteractor.updateDbListOfTracksInAllPlaylists(playlistId, idTrackToDelete)
     }
 
+    suspend fun deletePlaylistById(playlistId: Int, listOfTracks: ArrayList<Track>) {
+        playlistInteractor.deleteNewPlaylist(playlistId)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            for (track in listOfTracks) {
+                val idTrackToDelete = track.trackId
+                updateDbListOfTracksInAllPlaylists(playlistId, idTrackToDelete)
+            }
+        }
+    }
+
     fun shareTracks(playlist: Playlist, listOfTracks: List<Track>) {
         val message = generateMessage(playlist, listOfTracks)
         sharingInteractor.shareTracks(message)

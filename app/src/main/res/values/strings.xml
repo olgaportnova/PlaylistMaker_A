@@ -51,5 +51,16 @@
 
     <string name="no_tracks_to_share">В этом плейлисте нет списка треков, которым можно поделиться</string>
 
+    //bottom sheet menu details screen
+    <string name="share_bottom_sheet_menu_details_screen">Поделиться</string>
+    <string name="edit_bottom_sheet_menu_details_screen">Редактировать информацию</string>
+    <string name="delete_bottom_sheet_menu_details_screen">Удалить плейлист</string>
+
+
+    // dialog playlist delete
+    <string name="dialog_delete_playlist_title">Удалить плейлист</string>
+    <string name="dialog_delete_playlist_message">Хотите удалить плейлист?</string>
+    <string name="dialog_delete_playlist_delete">Да</string>
+    <string name="dialog_delete_playlist_cancel">Нет</string>
 
 </resources>

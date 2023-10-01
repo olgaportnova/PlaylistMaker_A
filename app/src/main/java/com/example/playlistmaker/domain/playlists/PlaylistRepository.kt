@@ -9,7 +9,7 @@ interface PlaylistRepository {
     fun getTracksOnlyFromPlaylist(listOfId: List<Int>): Flow<List<Track>?>
     fun getAllFavouritePlaylists(): Flow<List<Playlist>>
     suspend fun createNewPlaylist(playlist: Playlist)
-    suspend fun deleteNewPlaylist(playlist: Playlist)
+    suspend fun deleteNewPlaylist(playlistId: Int)
     suspend fun updatePlaylist(playlist: Playlist)
     suspend fun addTrackToPlaylist(playlistId:Int, trackId:String)
     suspend fun insertTrackDetailIntoPlaylistInfo(track: Track)

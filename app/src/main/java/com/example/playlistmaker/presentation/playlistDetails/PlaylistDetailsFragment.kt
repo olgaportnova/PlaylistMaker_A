@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +19,7 @@ import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.presentation.search.TrackAdapter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -29,6 +31,7 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
 
     private val viewModel: PlaylistDetailsFragmentViewModel by activityViewModel()
     private val searchTrackViewModel: SearchViewModel by viewModel()
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     private var _binding: FragmentPlaylistDetailsBinding? = null
     private val binding get() = _binding!!
@@ -48,6 +51,9 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
         _binding = FragmentPlaylistDetailsBinding.inflate(inflater, container, false)
         playlistId = arguments?.getInt("playlistId")
         viewModel.getPlaylistById(playlistId!!)
+        val bottomSheetContainer = binding.standardBottomSheetMenuDetails
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         return binding.root
     }
 
@@ -56,12 +62,16 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
         setupUI()
         setupObservers()
         setUpClickListeners()
+        setupBottomSheetBehaviorCallback()
     }
 
 
     private fun setupUI() {
         binding.recycleViewBottomSheet.layoutManager = LinearLayoutManager(requireContext())
+
     }
+
+
     private fun setupObservers() {
         viewModel.playlistDetails.observe(viewLifecycleOwner, ::initUi)
         viewModel.tracksLiveData.observe(viewLifecycleOwner, ::handleTracksState)
@@ -79,10 +89,80 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
                 viewModel.shareTracks(playlistToCompareId, adapter.tracks)
             }
         }
+
+        binding.iconMenu.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            binding.dimOverlay.visibility = View.VISIBLE
+        }
+
+        binding.sharePlaylist.setOnClickListener {
+            if (adapter.tracks.size<=0)  {
+                Toast.makeText(requireContext(),context?.getString(R.string.no_tracks_to_share),Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.shareTracks(playlistToCompareId, adapter.tracks)
+            }
+        }
+
+        binding.deletePlaylist.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(context?.getString(R.string.dialog_delete_playlist_title))
+                .setMessage(context?.getString(R.string.dialog_delete_playlist_message))
+                .setNeutralButton(context?.getString(R.string.dialog_delete_playlist_cancel)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton(getString(R.string.dialog_delete_playlist_delete)) { _, _ ->
+                    lifecycleScope.launch {
+                        viewModel.deletePlaylistById(playlistId!!, adapter.tracks)
+                        findNavController().popBackStack()
+                    }
+                }
+                .setOnDismissListener {
+                }
+                .show()
+                .apply {
+                    getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#3772E7"))
+                    getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#3772E7"))
+                }
+
+
+        }
+    }
+
+    private fun setupBottomSheetBehaviorCallback() {
+        val dimOverlay: View = binding.dimOverlay
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        dimOverlay.alpha = 1f
+                        dimOverlay.visibility = View.VISIBLE
+                    }
+                    else -> {
+                        dimOverlay.visibility = View.GONE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                dimOverlay.alpha = slideOffset
+            }
+        })
+    }
+    private fun setupBottomSheet(playlist: Playlist) {
+        binding.recycleViewBottomSheet.layoutManager = LinearLayoutManager(requireContext())
+        binding.playlistNameBtnSheet.text = playlist.name
+        binding.numberOfTracksBtnSheet.text =  "${playlist.numberOfTracks.toString()} ${getTrackWordForm(playlist.numberOfTracks ?: 0)}"
+        Glide.with(requireContext())
+            .load(playlist.imagePath)
+            .placeholder(R.drawable.placeholder)
+            .into(binding.playlistCoverImageBtnSheet)
     }
 
 
     private fun initUi(playlist: Playlist) {
+
+        setupBottomSheet(playlist)
 
         playlistToCompareId = playlist
         binding.recycleViewBottomSheet.layoutManager = LinearLayoutManager(requireContext())
