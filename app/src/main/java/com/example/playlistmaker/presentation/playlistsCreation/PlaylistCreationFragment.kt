@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -208,16 +209,14 @@ class PlaylistCreationFragment : Fragment() {
         val updatedName = binding.editTextName.text.toString()
         val updatedDetails = binding.editTextDetails.text.toString()
 
-        // Если новое изображение было выбрано, то обновляем URL
         if (isPhotoSelected) {
             viewModel.renameImageFile(updatedName)
             viewModel.getImageUrlFromStorage(updatedName)
-            urlImageForNewPlaylist = viewModel.getImageUrlLiveData().value
+            urlImageForNewPlaylist = viewModel.getImageUrlFromStorageEdit(updatedName)
         }
 
         val updatedImagePath = urlImageForNewPlaylist ?: playlist.imagePath
 
-        // Если idOfTracks или numberOfTracks равны 0, присваиваем null
         val updatedIdOfTracks = if (playlist.idOfTracks?.isEmpty() == true) null else playlist.idOfTracks
         val updatedNumberOfTracks = if (playlist.numberOfTracks == 0) null else playlist.numberOfTracks
 
@@ -247,17 +246,13 @@ class PlaylistCreationFragment : Fragment() {
         val outputStream = FileOutputStream(file)
 
         try {
-            BitmapFactory.decodeStream(inputStream).apply {
-                this.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-            }
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
         } finally {
             inputStream?.close()
             outputStream.close()
         }
     }
-
-
-
 
 
 
@@ -287,7 +282,7 @@ class PlaylistCreationFragment : Fragment() {
             backNavigationListenerAudio?.onNavigateBack(true) }
     }
     private fun showBackConfirmationDialog() {
-        MaterialAlertDialogBuilder(requireContext())
+        MaterialAlertDialogBuilder(requireContext(),R.style.DialogStyle)
             .setTitle(context?.getString(R.string.dialog_title))
             .setMessage(context?.getString(R.string.dialog_message))
             .setNeutralButton(context?.getString(R.string.dialog_cancel)) { dialog, _ ->

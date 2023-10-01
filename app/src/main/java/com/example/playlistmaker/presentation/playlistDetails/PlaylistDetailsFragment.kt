@@ -191,6 +191,8 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
 
         if (playlist.details?.isEmpty() == true) {
             binding.playlistDetails.visibility = View.GONE
+        } else {
+            binding.playlistDetails.visibility = View.VISIBLE
         }
     }
 
@@ -246,10 +248,7 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
             .setOnDismissListener {
             }
             .show()
-            .apply {
-                getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#3772E7"))
-                getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#3772E7"))
-            }
+
 
         return true
     }

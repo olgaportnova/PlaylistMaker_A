@@ -2,6 +2,7 @@ package com.example.playlistmaker.presentation.playlistsCreation
 
 import android.content.Context
 import android.os.Environment
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -47,24 +48,48 @@ class PlaylistCreationViewModel(
         imageUrlLiveData.postValue(url)
         urlImageForNewPlaylist = url
     }
+    fun getImageUrlFromStorageEdit(playlistName: String): String {
+        val file = ImageStorageHelper.getImageFileForPlaylist(context, playlistName)
+        val url = file.toUri().toString()
+        return url
+    }
 
     fun renameImageFile(playlistName: String) {
         val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
-        val temporaryFileName = "cover.jpg"
+        val temporaryFileName = "12345.jpg"
         temporaryFile = File(filePath, temporaryFileName)
+
+        if (temporaryFile!!.exists()) {
+            Log.d("DEBUG", "Temporary file exists at ${temporaryFile!!.absolutePath}")
+        } else {
+            Log.e("DEBUG", "Temporary file does NOT exist at ${temporaryFile!!.absolutePath}")
+        }
 
         val finalFile = File(filePath, "cover_$playlistName.jpg")
 
         if (finalFile.exists()) {
             finalFile.delete()
+            if (!finalFile.exists()) {
+                Log.d("DEBUG", "Final file was deleted successfully.")
+            } else {
+                Log.e("DEBUG", "Failed to delete the final file.")
+            }
         }
 
+        val finalFile1 = File(filePath, "cover_$playlistName.jpg")
+
         if (temporaryFile!!.exists()) {
-            temporaryFile!!.renameTo(finalFile)
+            temporaryFile!!.renameTo(finalFile1)
+            if (finalFile.exists()) {
+                Log.d("DEBUG", "File was renamed successfully to ${finalFile1.absolutePath}")
+            } else {
+                Log.e("DEBUG", "Failed to rename the file.")
+            }
         } else {
             urlImageForNewPlaylist = null
         }
     }
+
 
 
 

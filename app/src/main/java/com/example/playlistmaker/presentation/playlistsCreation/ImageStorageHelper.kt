@@ -2,6 +2,7 @@ package com.example.playlistmaker.presentation.playlistsCreation
 
 import android.content.Context
 import android.os.Environment
+import android.util.Log
 import java.io.File
 
 object ImageStorageHelper {
@@ -15,10 +16,13 @@ object ImageStorageHelper {
         if (!directory.exists()) {
             directory.mkdirs()
         }
-        return File(directory, "cover.jpg")
+        val tempFile = File(directory, "12345.jpg")
+        return tempFile
     }
 
-    fun getImageFileForPlaylist(context: Context, playlistName: String): File {
-        return File(getImageFileDirectory(context), "cover_$playlistName.jpg")
+
+        fun getImageFileForPlaylist(context: Context, playlistName: String): File {
+            return File(getImageFileDirectory(context), "cover_$playlistName.jpg")
+        }
     }
-}
+
