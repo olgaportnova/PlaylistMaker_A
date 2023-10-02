@@ -37,11 +37,11 @@ import java.io.FileOutputStream
 class PlaylistCreationFragment : Fragment() {
 
     private val viewModel: PlaylistCreationViewModel by viewModel { parametersOf(requireActivity() as AppCompatActivity) }
-    private var _binding: FragmentPlaylistCreationBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentPlaylistCreationBinding
     private var isPhotoSelected = false
     private var urlImageForNewPlaylist: String? = null
     private var editablePlaylist: Playlist? = null
+    private var navigateBack: Boolean = false
 
     private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -65,7 +65,6 @@ class PlaylistCreationFragment : Fragment() {
     }
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
     }
     override fun onDetach() {
         super.onDetach()
@@ -77,7 +76,7 @@ class PlaylistCreationFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentPlaylistCreationBinding.inflate(inflater, container, false)
+        binding = FragmentPlaylistCreationBinding.inflate(inflater, container, false)
         editablePlaylist = arguments?.getSerializable("EDIT_PLAYLIST") as? Playlist
 
         setupListeners()
@@ -277,10 +276,24 @@ class PlaylistCreationFragment : Fragment() {
     private fun navigateBackAfterCreatingPlaylist() {
         if (activity is RootActivity) {
             backNavigationListenerRoot?.onNavigateBack(true)
+        } else if (activity is AudioPlayerActivity) {
+            backNavigationListenerAudio?.onNavigateBack(true)
+            navigateBack = true
+
         }
-        else if (activity is AudioPlayerActivity) {
-            backNavigationListenerAudio?.onNavigateBack(true) }
     }
+
+       fun checkIfCouldBeClosed(): Boolean {
+           if (isAnyFieldNotEmpty() || isPhotoSelected) {
+               showBackConfirmationDialog()
+               return false
+           } else {
+               return true
+           }
+       }
+
+
+
     private fun showBackConfirmationDialog() {
         MaterialAlertDialogBuilder(requireContext(),R.style.DialogStyle)
             .setTitle(context?.getString(R.string.dialog_title))

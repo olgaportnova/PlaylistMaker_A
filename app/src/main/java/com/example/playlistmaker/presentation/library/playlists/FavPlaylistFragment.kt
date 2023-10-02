@@ -30,7 +30,7 @@ class FavPlaylistFragment : Fragment() {
         adapter = PlaylistsAdapter(requireContext(), mutableListOf(), object : PlaylistsAdapter.Listener {
             override fun onClick(playlist: Playlist) {
                 val bundle = Bundle()
-                bundle.putInt("playlistId", playlist.id )
+                bundle.putSerializable("playlist", playlist)
                 findNavController().navigate(R.id.playlistDetailsFragment, bundle)
             }
         })

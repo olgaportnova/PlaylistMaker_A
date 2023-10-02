@@ -19,8 +19,11 @@ class PlaylistDetailsFragmentViewModel(
     private val _playlistDetails = MutableLiveData<Playlist>()
     val playlistDetails: LiveData<Playlist> get() = _playlistDetails
 
-    private val _tracksLiveData = MutableLiveData<TracksInPlaylistState>()
-    val tracksLiveData: LiveData<TracksInPlaylistState> get() = _tracksLiveData
+//    private val _tracksLiveData = MutableLiveData<TracksInPlaylistState>()
+//    val tracksLiveData: LiveData<TracksInPlaylistState> get() = _tracksLiveData
+
+    private val _tracksLiveData = MutableLiveData<List<Track>?>()
+    val tracksLiveData: LiveData<List<Track>?> get() = _tracksLiveData
 
 
     fun getPlaylistById(id: Int) {
@@ -53,32 +56,40 @@ class PlaylistDetailsFragmentViewModel(
         }
     }
 
+//    private fun processResult(tracks: List<Track>?) {
+//        var totalDuration = 0
+//        if (tracks.isNullOrEmpty()) {
+//            renderState(TracksInPlaylistState.Empty)
+//        } else {
+//            for (track in tracks) {
+//                totalDuration += track.trackTimeMillis
+//            }
+//            renderState(TracksInPlaylistState.Content(tracks, totalDuration))
+//        }
+//    }
+
     private fun processResult(tracks: List<Track>?) {
-        var totalDuration = 0
-        if (tracks.isNullOrEmpty()) {
-            renderState(TracksInPlaylistState.Empty)
-        } else {
-            for (track in tracks) {
-                totalDuration += track.trackTimeMillis
-            }
-            renderState(TracksInPlaylistState.Content(tracks, totalDuration))
-        }
+        _tracksLiveData.postValue(tracks)
     }
 
-    private fun renderState(state: TracksInPlaylistState) {
-        _tracksLiveData.postValue(state)
-    }
+//    private fun renderState(state: TracksInPlaylistState) {
+//        _tracksLiveData.postValue(state)
+//    }
 
     suspend fun deleteTrackFromPlaylist(track: Track, playlist: Playlist) {
         val idTrackToDelete = track.trackId
         var listOfIdsInPlaylist = playlist.idOfTracks?.toMutableList()
+        listOfIdsInPlaylist?.remove(track.trackId)
+        val updatedPlaylist = playlist.copy(idOfTracks = listOfIdsInPlaylist)
+        _playlistDetails.postValue(updatedPlaylist!!)
+
         listOfIdsInPlaylist?.remove(idTrackToDelete)
         playlistInteractor.deleteTrackFromPlaylist(
             listOfIdsInPlaylist?.toList(),
             playlist.id,
             idTrackToDelete
         )
-        getTracksFromOnePlaylistUpdated(listOfIdsInPlaylist?.toList())
+        getTracksFromOnePlaylist(updatedPlaylist)
         viewModelScope.launch(Dispatchers.IO) {
             updateDbListOfTracksInAllPlaylists(playlist.id, idTrackToDelete)
         }

@@ -239,22 +239,20 @@ class AudioPlayerActivity (
                 .remove(fragment)
                 .commit()
         }
+        super.onBackPressed()
 
         binding.fragmentContainer.visibility = View.GONE
         viewModel.getListOfPlaylist()
         binding.scrollViewMain.visibility = View.VISIBLE
     }
     override fun onBackPressed() {
-            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-            if (currentFragment is PlaylistCreationFragment) {
-                val playlistArg = currentFragment.arguments?.getSerializable("EDIT_PLAYLIST")
-                if (playlistArg == null) {
-                onNavigateBack(false)}
-                else { super.onBackPressed()}
-            } else {
-                super.onBackPressed()
-            }
-        }
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (currentFragment is PlaylistCreationFragment) {
+            if(currentFragment.checkIfCouldBeClosed()) {
+            methodToCallFromFragment()}
+
+        }  else {super.onBackPressed()}
+    }
     private fun backCheckFragment() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (currentFragment is PlaylistCreationFragment)  {
@@ -265,6 +263,8 @@ class AudioPlayerActivity (
                 super.onBackPressed()
             }
         }
+
+
     override fun onNavigateBack(isEmpty: Boolean) {
         if (isEmpty) methodToCallFromFragment()
         else backCheckFragment()

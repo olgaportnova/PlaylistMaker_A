@@ -11,10 +11,10 @@
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:background="@drawable/rounded_playlist_cover"
-        android:scaleType="centerCrop"
         android:clipToOutline="true"
         android:contentDescription="@string/app_name"
 
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -30,11 +30,12 @@
 
     <TextView
         android:id="@+id/numberOfTracks"
+        style="@style/playlist_view_big_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/playlist_view_big_number"
+        android:paddingBottom="16dp"
         app:layout_constraintStart_toStartOf="@id/playlistcover"
-        app:layout_constraintTop_toBottomOf="@+id/playlistName"/>
+        app:layout_constraintTop_toBottomOf="@+id/playlistName" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
