@@ -54,6 +54,7 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
 
 
 
+
         playlist = arguments?.getSerializable("playlist") as? Playlist
 
         if (updatedPlaylist==null || playlist?.id!=updatedPlaylist?.id) {
@@ -111,7 +112,7 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
     }
         private fun showContent(tracks: List<Track>?, duration: Int?) {
 
-            if (tracks?.isEmpty() == true) {
+            if (tracks.isNullOrEmpty()) {
                 binding.apply {
                     recycleViewBottomSheet.visibility = View.GONE
                     playlistMinutes.text = "0 минут"
@@ -190,13 +191,13 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
 
         }
 
-//        binding.editPlaylist.setOnClickListener {
-//            val playlist: Playlist? = playlistToEdit
-//            val bundle = Bundle().apply {
-//                putSerializable("EDIT_PLAYLIST", playlist)
-//            }
-//            findNavController().navigate(R.id.playlistFragment, bundle)
-//        }
+        binding.editPlaylist.setOnClickListener {
+            val playlist: Playlist? = updatedPlaylist
+            val bundle = Bundle().apply {
+                putSerializable("EDIT_PLAYLIST", playlist)
+            }
+            findNavController().navigate(R.id.playlistFragment, bundle)
+        }
     }
 
     private fun setupBottomSheetBehaviorCallback() {
@@ -329,7 +330,6 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
                 lifecycleScope.launch {
                     viewModel.deleteTrackFromPlaylist(track,updatedPlaylist!!)
                 }
-                viewModel.getTracksFromOnePlaylist(updatedPlaylist!!)
             }
             .setOnDismissListener {
             }

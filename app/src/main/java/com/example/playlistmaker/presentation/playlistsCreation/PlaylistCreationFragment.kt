@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -27,14 +28,20 @@ import com.example.playlistmaker.databinding.FragmentPlaylistCreationBinding
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.presentation.audioPlayer.AudioPlayerActivity
 import com.example.playlistmaker.presentation.main.RootActivity
+import com.example.playlistmaker.presentation.playlistDetails.PlaylistDetailsFragmentViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import java.io.File
 import java.io.FileOutputStream
+import java.util.UUID
 
 
 class PlaylistCreationFragment : Fragment() {
+
+    private val viewModelDetails: PlaylistDetailsFragmentViewModel by activityViewModel()
 
     private val viewModel: PlaylistCreationViewModel by viewModel { parametersOf(requireActivity() as AppCompatActivity) }
     private lateinit var binding: FragmentPlaylistCreationBinding
@@ -42,6 +49,8 @@ class PlaylistCreationFragment : Fragment() {
     private var urlImageForNewPlaylist: String? = null
     private var editablePlaylist: Playlist? = null
     private var navigateBack: Boolean = false
+    private var finalUrl:String? = null
+    private var uniqueID:String?=null
 
     private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -174,20 +183,15 @@ class PlaylistCreationFragment : Fragment() {
         val playlistName = binding.editTextName.text.toString()
 
         if (isPhotoSelected) {
-            viewModel.renameImageFile(playlistName)
-            viewModel.getImageUrlFromStorage(playlistName)
-            viewModel.getImageUrlLiveData().observe(viewLifecycleOwner, Observer { url ->
-                urlImageForNewPlaylist = url
                 lifecycleScope.launch {
                     viewModel.createNewPlaylist(
                         playlistName,
                         binding.editTextDetails.text.toString(),
-                        urlImageForNewPlaylist,
+                        finalUrl,
                         null,
                         0
                     )
                 }
-            })
         } else {
             lifecycleScope.launch {
                 viewModel.createNewPlaylist(
@@ -208,25 +212,21 @@ class PlaylistCreationFragment : Fragment() {
         val updatedName = binding.editTextName.text.toString()
         val updatedDetails = binding.editTextDetails.text.toString()
 
-        if (isPhotoSelected) {
-            viewModel.renameImageFile(updatedName)
-            viewModel.getImageUrlFromStorage(updatedName)
-            urlImageForNewPlaylist = viewModel.getImageUrlFromStorageEdit(updatedName)
-        }
-
-        val updatedImagePath = urlImageForNewPlaylist ?: playlist.imagePath
-
         val updatedIdOfTracks = if (playlist.idOfTracks?.isEmpty() == true) null else playlist.idOfTracks
         val updatedNumberOfTracks = if (playlist.numberOfTracks == 0) null else playlist.numberOfTracks
 
         val updatedPlaylist = playlist.copy(
             name = updatedName,
             details = updatedDetails,
-            imagePath = updatedImagePath,
+            imagePath = finalUrl,
             idOfTracks = updatedIdOfTracks,
             numberOfTracks = updatedNumberOfTracks
         )
         viewModel.editPlaylist(updatedPlaylist)
+        val bundle = Bundle()
+        bundle.putSerializable("playlist", updatedPlaylist)
+        parentFragmentManager.setFragmentResult("playlist", bundle)
+
         findNavController().popBackStack()
     }
 
@@ -234,23 +234,31 @@ class PlaylistCreationFragment : Fragment() {
 
     private fun chooseAndUploadImage() {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+
+        uniqueID = UUID.randomUUID().toString()
+        val filePath = File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
+        val file = File(filePath, "cover_$uniqueID.jpg")
+        finalUrl = file.absolutePath
     }
+
+    private fun saveImageToPrivateStorage(uri: Uri) {
+        val filePath = File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
+        if (!filePath.exists()){
+            filePath.mkdirs()
+        }
+        val file = File(filePath, "cover_$uniqueID.jpg")
+        val inputStream = requireActivity().contentResolver.openInputStream(uri)
+        val outputStream = FileOutputStream(file)
+        BitmapFactory
+            .decodeStream(inputStream)
+            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+    }
+
+
+
     private fun showToastPlaylistCreated(playlistName: String) {
         val message = getString(R.string.playlist_created, playlistName)
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-    }
-    private fun saveImageToPrivateStorage(uri: Uri) {
-        val file = ImageStorageHelper.getTemporaryImageFile(requireContext())
-        val inputStream = requireActivity().contentResolver.openInputStream(uri)
-        val outputStream = FileOutputStream(file)
-
-        try {
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-            bitmap?.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-        } finally {
-            inputStream?.close()
-            outputStream.close()
-        }
     }
 
 

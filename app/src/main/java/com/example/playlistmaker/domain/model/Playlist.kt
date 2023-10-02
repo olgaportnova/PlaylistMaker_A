@@ -8,6 +8,6 @@ data class Playlist(
     val details: String?,
     val imagePath: String?,
     var idOfTracks: List<Int>?,
-    val numberOfTracks: Int? =  idOfTracks?.size ?:0
+    var numberOfTracks: Int? =  idOfTracks?.size ?:0
 
 ): Serializable

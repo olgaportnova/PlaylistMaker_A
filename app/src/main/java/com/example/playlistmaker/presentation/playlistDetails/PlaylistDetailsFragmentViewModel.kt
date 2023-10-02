@@ -35,13 +35,18 @@ class PlaylistDetailsFragmentViewModel(
 
     fun getTracksFromOnePlaylist(playlist: Playlist) {
         val listOfId = playlist.idOfTracks?.toList()
-        viewModelScope.launch {
-            playlistInteractor.getTracksOnlyFromPlaylist(listOfId!!)
-                .collect { track ->
-                    processResult(track)
-                }
+        if (listOfId != null) {
+            viewModelScope.launch {
+                playlistInteractor.getTracksOnlyFromPlaylist(listOfId)
+                    .collect { track ->
+                        processResult(track)
+                    }
+            }
+        } else {
+            _tracksLiveData.postValue(listOf())
         }
     }
+
 
     private fun getTracksFromOnePlaylistUpdated(updatedListOfId: List<Int>?) {
         if (updatedListOfId?.isEmpty() == true || updatedListOfId == null) {
@@ -80,16 +85,18 @@ class PlaylistDetailsFragmentViewModel(
         val idTrackToDelete = track.trackId
         var listOfIdsInPlaylist = playlist.idOfTracks?.toMutableList()
         listOfIdsInPlaylist?.remove(track.trackId)
-        val updatedPlaylist = playlist.copy(idOfTracks = listOfIdsInPlaylist)
-        _playlistDetails.postValue(updatedPlaylist!!)
+        playlist.idOfTracks = listOfIdsInPlaylist?.reversed()
+        if (playlist.numberOfTracks !=null) {
+        playlist.numberOfTracks = playlist.numberOfTracks!! - 1 }
+        _playlistDetails.postValue(playlist)
 
-        listOfIdsInPlaylist?.remove(idTrackToDelete)
         playlistInteractor.deleteTrackFromPlaylist(
             listOfIdsInPlaylist?.toList(),
             playlist.id,
             idTrackToDelete
         )
-        getTracksFromOnePlaylist(updatedPlaylist)
+
+        getTracksFromOnePlaylist(playlist)
         viewModelScope.launch(Dispatchers.IO) {
             updateDbListOfTracksInAllPlaylists(playlist.id, idTrackToDelete)
         }

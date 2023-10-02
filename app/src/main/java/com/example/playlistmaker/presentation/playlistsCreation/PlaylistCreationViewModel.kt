@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.playlists.PlaylistInteractor
 import java.io.File
+import java.util.UUID
 
 class PlaylistCreationViewModel(
     private val context: Context,
@@ -22,6 +23,8 @@ class PlaylistCreationViewModel(
 
     private var urlImageForNewPlaylist: String? = null
     private var temporaryFile: File? = null
+
+    private var finalUrl: String? = null
 
 
     suspend fun createNewPlaylist(
@@ -42,53 +45,41 @@ class PlaylistCreationViewModel(
         playlistInteractor.createNewPlaylist(playlist)
     }
 
-    fun getImageUrlFromStorage(playlistName: String) {
-        val file = ImageStorageHelper.getImageFileForPlaylist(context, playlistName)
-        val url = file.toUri().toString()
-        imageUrlLiveData.postValue(url)
-        urlImageForNewPlaylist = url
-    }
-    fun getImageUrlFromStorageEdit(playlistName: String): String {
-        val file = ImageStorageHelper.getImageFileForPlaylist(context, playlistName)
-        val url = file.toUri().toString()
-        return url
-    }
+//    fun getImageUrlFromStorage(playlistName: String) {
+//        val file = ImageStorageHelper.getImageFileForPlaylist(context, playlistName)
+//        val url = file.toUri().toString()
+//        imageUrlLiveData.postValue(url)
+//        urlImageForNewPlaylist = url
+//    }
+//    fun getImageUrlFromStorageEdit(playlistName: String): String {
+//        val file = ImageStorageHelper.getImageFileForPlaylist(context, playlistName)
+//        val url = file.toUri().toString()
+//        imageUrlLiveData.postValue(url)
+//        return url
+//    }
 
-    fun renameImageFile(playlistName: String) {
-        val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
-        val temporaryFileName = "12345.jpg"
-        temporaryFile = File(filePath, temporaryFileName)
+//    fun renameImageFile() {
+//        val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
+//        val temporaryFileName = "12345.jpg"
+//        temporaryFile = File(filePath, temporaryFileName)
+//
+//        // Генерация уникального идентификатора для имени файла
+//        val uniqueID = UUID.randomUUID().toString()
+//        val finalFile = File(filePath, "cover_$uniqueID.jpg")
+//        finalUrl = finalFile.absolutePath
+//
+//        if (finalFile.exists()) {
+//            finalFile.delete()
+//        }
+//
+//        if (temporaryFile!!.exists()) {
+//            temporaryFile!!.renameTo(finalFile)
+//            if (!finalFile.exists()) {
+//                urlImageForNewPlaylist = finalFile.toString()
+//            }
+//        }
+//    }
 
-        if (temporaryFile!!.exists()) {
-            Log.d("DEBUG", "Temporary file exists at ${temporaryFile!!.absolutePath}")
-        } else {
-            Log.e("DEBUG", "Temporary file does NOT exist at ${temporaryFile!!.absolutePath}")
-        }
-
-        val finalFile = File(filePath, "cover_$playlistName.jpg")
-
-        if (finalFile.exists()) {
-            finalFile.delete()
-            if (!finalFile.exists()) {
-                Log.d("DEBUG", "Final file was deleted successfully.")
-            } else {
-                Log.e("DEBUG", "Failed to delete the final file.")
-            }
-        }
-
-        val finalFile1 = File(filePath, "cover_$playlistName.jpg")
-
-        if (temporaryFile!!.exists()) {
-            temporaryFile!!.renameTo(finalFile1)
-            if (finalFile.exists()) {
-                Log.d("DEBUG", "File was renamed successfully to ${finalFile1.absolutePath}")
-            } else {
-                Log.e("DEBUG", "Failed to rename the file.")
-            }
-        } else {
-            urlImageForNewPlaylist = null
-        }
-    }
 
 
 
