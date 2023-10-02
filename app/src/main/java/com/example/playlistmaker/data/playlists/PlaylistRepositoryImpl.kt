@@ -26,13 +26,19 @@ class PlaylistRepositoryImpl(
             val filteredTracks = tracksInAllPlaylists.filter { track ->
                 listOfId.contains(track.id)
             }
-            if (filteredTracks == null) {
+
+            val sortedTracks = filteredTracks.sortedBy { track ->
+                listOfId.indexOf(track.id)
+            }.reversed()
+
+            if (sortedTracks.isEmpty()) {
                 emit(null)
             } else {
-                emit(convertFromTrackInPlaylistEntityToTrack(filteredTracks))
+                emit(convertFromTrackInPlaylistEntityToTrack(sortedTracks))
             }
         }
     }
+
 
     override fun getAllFavouritePlaylists(): Flow<List<Playlist>> = flow {
         val playlists = appDatabase.playlistDao().getAllPlaylists()
