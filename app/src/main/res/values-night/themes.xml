@@ -15,6 +15,7 @@
         <!-- Customize your theme here. -->
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
 
+
     </style>
 
     <style name="Widget.App.BottomNavigationView"  parent="Widget.MaterialComponents.BottomNavigationView.Colored">

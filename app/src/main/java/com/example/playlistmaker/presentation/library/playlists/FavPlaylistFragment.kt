@@ -48,7 +48,7 @@ class FavPlaylistFragment : Fragment() {
 
         val layoutManager = GridLayoutManager(context,2)
         binding.recyclerViewPlaylists.layoutManager = layoutManager
-        binding.recyclerViewPlaylists.addItemDecoration(GridSpacingItemDecoration(2, 8,16))
+     //   binding.recyclerViewPlaylists.addItemDecoration(GridSpacingItemDecoration(2, 8,16))
 
         favPlaylistFragmentViewModel.observeState().observe(viewLifecycleOwner) { state ->
             when (state) {

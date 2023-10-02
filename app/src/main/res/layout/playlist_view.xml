@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rcTrackList"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
+    <ImageView
+        android:id="@+id/playlistcover"
         android:layout_width="160dp"
         android:layout_height="160dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="0dp">
+        android:background="@drawable/rounded_playlist_cover"
+        android:scaleType="centerCrop"
+        android:clipToOutline="true"
+        android:contentDescription="@string/app_name"
 
-        <ImageView
-            android:id="@+id/playlistcover"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            />
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/playlistName"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="@id/playlistcover"
+        app:layout_constraintTop_toBottomOf="@id/playlistcover"
         style="@style/playlist_view_big_name" />
 
     <TextView
         android:id="@+id/numberOfTracks"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/playlist_view_big_number" />
+        style="@style/playlist_view_big_number"
+        app:layout_constraintStart_toStartOf="@id/playlistcover"
+        app:layout_constraintTop_toBottomOf="@+id/playlistName"/>
 
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>

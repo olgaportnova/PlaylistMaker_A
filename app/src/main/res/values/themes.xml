@@ -5,6 +5,8 @@
         <item name="colorPrimary">#AEAFB4</item>
         <item name="colorPrimaryVariant">@color/text_grey_color</item>
         <item name="colorOnPrimary">@color/white</item>
+
+
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/white</item>
         <item name="colorSecondaryVariant">@color/ic_day</item>
@@ -14,6 +16,8 @@
         <!-- Customize your theme here. -->
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
         <item name="android:textCursorDrawable">@drawable/cursos_edit_text</item>
+
+
 
 
 
