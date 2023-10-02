@@ -112,10 +112,10 @@ class PlaylistDetailsFragmentViewModel(
             sb.append(playlist.details).append("\n")
         }
         val trackWord = getTrackWordForm(tracks.size)
-        sb.append("[").append(tracks.size).append("] $trackWord").append("\n")
+        sb.append(tracks.size).append("$trackWord").append("\n")
         tracks.forEachIndexed { index, track ->
             val trackDuration = convertMillisToTimeFormat(track.trackTimeMillis)
-            sb.append("[${index + 1}]. ${track.artistName} - ${track.trackName} ($trackDuration)")
+            sb.append("${index + 1}. ${track.artistName} - ${track.trackName} ($trackDuration)")
                 .append("\n")
         }
 

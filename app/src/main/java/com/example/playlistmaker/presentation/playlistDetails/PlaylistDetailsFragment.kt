@@ -103,6 +103,8 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
             } else {
                 viewModel.shareTracks(playlistToCompareId, adapter.tracks)
             }
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
         }
 
         binding.deletePlaylist.setOnClickListener {
