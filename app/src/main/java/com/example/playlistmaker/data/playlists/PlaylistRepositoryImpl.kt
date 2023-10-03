@@ -1,5 +1,10 @@
 package com.example.playlistmaker.data.playlists
 
+import android.content.ContentResolver
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.db.convertors.PlaylistDbConvertor
 import com.example.playlistmaker.data.db.convertors.TrackInPlaylistsEntityDbConvertor
@@ -10,12 +15,34 @@ import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.io.File
+import java.io.FileOutputStream
+import java.util.UUID
 
 class PlaylistRepositoryImpl(
     private val appDatabase: AppDatabase,
     private val playlistDbConvertor: PlaylistDbConvertor,
-    private val trackInPlaylistsEntityDbConvertor: TrackInPlaylistsEntityDbConvertor
+    private val trackInPlaylistsEntityDbConvertor: TrackInPlaylistsEntityDbConvertor,
+    private val contentResolver: ContentResolver
 ) : PlaylistRepository {
+
+
+    override fun saveImageFromUri(uri: Uri, picturesDirectoryPath: String): String {
+        val uniqueID = UUID.randomUUID().toString()
+        val file = File(picturesDirectoryPath, "cover_$uniqueID.jpg")
+
+        val inputStream = contentResolver.openInputStream(uri)
+        val outputStream = FileOutputStream(file)
+
+        BitmapFactory.decodeStream(inputStream).compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+        inputStream?.close()
+        outputStream.close()
+
+        return file.absolutePath
+    }
+
+
+
 
     override fun getTracksOnlyFromPlaylist(listOfId: List<Int>): Flow<List<Track>?> = flow {
         val tracksInAllPlaylists = appDatabase.trackInPlaylistDao().getAllTracksFromPlaylists()

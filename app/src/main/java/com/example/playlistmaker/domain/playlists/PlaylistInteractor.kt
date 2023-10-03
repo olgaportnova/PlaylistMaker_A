@@ -1,10 +1,13 @@
 package com.example.playlistmaker.domain.playlists
 
+import android.net.Uri
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 
 interface PlaylistInteractor {
+
+    fun saveImageFromUri(uri: Uri, picturesDirectoryPath: String): String
 
     fun getTracksOnlyFromPlaylist(listOfId:List<Int>): Flow<List<Track>?>
 

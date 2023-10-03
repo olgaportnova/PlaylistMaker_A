@@ -1,5 +1,6 @@
 package com.example.playlistmaker.domain.playlists.impl
 
+import android.net.Uri
 import com.example.playlistmaker.domain.playlists.PlaylistInteractor
 import com.example.playlistmaker.domain.playlists.PlaylistRepository
 import com.example.playlistmaker.domain.model.Playlist
@@ -9,6 +10,10 @@ import kotlinx.coroutines.flow.Flow
 class PlaylistInteractorImpl(
     private val playlistRepository: PlaylistRepository
 ): PlaylistInteractor {
+
+    override fun saveImageFromUri(uri: Uri, picturesDirectoryPath: String): String {
+        return playlistRepository.saveImageFromUri(uri, picturesDirectoryPath)
+    }
 
 
     override fun getTracksOnlyFromPlaylist(listOfId:List<Int>): Flow<List<Track>?> {

@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +40,6 @@ import java.util.UUID
 
 class PlaylistCreationFragment : Fragment() {
 
-    private val viewModelDetails: PlaylistDetailsFragmentViewModel by activityViewModel()
 
     private val viewModel: PlaylistCreationViewModel by viewModel { parametersOf(requireActivity() as AppCompatActivity) }
     private lateinit var binding: FragmentPlaylistCreationBinding
@@ -136,8 +134,8 @@ class PlaylistCreationFragment : Fragment() {
     }
 
     private fun setupViewModelObservers() {
-        viewModel.getImageUrlLiveData().observe(viewLifecycleOwner, Observer { url ->
-            urlImageForNewPlaylist = url
+        viewModel.imagePathLiveData.observe(viewLifecycleOwner, Observer { url ->
+            finalUrl = url
         })
     }
     private fun isAnyFieldNotEmpty(): Boolean {
@@ -177,7 +175,7 @@ class PlaylistCreationFragment : Fragment() {
         binding.frameForImage.setImageURI(uri)
         binding.icAddImage.visibility = View.GONE
         isPhotoSelected = true
-        saveImageToPrivateStorage(uri)
+        viewModel.saveImage(uri)
     }
     private fun createNewPlaylist() {
         val playlistName = binding.editTextName.text.toString()
@@ -234,25 +232,25 @@ class PlaylistCreationFragment : Fragment() {
 
     private fun chooseAndUploadImage() {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-
-        uniqueID = UUID.randomUUID().toString()
-        val filePath = File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
-        val file = File(filePath, "cover_$uniqueID.jpg")
-        finalUrl = file.absolutePath
+//
+//        uniqueID = UUID.randomUUID().toString()
+//        val filePath = File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
+//        val file = File(filePath, "cover_$uniqueID.jpg")
+//        finalUrl = file.absolutePath
     }
 
-    private fun saveImageToPrivateStorage(uri: Uri) {
-        val filePath = File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
-        if (!filePath.exists()){
-            filePath.mkdirs()
-        }
-        val file = File(filePath, "cover_$uniqueID.jpg")
-        val inputStream = requireActivity().contentResolver.openInputStream(uri)
-        val outputStream = FileOutputStream(file)
-        BitmapFactory
-            .decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-    }
+//    private fun saveImageToPrivateStorage(uri: Uri) {
+//        val filePath = File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
+//        if (!filePath.exists()){
+//            filePath.mkdirs()
+//        }
+//        val file = File(filePath, "cover_$uniqueID.jpg")
+//        val inputStream = requireActivity().contentResolver.openInputStream(uri)
+//        val outputStream = FileOutputStream(file)
+//        BitmapFactory
+//            .decodeStream(inputStream)
+//            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+//    }
 
 
 

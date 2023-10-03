@@ -1,5 +1,6 @@
 package com.example.playlistmaker.di
 
+import android.content.Context
 import com.example.playlistmaker.data.favorites.FavouriteRepositoryImpl
 import com.example.playlistmaker.data.network.TrackRepositoryImpl
 import com.example.playlistmaker.data.db.convertors.TrackDbConvertor
@@ -31,12 +32,14 @@ val repositoryModule = module {
         }
 
         single<PlaylistRepository> {
-            PlaylistRepositoryImpl(get(), get(), get())
+            PlaylistRepositoryImpl(get(), get(), get(),get())
         }
 
         factory { TrackDbConvertor() }
 
         factory { PlaylistDbConvertor() }
+
+        single { get<Context>().contentResolver }
 
         factory { TrackInPlaylistsEntityDbConvertor() }
 
