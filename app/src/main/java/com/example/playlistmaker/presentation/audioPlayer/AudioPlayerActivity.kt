@@ -246,12 +246,15 @@ class AudioPlayerActivity (
         binding.scrollViewMain.visibility = View.VISIBLE
     }
     override fun onBackPressed() {
+      //  bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (currentFragment is PlaylistCreationFragment) {
             if(currentFragment.checkIfCouldBeClosed()) {
             methodToCallFromFragment()}
 
-        }  else {super.onBackPressed()}
+        }  else {
+            binding.fragmentContainer.visibility = View.GONE
+            super.onBackPressed()}
     }
     private fun backCheckFragment() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
