@@ -60,8 +60,6 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
         if (updatedPlaylist==null || playlist?.id!=updatedPlaylist?.id) {
             viewModel.getPlaylistById(playlist!!.id)
             viewModel.getTracksFromOnePlaylist(playlist!!)
-
-      //      initUi(playlist!!)
             updatedPlaylist = playlist!!.copy()
 
 
@@ -69,7 +67,6 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
             viewModel.getPlaylistById(updatedPlaylist!!.id)
             viewModel.getTracksFromOnePlaylist(updatedPlaylist!!)
 
-     //       updateUi(updatedPlaylist!!)
         }
 
 
@@ -108,7 +105,7 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
 
 
         }
-    //    viewModel.tracksLiveData.observe(viewLifecycleOwner, ::handleTracksState)
+
     }
         private fun showContent(tracks: List<Track>?, duration: Int?) {
 
@@ -122,11 +119,16 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
             }
             if (!tracks.isNullOrEmpty()) {
                 val numberOfTracks = tracks.size
+                val updatedTracks = tracks.map { track ->
+                    track.copy(artworkUrl100 = track.artworkUrl100.replaceAfterLast('/', "60x60bb.jpg"))
+                }
+
+
 
 
                 with(binding) {
                     val formattedDuration = getFormattedDuration(duration)
-                    adapter.tracks = ArrayList(tracks)
+                    adapter.tracks = ArrayList(updatedTracks)
                     recycleViewBottomSheet.adapter = adapter
                     adapter.notifyDataSetChanged()
                     recycleViewBottomSheet.visibility = View.VISIBLE
@@ -143,7 +145,7 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
         }
 
         binding.iconShare.setOnClickListener {
-            if (updatedPlaylist?.idOfTracks?.isEmpty() == true)  {
+            if (updatedPlaylist?.numberOfTracks ==0)  {
                 Toast.makeText(requireContext(),context?.getString(R.string.no_tracks_to_share),Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.shareTracks(playlist!!, adapter.tracks)
@@ -156,7 +158,7 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
         }
 
         binding.sharePlaylist.setOnClickListener {
-            if (updatedPlaylist?.idOfTracks?.isEmpty() == true)  {
+            if (updatedPlaylist?.numberOfTracks ==0)  {
                 Toast.makeText(requireContext(),context?.getString(R.string.no_tracks_to_share),Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.shareTracks(playlist!!, adapter.tracks)
@@ -232,31 +234,6 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
     }
 
 
-    private fun initUi(playlist: Playlist) {
-
-        setupBottomSheet(playlist)
-        with(binding) {
-            playlistName.text = playlist.name
-            playlistDetails.text = playlist.details
-            playlistTracks.text =
-                "${playlist.numberOfTracks.toString()} ${getTrackWordForm(playlist.numberOfTracks ?: 0)}"
-            Glide.with(root.context)
-                .load(playlist.imagePath)
-                .placeholder(R.drawable.placeholder_big)
-                .into(imagePlaylistCover)
-        }
-
-        if (playlist.details?.isEmpty() == true) {
-            binding.playlistDetails.visibility = View.GONE
-        } else {
-            binding.playlistDetails.visibility = View.VISIBLE
-        }
-
-        if (playlist.numberOfTracks==0) {
-            Toast.makeText(requireContext(), "нет треков в плейлисте", Toast.LENGTH_SHORT).show()
-        }
-    }
-
     private fun updateUi(playlist: Playlist) {
 
         setupBottomSheet(playlist)
@@ -281,36 +258,6 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener, Tr
             Toast.makeText(requireContext(), "нет треков в плейлисте", Toast.LENGTH_SHORT).show()
         }
     }
-
-//    private fun showContent(tracks: List<Track>, duration: Int) {
-//        val formattedDuration = getFormattedDuration(duration)
-//        val numberOfTracks = tracks.size
-//        with(binding) {
-//            adapter.tracks = ArrayList(tracks)
-//            recycleViewBottomSheet.adapter = adapter
-//            recycleViewBottomSheet.visibility = View.VISIBLE
-//            playlistMinutes.text = "$formattedDuration ${getMinuteWordForm(formattedDuration.toInt() ?: 0)}"
-//            playlistTracks.text = "${numberOfTracks.toString()} ${getTrackWordForm(numberOfTracks)}"
-//        }
-//    }
-
-//    private fun handleTracksState(state: TracksInPlaylistState) {
-//        when (state) {
-//            is TracksInPlaylistState.Content -> showContent(state.tracks, state.trackDurations)
-//            is TracksInPlaylistState.Empty -> showEmpty()
-//            is TracksInPlaylistState.Loading -> {}
-//            else -> {}
-//        }
-////    }
-//    private fun showEmpty() {
-//        with(binding) {
-//            recycleViewBottomSheet.visibility = View.GONE
-//            playlistMinutes.text = "0 минут"
-//            playlistTracks.text = "0 треков"
-//        }
-//    }
-
-
 
 
 
