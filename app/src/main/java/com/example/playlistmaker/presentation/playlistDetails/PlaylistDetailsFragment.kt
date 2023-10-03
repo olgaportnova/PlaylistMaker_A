@@ -36,11 +36,8 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener,
     private var playlist: Playlist? = null
     private var updatedPlaylist: Playlist? = null
 
-
     private var _binding: FragmentPlaylistDetailsBinding? = null
     private val binding get() = _binding!!
-
-    private var isFirstLauch: Boolean = true
 
     private var adapter = TrackAdapter(
         arrayListOf(),
@@ -60,23 +57,12 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener,
         playlist = arguments?.getSerializable("playlist") as? Playlist
 
         if (updatedPlaylist == null || playlist?.id != updatedPlaylist?.id) {
-            if (playlist?.numberOfTracks == 0 || playlist?.numberOfTracks == null) {
-                Toast.makeText(requireContext(), "Нет треков в плейлисте", Toast.LENGTH_SHORT)
-                    .show()
-            }
 
             viewModel.getPlaylistById(playlist!!.id)
             viewModel.getTracksFromOnePlaylist(playlist!!)
             updatedPlaylist = playlist!!.copy()
 
-
         } else {
-            if (updatedPlaylist?.numberOfTracks == 0 || updatedPlaylist?.id != updatedPlaylist?.id) {
-                Toast.makeText(requireContext(), "Нет треков в плейлисте", Toast.LENGTH_SHORT)
-                    .show()
-            }
-
-
 
             viewModel.getPlaylistById(updatedPlaylist!!.id)
             viewModel.getTracksFromOnePlaylist(updatedPlaylist!!)
@@ -124,7 +110,8 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener,
 
         if (tracks.isNullOrEmpty()) {
             binding.apply {
-                //   Toast.makeText(requireContext(), "Нет треков в плейлисте", Toast.LENGTH_SHORT).show()
+
+                messageEmptyList.visibility=View.VISIBLE
                 recycleViewBottomSheet.visibility = View.GONE
                 playlistMinutes.text = "0 минут"
                 playlistTracks.text = "0 треков"
@@ -132,6 +119,8 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener,
 
         }
         if (!tracks.isNullOrEmpty()) {
+            binding.messageEmptyList.visibility=View.GONE
+            binding. recycleViewBottomSheet.visibility = View.VISIBLE
             val numberOfTracks = tracks.size
             val updatedTracks = tracks.map { track ->
                 track.copy(artworkUrl100 = track.artworkUrl100.replaceAfterLast('/', "60x60bb.jpg"))

@@ -63,4 +63,8 @@
     <string name="dialog_delete_playlist_delete">Да</string>
     <string name="dialog_delete_playlist_cancel">Нет</string>
 
+    <string name="playlist_is_empty">В этом плейлисте еще нет треков</string>
+
+
+
 </resources>
