@@ -55,6 +55,7 @@ class FavPlaylistFragment : Fragment() {
                 is PlaylistsState.Content -> showContent(state.playlists)
                 is PlaylistsState.Empty -> showEmpty()
                 is PlaylistsState.Loading -> {}
+                else -> {}
             }
         }
 
