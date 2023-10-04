@@ -35,6 +35,7 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener,
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private var playlist: Playlist? = null
     private var updatedPlaylist: Playlist? = null
+    private var playlistToEdit: Playlist? = null
 
     private var _binding: FragmentPlaylistDetailsBinding? = null
     private val binding get() = _binding!!
@@ -61,11 +62,13 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener,
             viewModel.getPlaylistById(playlist!!.id)
             viewModel.getTracksFromOnePlaylist(playlist!!)
             updatedPlaylist = playlist!!.copy()
+            playlistToEdit = playlist!!.copy()
 
         } else {
 
             viewModel.getPlaylistById(updatedPlaylist!!.id)
             viewModel.getTracksFromOnePlaylist(updatedPlaylist!!)
+            playlistToEdit = updatedPlaylist!!.copy()
 
         }
 
@@ -93,6 +96,11 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener,
     private fun setupObservers() {
         viewModel.playlistDetails.observe(viewLifecycleOwner) { playlist ->
             updateUi(playlist)
+            playlistToEdit!!.name = playlist.name
+            playlistToEdit!!.details = playlist.details
+            playlistToEdit!!.imagePath = playlist.imagePath
+
+
 
         }
         viewModel.tracksLiveData.observe(viewLifecycleOwner) { tracks ->
@@ -100,7 +108,8 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener,
             val totalTrackTimeMillis = tracks?.sumBy { it.trackTimeMillis }
             updatedPlaylist = updatedPlaylist!!.copy(idOfTracks = trackIds)
             showContent(tracks, totalTrackTimeMillis)
-
+            playlistToEdit!!.idOfTracks = trackIds
+            playlistToEdit!!.numberOfTracks = tracks?.size
 
         }
 
@@ -203,7 +212,8 @@ class PlaylistDetailsFragment : Fragment(), TrackAdapter.OnItemClickListener,
         }
 
         binding.editPlaylist.setOnClickListener {
-            val playlist: Playlist? = updatedPlaylist
+            viewModel.getPlaylistById(updatedPlaylist!!.id)
+            val playlist: Playlist? = playlistToEdit
             val bundle = Bundle().apply {
                 putSerializable("EDIT_PLAYLIST", playlist)
             }

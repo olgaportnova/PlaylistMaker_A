@@ -208,18 +208,38 @@ class PlaylistCreationFragment : Fragment() {
     private suspend fun editPlaylist(playlist: Playlist) {
         val updatedName = binding.editTextName.text.toString()
         val updatedDetails = binding.editTextDetails.text.toString()
-
         val updatedIdOfTracks = if (playlist.idOfTracks?.isEmpty() == true) null else playlist.idOfTracks
         val updatedNumberOfTracks = if (playlist.numberOfTracks == 0) null else playlist.numberOfTracks
+        var updatedPlaylist: Playlist? = null
 
-        val updatedPlaylist = playlist.copy(
-            name = updatedName,
-            details = updatedDetails,
-            imagePath = finalUrl,
-            idOfTracks = updatedIdOfTracks,
-            numberOfTracks = updatedNumberOfTracks
-        )
-        viewModel.editPlaylist(updatedPlaylist)
+        if (isPhotoSelected) {
+
+            updatedPlaylist = playlist.copy(
+                name = updatedName,
+                details = updatedDetails,
+                imagePath = finalUrl,
+                idOfTracks = updatedIdOfTracks,
+                numberOfTracks = updatedNumberOfTracks
+            )
+            lifecycleScope.launch {
+                viewModel.editPlaylist(updatedPlaylist!!)
+            }
+        } else {
+
+            updatedPlaylist = playlist.copy(
+                name = updatedName,
+                details = updatedDetails,
+                idOfTracks = updatedIdOfTracks,
+                numberOfTracks = updatedNumberOfTracks
+            )
+            lifecycleScope.launch {
+                lifecycleScope.launch {
+                    viewModel.editPlaylist(updatedPlaylist)
+                }
+            }
+        }
+
+
         val bundle = Bundle()
         bundle.putSerializable("playlist", updatedPlaylist)
         parentFragmentManager.setFragmentResult("playlist", bundle)
