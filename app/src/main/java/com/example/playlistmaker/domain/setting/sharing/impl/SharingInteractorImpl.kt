@@ -23,6 +23,10 @@ class SharingInteractorImpl(
         externalNavigator.openEmail(EmailData(SENDER_EMAIL,subject,text))
     }
 
+    override fun shareTracks(text: String) {
+        externalNavigator.shareTracks(text)
+    }
+
     private fun getShareAppLink(): String {
         return (LINK_TO_SHARE)
     }

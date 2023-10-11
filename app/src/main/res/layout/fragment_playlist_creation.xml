@@ -21,6 +21,7 @@
             style="@style/back_arrow_from_playlist_creation" />
 
         <TextView
+            android:id="@+id/text_header"
             android:text="Новый плейлист"
             style="@style/header_new_playlist" />
     </LinearLayout>
@@ -89,7 +90,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
                     android:id="@+id/editTextName" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -114,7 +115,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
                     android:id="@+id/editTextDetails" />
             </com.google.android.material.textfield.TextInputLayout>
 

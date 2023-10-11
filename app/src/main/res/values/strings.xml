@@ -42,4 +42,29 @@
     <string name="dialog_cancel">Отмена</string>
     <string name="playlist_created">Плейлист "%s" создан</string>
 
+
+    // dialog track delete from playlist
+    <string name="dialog_delete_title">Удалить трек</string>
+    <string name="dialog_delete_message">Вы уверены, что хотите удалить трек из плейлиста?</string>
+    <string name="dialog_delete_delete">Удалить</string>
+    <string name="dialog_delete_cancel">Отмена</string>
+
+    <string name="no_tracks_to_share">В этом плейлисте нет списка треков, которым можно поделиться</string>
+
+    //bottom sheet menu details screen
+    <string name="share_bottom_sheet_menu_details_screen">Поделиться</string>
+    <string name="edit_bottom_sheet_menu_details_screen">Редактировать информацию</string>
+    <string name="delete_bottom_sheet_menu_details_screen">Удалить плейлист</string>
+
+
+    // dialog playlist delete
+    <string name="dialog_delete_playlist_title">Удалить плейлист</string>
+    <string name="dialog_delete_playlist_message">Хотите удалить плейлист?</string>
+    <string name="dialog_delete_playlist_delete">Да</string>
+    <string name="dialog_delete_playlist_cancel">Нет</string>
+
+    <string name="playlist_is_empty">В этом плейлисте еще нет треков</string>
+
+
+
 </resources>

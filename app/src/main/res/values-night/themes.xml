@@ -15,6 +15,7 @@
         <!-- Customize your theme here. -->
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
 
+
     </style>
 
     <style name="Widget.App.BottomNavigationView"  parent="Widget.MaterialComponents.BottomNavigationView.Colored">
@@ -45,6 +46,7 @@
             <item name="boxStrokeColor">@color/text_input_outline_color</item>
             <item name="hintTextColor">#3772E7</item>
         </style>
+
 
 
 

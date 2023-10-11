@@ -19,8 +19,13 @@ class GridSpacingItemDecoration(
         val position = parent.getChildAdapterPosition(view)
         val column = position % spanCount
 
-        outRect.left = column * horizontalSpacing / spanCount
-        outRect.right = horizontalSpacing - (column + 1) * horizontalSpacing / spanCount
+        if (column == 0) {
+            outRect.left = horizontalSpacing  // Отступ для первого столбца слева
+            outRect.right = horizontalSpacing / 2
+        } else {
+            outRect.left = horizontalSpacing / 2
+            outRect.right = horizontalSpacing  // Отступ для последнего столбца справа
+        }
 
         if (position >= spanCount) {
             outRect.top = verticalSpacing

@@ -12,7 +12,7 @@ class PlaylistDbConvertor {
             playlist.name,
             playlist.details,
             playlist.imagePath,
-            convertIdOfTrackToString(playlist.idOfTracks),
+            convertIdOfTrackToStringNoGson(playlist.idOfTracks),
             playlist.idOfTracks?.size
         )
     }
@@ -34,14 +34,19 @@ class PlaylistDbConvertor {
     }
 
 
-    private fun convertIdOfTrackToString(listOfIds: List<Int>?): String? {
+    fun convertIdOfTrackToString(listOfIds: List<Int>?): String? {
         return if (listOfIds ==null) {
             null
         } else {
             Gson().toJson(listOfIds)
         }
     }
-    private fun convertStringOfIdTrackToList(stringOfIds: String?): List<Int> {
+
+    fun convertIdOfTrackToStringNoGson(listOfIds: List<Int>?): String? {
+        return listOfIds?.joinToString(separator = ",")
+    }
+
+    fun convertStringOfIdTrackToList(stringOfIds: String?): List<Int> {
         return stringOfIds?.split(",")?.mapNotNull { it.toIntOrNull() } ?: emptyList()
     }
 

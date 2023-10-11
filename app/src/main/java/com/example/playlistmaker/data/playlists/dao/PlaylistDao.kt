@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.playlistmaker.data.playlists.entity.TrackInPlaylistsEntity
 
 @Dao
 interface PlaylistDao {
@@ -14,14 +15,31 @@ interface PlaylistDao {
     @Insert(entity = PlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun createPlaylist(playlist: PlaylistEntity)
 
-    @Delete(entity = PlaylistEntity::class)
-    suspend fun deletePlaylist(playlist: PlaylistEntity)
+    @Query("DELETE FROM playlists WHERE id = :playlistId")
+    suspend fun deletePlaylistById(playlistId: Int)
+
 
     @Query("SELECT * FROM playlists")
     suspend fun getAllPlaylists(): List<PlaylistEntity>
 
+    @Query("SELECT * FROM playlists WHERE id = :id")
+    suspend fun getPlaylistsById(id: Int): PlaylistEntity
+
     @Update
     suspend fun updatePlaylist(playlist: PlaylistEntity)
+
+
+    @Query("UPDATE playlists SET id_of_tracks = :updatedListOfTracks, number_of_tracks = number_of_tracks - 1 WHERE id = :playlistId")
+    suspend fun deleteTrackFromPlaylist(updatedListOfTracks: String?, playlistId: Int)
+
+    @Query("SELECT * FROM tracks_in_playlists")
+    suspend fun getAllTracksFromPlaylists(): List<TrackInPlaylistsEntity>?
+
+    @Query("SELECT * FROM playlists WHERE id <> :excludedId")
+    suspend fun getAllPlaylistsExceptOne(excludedId: Int): List<PlaylistEntity>
+
+
+
 
     @Query("""
     UPDATE playlists 

@@ -160,8 +160,14 @@ class AudioPlayerActivity (
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             binding.scrollViewMain.visibility=View.GONE
             binding.fragmentContainer.visibility=View.VISIBLE
+            val fragment = PlaylistCreationFragment()
+            val bundle = Bundle().apply {
+                putSerializable("EDIT_PLAYLIST", null)
+            }
+            fragment.arguments = bundle
+
             val fragmentTransaction = supportFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.fragment_container, PlaylistCreationFragment())
+            fragmentTransaction.replace(R.id.fragment_container, fragment)
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         }
@@ -233,19 +239,23 @@ class AudioPlayerActivity (
                 .remove(fragment)
                 .commit()
         }
+        super.onBackPressed()
 
         binding.fragmentContainer.visibility = View.GONE
         viewModel.getListOfPlaylist()
         binding.scrollViewMain.visibility = View.VISIBLE
     }
     override fun onBackPressed() {
-            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-            if (currentFragment is PlaylistCreationFragment) {
-                onNavigateBack(false)
-            } else {
-                super.onBackPressed()
-            }
-        }
+      //  bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (currentFragment is PlaylistCreationFragment) {
+            if(currentFragment.checkIfCouldBeClosed()) {
+            methodToCallFromFragment()}
+
+        }  else {
+            binding.fragmentContainer.visibility = View.GONE
+            super.onBackPressed()}
+    }
     private fun backCheckFragment() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (currentFragment is PlaylistCreationFragment)  {
@@ -256,6 +266,8 @@ class AudioPlayerActivity (
                 super.onBackPressed()
             }
         }
+
+
     override fun onNavigateBack(isEmpty: Boolean) {
         if (isEmpty) methodToCallFromFragment()
         else backCheckFragment()

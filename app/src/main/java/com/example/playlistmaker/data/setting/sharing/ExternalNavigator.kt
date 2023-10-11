@@ -9,4 +9,5 @@ interface ExternalNavigator {
     fun openLink(link: String)
 
     fun openEmail(emailToSupport: EmailData)
+    fun shareTracks(text: String)
 }

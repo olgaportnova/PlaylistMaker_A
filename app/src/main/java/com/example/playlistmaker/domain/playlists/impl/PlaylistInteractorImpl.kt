@@ -1,5 +1,6 @@
 package com.example.playlistmaker.domain.playlists.impl
 
+import android.net.Uri
 import com.example.playlistmaker.domain.playlists.PlaylistInteractor
 import com.example.playlistmaker.domain.playlists.PlaylistRepository
 import com.example.playlistmaker.domain.model.Playlist
@@ -10,17 +11,29 @@ class PlaylistInteractorImpl(
     private val playlistRepository: PlaylistRepository
 ): PlaylistInteractor {
 
+    override fun saveImageFromUri(uri: Uri, picturesDirectoryPath: String): String {
+        return playlistRepository.saveImageFromUri(uri, picturesDirectoryPath)
+    }
+
+
+    override fun getTracksOnlyFromPlaylist(listOfId:List<Int>): Flow<List<Track>?> {
+        return playlistRepository.getTracksOnlyFromPlaylist(listOfId)
+    }
 
     override fun getAllFavouritePlaylists(): Flow<List<Playlist>> {
         return playlistRepository.getAllFavouritePlaylists()
+    }
+
+    override  suspend fun getPlaylistsById(id:Int): Playlist {
+        return playlistRepository.getPlaylistsById(id)
     }
 
     override suspend fun createNewPlaylist(playlist: Playlist) {
         playlistRepository.createNewPlaylist(playlist)
     }
 
-    override suspend fun deleteNewPlaylist(playlist: Playlist) {
-        playlistRepository.deleteNewPlaylist(playlist)
+    override suspend fun deleteNewPlaylist(playlistId: Int) {
+        playlistRepository.deleteNewPlaylist(playlistId)
     }
 
     override suspend fun updatePlaylist(playlist: Playlist) {
@@ -33,6 +46,14 @@ class PlaylistInteractorImpl(
 
     override suspend fun insertTrackDetailIntoPlaylistInfo(track: Track) {
         playlistRepository.insertTrackDetailIntoPlaylistInfo(track)
+    }
+
+    override suspend fun deleteTrackFromPlaylist(updatedListOfTracks: List<Int>?, playlistId:Int, idTrackToDelete:Int) {
+        playlistRepository.deleteTrackFromPlayList(updatedListOfTracks, playlistId, idTrackToDelete)
+    }
+
+    override suspend fun updateDbListOfTracksInAllPlaylists(id: Int, idTrackToDelete: Int) {
+        playlistRepository.updateDbListOfTracksInAllPlaylists(id, idTrackToDelete)
     }
 
 }

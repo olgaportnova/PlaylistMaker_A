@@ -29,7 +29,9 @@ class FavPlaylistFragment : Fragment() {
         _binding = FragmentFavPlaylistsBinding.inflate(inflater, container, false)
         adapter = PlaylistsAdapter(requireContext(), mutableListOf(), object : PlaylistsAdapter.Listener {
             override fun onClick(playlist: Playlist) {
-                // Обработка клика на элементе списка (если нужно)
+                val bundle = Bundle()
+                bundle.putSerializable("playlist", playlist)
+                findNavController().navigate(R.id.playlistDetailsFragment, bundle)
             }
         })
         binding.recyclerViewPlaylists.adapter = adapter
@@ -46,13 +48,14 @@ class FavPlaylistFragment : Fragment() {
 
         val layoutManager = GridLayoutManager(context,2)
         binding.recyclerViewPlaylists.layoutManager = layoutManager
-        binding.recyclerViewPlaylists.addItemDecoration(GridSpacingItemDecoration(2, 8,16))
+     //   binding.recyclerViewPlaylists.addItemDecoration(GridSpacingItemDecoration(2, 8,16))
 
         favPlaylistFragmentViewModel.observeState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is PlaylistsState.Content -> showContent(state.playlists)
                 is PlaylistsState.Empty -> showEmpty()
                 is PlaylistsState.Loading -> {}
+                else -> {}
             }
         }
 
@@ -79,7 +82,7 @@ class FavPlaylistFragment : Fragment() {
 
 
     private fun navigateToNewFragment() {
-        findNavController().navigate(R.id.playlistFragment)
+        findNavController().navigate(R.id.playlistFragment,null)
     }
 
     override fun onDestroyView() {

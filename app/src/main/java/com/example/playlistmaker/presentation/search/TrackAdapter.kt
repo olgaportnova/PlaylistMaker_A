@@ -14,7 +14,7 @@ import java.util.*
 
 
 
-class TrackAdapter(var tracks: ArrayList<Track>, var listener: Listener): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
+class TrackAdapter(var tracks: ArrayList<Track>, var onItemClickListener: OnItemClickListener, val onItemLongClickListener: OnItemLongClickListener): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
 
 
     class TrackHolder(item: View) : RecyclerView.ViewHolder(item) {
@@ -23,7 +23,7 @@ class TrackAdapter(var tracks: ArrayList<Track>, var listener: Listener): Recycl
         val cornerRadius =
             item.resources.getDimensionPixelSize(R.dimen.radius_art_work)
 
-        fun bind(track: Track, listener: Listener) = with(binding) {
+        fun bind(track: Track, onItemClickListener: OnItemClickListener, onItemLongClickListener: OnItemLongClickListener) = with(binding) {
             trackName.text = track.trackName
             artistName.text = track.artistName
             trackTime.text =
@@ -31,7 +31,10 @@ class TrackAdapter(var tracks: ArrayList<Track>, var listener: Listener): Recycl
             Glide.with(itemView).load(track.artworkUrl100).transform(RoundedCorners(cornerRadius))
                 .placeholder(R.drawable.placeholder).into(artWork)
             itemView.setOnClickListener {
-                listener.onClick(track)
+                onItemClickListener?.onItemClick(track)
+            }
+            itemView.setOnLongClickListener {
+                onItemLongClickListener?.onItemLongClick(track) ?: false
             }
         }
     }
@@ -46,11 +49,16 @@ class TrackAdapter(var tracks: ArrayList<Track>, var listener: Listener): Recycl
     }
 
     override fun onBindViewHolder(holder: TrackHolder, position: Int) {
-        holder.bind(tracks[position], listener)
+        holder.bind(tracks[position],onItemClickListener, onItemLongClickListener)
 
     }
 
-    interface Listener {
-        fun onClick(track: Track)
+    interface OnItemClickListener {
+        fun onItemClick(track: Track)
     }
+
+    interface OnItemLongClickListener {
+        fun onItemLongClick(track: Track): Boolean
+    }
+
 }
