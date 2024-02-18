@@ -1,7 +1,6 @@
 package com.example.playlistmaker.presentation.audioPlayer
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
