@@ -1,5 +1,8 @@
 <resources>
-
+        <declare-styleable name="PlaybackButtonView">
+            <attr name="playIcon" format="reference"/>
+            <attr name="pauseIcon" format="reference"/>
+        </declare-styleable>
 
         <declare-styleable name="CustomEditText">
             <attr name="state_not_empty" format="boolean" />

@@ -27,6 +27,8 @@
     <dimen name="radius_art_work">2dp</dimen>
     <dimen name="radius_playlist_cover">8dp</dimen>
     <dimen name="album_cover_corner_radius">8dp</dimen>
+    <dimen name="size_play_pause_btn">83dp</dimen>
+    <dimen name="play_pause_margin_top">38dp</dimen>
 
     //bottom_sheet
     <dimen name="bottom_sheet_height">505dp</dimen>
