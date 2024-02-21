@@ -46,8 +46,10 @@ class PlaybackButtonView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = imageBitmapPlay?.width ?: 38
-        val desiredHeight = imageBitmapPlay?.height ?: 38
+
+        val sizeInDp = pxToDp(38,context)
+        val desiredWidth = imageBitmapPlay?.width ?: sizeInDp
+        val desiredHeight = imageBitmapPlay?.height ?: sizeInDp
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -79,10 +81,18 @@ class PlaybackButtonView @JvmOverloads constructor(
             MotionEvent.ACTION_UP -> {
                 isPlaying = !isPlaying
                 onPlayPauseClicked?.invoke()
-                invalidate()
+                setPlayingState(isPlaying)
                 return true
             }
         }
         return super.onTouchEvent(event)
+    }
+    fun setPlayingState(isPlaying: Boolean) {
+        this.isPlaying = isPlaying
+        invalidate()
+    }
+
+    private fun pxToDp(px: Int, context: Context): Int {
+        return (px / context.resources.displayMetrics.density).toInt()
     }
 }

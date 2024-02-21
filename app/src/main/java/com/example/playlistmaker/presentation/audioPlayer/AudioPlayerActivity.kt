@@ -53,11 +53,8 @@ class AudioPlayerActivity (
 
     override fun onPause() {
         super.onPause()
-        if (binding.playButton.isPlaying) {
-            viewModel.onPause()
-            binding.playButton.isPlaying = false
-            binding.playButton.invalidate()
-        }
+        viewModel.onPause()
+        binding.playButton.setPlayingState(false)
     }
 
     override fun onResume() {
