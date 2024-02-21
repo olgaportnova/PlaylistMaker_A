@@ -156,14 +156,11 @@ class AudioPlayerViewModel(
     fun onPause() {
         statePlayerLiveData.postValue(State.PAUSED)
         audioPlayerInterator.pausePlayer()
-
     }
-
 
     fun onResume() {
         getListOfPlaylist()
         statePlayerLiveData.postValue(State.PAUSED)
-
     }
 
     suspend fun addTrackToPlaylist(playlist: Playlist, track: Track) {

@@ -96,17 +96,18 @@
                 app:layout_constraintTop_toBottomOf="@id/artist_name"
                 android:background="@null"
                 style="@style/ic_add_to_pl" />
-
-
-
-            <ImageButton
+            
+            <com.example.playlistmaker.presentation.audioPlayer.PlaybackButtonView
                 android:id="@+id/play_button"
+                android:layout_width="@dimen/size_play_pause_btn"
+                android:layout_height="@dimen/size_play_pause_btn"
+                android:layout_marginTop="@dimen/play_pause_margin_top"
                 android:background="@null"
-                android:src="@drawable/ic_play_button"
+                app:playIcon="@drawable/ic_play_button"
+                app:pauseIcon="@drawable/ic_pause"
                 app:layout_constraintEnd_toStartOf="@+id/favorite_button"
                 app:layout_constraintStart_toEndOf="@id/add_to_PL_button"
-                app:layout_constraintTop_toBottomOf="@id/artist_name"
-                style="@style/ic_play_button_AP_screen" />
+                app:layout_constraintTop_toBottomOf="@id/artist_name"/>
 
             <ImageButton
                 android:id="@+id/favorite_button"
